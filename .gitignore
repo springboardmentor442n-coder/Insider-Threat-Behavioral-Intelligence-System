@@ -1,21 +1,82 @@
-# Python
+# PYTHON
+
 __pycache__/
-*.pyc
-.venv/
+*.py[cod]
+*$py.class
+
+# Compiled Python files
+*.so
+
+
+# VIRTUAL ENVIRONMENT
+
 venv/
+.venv/
+env/
+ENV/
 
-# Node
-node_modules/
-
-# Environment files
+# ENVIRONMENT VARIABLES
 .env
 
-# VS Code
-.vscode/
+# NODE / FRONTEND
 
-# Logs
+node_modules/
+
+# IDE SETTINGS
+
+.vscode/
+.idea/
+
+# LOG FILES
+
 *.log
 
-# OS files
+# DATABASE FILES
+
+*.db
+*.sqlite3
+
+# MACHINE LEARNING MODELS
+
+ml/models/
+*.pkl
+*.pickle
+*.joblib
+*.h5
+*.keras
+*.onnx
+
+# DATASET
+
+dataset/raw/
+dataset/processed/
+
+# BUILD FILES
+
+build/
+dist/
+*.egg-info/
+
+# TESTING
+
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# ==========================================
+# JUPYTER NOTEBOOKS
+# ==========================================
+.ipynb_checkpoints/
+
+# TEMP FILES
+
+*.tmp
+*.bak
+*.swp
+
+# OPERATING SYSTEM FILES
+
 .DS_Store
 Thumbs.db
+Desktop.ini
