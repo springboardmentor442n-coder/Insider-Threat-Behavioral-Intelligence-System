@@ -7,9 +7,10 @@ from database.crud import (
     get_users,
     get_user,
     update_user,
-    delete_user
+    delete_user,
+    login_user
 )
-from backend.schemas import UserCreate
+from backend.schemas import UserCreate, UserLogin
 from fastapi import FastAPI
 from database.config import engine, Base
 
@@ -48,6 +49,16 @@ def add_user(user: UserCreate, db: Session = Depends(get_db)):
         "email": new_user.email,
         "department": new_user.department
     }
+
+@app.post("/login")
+def login(user: UserLogin, db: Session = Depends(get_db)):
+
+    return login_user(
+        db,
+        user.username,
+        user.password
+    )
+    
 @app.get("/users")
 def read_users(db: Session = Depends(get_db)):
     return get_users(db)
