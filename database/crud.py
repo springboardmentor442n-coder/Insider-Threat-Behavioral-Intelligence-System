@@ -1,7 +1,7 @@
 from backend.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
-from database.models import User
+from database.models import User, Prediction, Employee
 
 def create_user(db: Session,username: str,email: str,department: str,password: str):
 
@@ -84,3 +84,95 @@ def login_user(db: Session, username: str, password: str):
         "access_token": token,
         "token_type": "bearer"
     }
+
+def save_prediction(
+    db,
+    login_count,
+    unique_pc_count,
+    is_weekend,
+    hour,
+    prediction,
+    risk_level,
+    confidence
+):
+    new_prediction = Prediction(
+        login_count=login_count,
+        unique_pc_count=unique_pc_count,
+        is_weekend=is_weekend,
+        hour=hour,
+        prediction=prediction,
+        risk_level=risk_level,
+        confidence=confidence
+    )
+
+    db.add(new_prediction)
+    db.commit()
+    db.refresh(new_prediction)
+
+    return new_prediction
+
+def create_employee(
+    db: Session,
+    employee_id: str,
+    name: str,
+    department: str,
+    designation: str,
+    email: str
+):
+    employee = Employee(
+        employee_id=employee_id,
+        name=name,
+        department=department,
+        designation=designation,
+        email=email
+    )
+
+    db.add(employee)
+    db.commit()
+    db.refresh(employee)
+
+    return employee
+
+
+def get_employees(db: Session):
+    return db.query(Employee).all()
+
+
+def get_employee(db: Session, employee_id: int):
+    return db.query(Employee).filter(Employee.id == employee_id).first()
+
+
+def update_employee(
+    db: Session,
+    employee_id: int,
+    name: str,
+    department: str,
+    designation: str,
+    email: str
+):
+    employee = db.query(Employee).filter(Employee.id == employee_id).first()
+
+    if not employee:
+        return None
+
+    employee.name = name
+    employee.department = department
+    employee.designation = designation
+    employee.email = email
+
+    db.commit()
+    db.refresh(employee)
+
+    return employee
+
+
+def delete_employee(db: Session, employee_id: int):
+    employee = db.query(Employee).filter(Employee.id == employee_id).first()
+
+    if not employee:
+        return None
+
+    db.delete(employee)
+    db.commit()
+
+    return employee

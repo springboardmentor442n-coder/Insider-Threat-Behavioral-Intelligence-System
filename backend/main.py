@@ -1,5 +1,6 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from backend.routes.prediction import router as prediction_router
 
 from database.config import get_db
 from database.crud import (
@@ -13,9 +14,16 @@ from database.crud import (
 from backend.schemas import UserCreate, UserLogin
 from fastapi import FastAPI
 from database.config import engine, Base
+from backend.routes import auth
+from database.models import Prediction
+from sqlalchemy.orm import Session
+from backend.routes.employee import router as employee_router
+
 
 app = FastAPI()
-
+app.include_router(auth.router)
+app.include_router(prediction_router)
+app.include_router(employee_router)
 Base.metadata.create_all(bind=engine)
 
 @app.get("/")
@@ -87,3 +95,7 @@ def remove_user(user_id: int, db: Session = Depends(get_db)):
         return {"message": "User not found"}
 
     return {"message": "User deleted successfully"}
+    
+@app.get("/predictions")
+def read_predictions(db: Session = Depends(get_db)):
+    return db.query(Prediction).all()
