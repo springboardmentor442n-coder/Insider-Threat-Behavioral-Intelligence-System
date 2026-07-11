@@ -18,12 +18,14 @@ from backend.routes import auth
 from database.models import Prediction
 from sqlalchemy.orm import Session
 from backend.routes.employee import router as employee_router
+from backend.routes.dashboard import router as dashboard_router
 
 
 app = FastAPI()
 app.include_router(auth.router)
 app.include_router(prediction_router)
 app.include_router(employee_router)
+app.include_router(dashboard_router)
 Base.metadata.create_all(bind=engine)
 
 @app.get("/")

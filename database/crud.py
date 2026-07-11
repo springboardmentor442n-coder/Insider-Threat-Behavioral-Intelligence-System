@@ -2,7 +2,7 @@ from backend.security import hash_password, verify_password, create_access_token
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from database.models import User, Prediction, Employee
-
+from sqlalchemy import func
 def create_user(db: Session,username: str,email: str,department: str,password: str):
 
     existing_user = db.query(User).filter(
@@ -176,3 +176,22 @@ def delete_employee(db: Session, employee_id: int):
     db.commit()
 
     return employee
+
+def get_dashboard_stats(db: Session):
+    total_employees = db.query(Employee).count()
+    total_predictions = db.query(Prediction).count()
+
+    high_risk = db.query(Prediction).filter(
+        Prediction.risk_level == "HIGH"
+    ).count()
+
+    low_risk = db.query(Prediction).filter(
+        Prediction.risk_level == "LOW"
+    ).count()
+
+    return {
+        "total_employees": total_employees,
+        "total_predictions": total_predictions,
+        "high_risk": high_risk,
+        "low_risk": low_risk
+    }
