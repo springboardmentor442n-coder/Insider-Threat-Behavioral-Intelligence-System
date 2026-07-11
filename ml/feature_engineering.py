@@ -5,12 +5,17 @@ PROCESSED_DATA = Path("dataset/processed")
 
 file_path = PROCESSED_DATA / "logon_processed.csv"
 
-print("Loading processed dataset...")
+print("=" * 50)
+print("FEATURE ENGINEERING")
+print("=" * 50)
+
+print("\nLoading processed dataset...")
 
 df = pd.read_csv(file_path)
 
 print("Dataset Loaded Successfully!")
 
+print("\nFirst 5 Rows:")
 print(df.head())
 
 print("\nDataset Shape:")
@@ -29,14 +34,7 @@ print(user_login_count.head())
 df = df.merge(user_login_count, on="user")
 
 print("\nDataset after adding login_count:")
-
 print(df.head())
-
-engineered_file = PROCESSED_DATA / "logon_features.csv"
-
-df.to_csv(engineered_file, index=False)
-
-print("\nUpdated feature dataset saved successfully!")
 
 print("\nCalculating number of PCs used by each user...")
 
@@ -57,6 +55,7 @@ df["is_weekend"] = df["day_of_week"].isin(
 ).astype(int)
 
 print(df[["day_of_week", "is_weekend"]].head())
+
 print("\nCreating suspicious login hour feature...")
 
 df["late_night_login"] = (
@@ -65,3 +64,15 @@ df["late_night_login"] = (
 ).astype(int)
 
 print(df[["hour", "late_night_login"]].head())
+
+engineered_file = PROCESSED_DATA / "logon_features.csv"
+
+df.to_csv(engineered_file, index=False)
+
+print("\nFeature engineered dataset saved successfully!")
+
+print("\nFinal Dataset Shape:")
+print(df.shape)
+
+print("\nFinal Columns:")
+print(df.columns.tolist())
