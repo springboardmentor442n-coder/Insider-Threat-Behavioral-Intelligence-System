@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------------------
+# Insider Threat Behavioral Intelligence System - Python dependencies
+#
+# Versions are PINNED (== not >=) on purpose: an unpinned dependency can
+# silently change under you and break a build that worked yesterday.
+# Reproducible builds are a baseline requirement for production code.
+# ---------------------------------------------------------------------------
+
+# --- Web framework -----------------------------------------------------------
+fastapi==0.115.6              # API framework; async, auto-generates OpenAPI docs
+uvicorn[standard]==0.34.0     # ASGI server that actually runs the FastAPI app
+
+# --- Database ----------------------------------------------------------------
+SQLAlchemy==2.0.36            # ORM + connection pooling
+psycopg2-binary==2.9.10       # PostgreSQL driver SQLAlchemy talks through
+
+# --- Configuration -----------------------------------------------------------
+pydantic==2.10.4              # Data validation (FastAPI is built on it)
+pydantic-settings==2.7.0      # Typed, validated settings loaded from .env
+python-dotenv==1.0.1          # Reads the .env file itself
+
+# --- Testing -----------------------------------------------------------------
+pytest==8.3.4                 # Test runner
+httpx==0.28.1                 # HTTP client used by FastAPI's TestClient

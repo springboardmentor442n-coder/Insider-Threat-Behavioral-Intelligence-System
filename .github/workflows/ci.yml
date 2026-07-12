@@ -1,0 +1,59 @@
+name: CI
+
+# Run on every push to any branch, and on every PR into main.
+# Catching a break on YOUR branch before the PR is the whole point.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    name: Backend tests
+    runs-on: ubuntu-latest
+
+    # Spin up a real PostgreSQL alongside the test run. We test against an
+    # actual database rather than a mock, because a mock cannot tell you that
+    # your connection string, driver, or SQL is wrong - and those are exactly
+    # the things that break in production.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: itbis_user
+          POSTGRES_PASSWORD: itbis_dev_password
+          POSTGRES_DB: insider_threat_db
+        ports:
+          - 5432:5432
+        # Do not start the tests until Postgres is actually accepting
+        # connections. Without this the first test hits a database that is
+        # still booting and fails for no real reason.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql://itbis_user:itbis_dev_password@localhost:5432/insider_threat_db
+          APP_NAME: Insider Threat Behavioral Intelligence System
+          APP_ENV: ci
+          DEBUG: "false"
+        run: pytest

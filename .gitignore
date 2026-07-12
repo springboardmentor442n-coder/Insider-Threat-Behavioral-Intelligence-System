@@ -1,0 +1,65 @@
+# ---------------------------------------------------------------------------
+# Data - the CERT r4.2 dataset is ~7GB and must NEVER be committed.
+# It is downloaded separately (see README) and lives in data/ locally.
+# ---------------------------------------------------------------------------
+data/
+*.csv
+*.zip
+*.tar.bz2
+*.parquet
+
+# ---------------------------------------------------------------------------
+# Secrets & environment
+# .env holds real credentials; .env.example is the committed template.
+# ---------------------------------------------------------------------------
+.env
+.env.local
+*.pem
+*.key
+
+# ---------------------------------------------------------------------------
+# Python
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+venv/
+.venv/
+env/
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+.ruff_cache/
+
+# ---------------------------------------------------------------------------
+# ML artifacts - trained models are build outputs, not source.
+# ---------------------------------------------------------------------------
+ml/models/*.pkl
+ml/models/*.joblib
+ml/models/*.h5
+ml/models/*.onnx
+.ipynb_checkpoints/
+
+# ---------------------------------------------------------------------------
+# Node / frontend
+# ---------------------------------------------------------------------------
+node_modules/
+.next/
+out/
+frontend/dist/
+frontend/build/
+
+# ---------------------------------------------------------------------------
+# IDE & OS
+# ---------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
