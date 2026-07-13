@@ -21,7 +21,8 @@ The dataset spans **1,000 users** from **Jan 2010 to May 2011** and includes 3 k
 
 ## What's in this notebook
 
-`insider-threat-dectection.ipynb` performs the EDA phase of Milestone 1:
+`data-preprocessing-insider-threat-dectection.ipynb
+` performs the EDA phase of Milestone 1:
 
 - Loads all core log files using **Polars' lazy API** (`pl.scan_csv`) for memory-efficient processing on large files (esp. `http.csv` at 28M+ rows)
 - Schema inspection, null/duplicate checks, and datetime parsing across all files
