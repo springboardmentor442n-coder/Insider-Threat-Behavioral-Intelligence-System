@@ -195,3 +195,6 @@ def get_dashboard_stats(db: Session):
         "high_risk": high_risk,
         "low_risk": low_risk
     }
+
+def get_predictions(db: Session):
+    return db.query(Prediction).all()

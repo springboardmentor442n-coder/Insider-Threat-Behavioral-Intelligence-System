@@ -8,9 +8,8 @@ from pathlib import Path
 from backend.security import verify_token
 from fastapi import Depends
 from sqlalchemy.orm import Session
-
 from database.config import get_db
-from database.crud import save_prediction
+from database.crud import save_prediction, get_predictions
 
 router = APIRouter()
 
@@ -47,3 +46,7 @@ def predict(
         "risk_level": risk,
         "confidence": round(probability * 100, 2)
     }
+
+@router.get("/predictions")
+def read_predictions(db: Session = Depends(get_db)):
+    return get_predictions(db)
