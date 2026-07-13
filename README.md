@@ -269,23 +269,6 @@ python pipeline/predict.py
 
 ---
 
-# Running the Backend
-
-```bash
-uvicorn app:app --reload
-```
-
----
-
-# Running the Frontend
-
-```bash
-npm install
-npm start
-```
-
----
-
 # Dashboard Modules
 
 ### Administrator
@@ -317,17 +300,6 @@ npm start
 - Executive Dashboard
 
 ---
-
-# Future Enhancements
-
-- Real-Time Log Streaming
-- Explainable AI (XAI)
-- Deep Learning-Based UEBA
-- SIEM Integration
-- Multi-Tenant Support
-- Cloud Deployment
-- Real-Time Alert Notifications
-- Automated Threat Response
 
 ---
 
