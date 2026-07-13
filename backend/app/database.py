@@ -36,7 +36,19 @@ engine = create_engine(
     pool_pre_ping=True,
     pool_size=5,          # steady-state connections kept open
     max_overflow=10,      # extra connections allowed under burst load
-    echo=settings.DEBUG,  # log SQL in development only - never in production
+    # SQL echo is its own setting, NOT tied to DEBUG.
+    #
+    # These were conflated originally, and it was a real mistake. DEBUG controls
+    # whether /docs is exposed. SQL_ECHO controls whether every statement is
+    # printed. Wiring them together meant that turning on the API docs also
+    # dumped 2.6 million INSERT statements to the console during ingestion -
+    # which is not merely noisy, it is genuinely SLOW: writing that much text to
+    # a Windows console throttles the whole load, and it makes a working job look
+    # like a hung one.
+    #
+    # Defaults to False. Turn it on deliberately when you are debugging a query,
+    # not as a side effect of being in development.
+    echo=settings.SQL_ECHO,
 )
 
 # ---------------------------------------------------------------------------

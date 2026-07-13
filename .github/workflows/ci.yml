@@ -53,6 +53,11 @@ jobs:
       - name: Run tests
         env:
           DATABASE_URL: postgresql://itbis_user:itbis_dev_password@localhost:5432/insider_threat_db
+          # A throwaway key for CI only. The real one lives in .env locally and
+          # in a secret manager in production - never in the repository.
+          SECRET_KEY: ci-only-key-not-used-anywhere-real-0000000000000000
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30"
           APP_NAME: Insider Threat Behavioral Intelligence System
           APP_ENV: ci
           DEBUG: "false"

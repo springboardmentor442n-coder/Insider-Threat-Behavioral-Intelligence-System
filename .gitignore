@@ -63,3 +63,4 @@ frontend/build/
 .DS_Store
 Thumbs.db
 desktop.ini
+models/
