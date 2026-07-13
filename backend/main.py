@@ -19,9 +19,17 @@ from database.models import Prediction
 from sqlalchemy.orm import Session
 from backend.routes.employee import router as employee_router
 from backend.routes.dashboard import router as dashboard_router
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(auth.router)
 app.include_router(prediction_router)
 app.include_router(employee_router)

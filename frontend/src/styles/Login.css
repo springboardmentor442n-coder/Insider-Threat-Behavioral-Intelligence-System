@@ -1,0 +1,121 @@
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #0f172a;
+}
+
+.login-container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+
+    background:
+    linear-gradient(rgba(15,23,42,.88),rgba(15,23,42,.88)),
+    url("https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1500&q=80");
+
+    background-size:cover;
+}
+
+.login-card{
+
+    width:380px;
+
+    background:#1e293b;
+
+    padding:40px;
+
+    border-radius:18px;
+
+    box-shadow:0 10px 40px rgba(0,0,0,.45);
+
+}
+
+.login-card h1{
+
+    color:white;
+    font-size: 40px;
+    text-align:center;
+    line-height: 1.2;
+    margin-bottom:8px;
+
+}
+
+.login-card p{
+
+    color:#94a3b8;
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.login-card input{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:18px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#334155;
+
+    color:white;
+
+    font-size:16px;
+
+    box-sizing:border-box;
+
+}
+
+.login-card input::placeholder{
+
+    color:#cbd5e1;
+
+}
+
+.login-card button{
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:#2563eb;
+
+    color:white;
+
+    font-size:17px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.login-card button:hover{
+
+    background:#1d4ed8;
+
+}
+.password-box{
+    position: relative;
+}
+
+.toggle-password{
+    position:absolute;
+    right:15px;
+    top:35%;
+    transform:translateY(-50%);
+    cursor:pointer;
+    user-select:none;
+    color:white;
+}
