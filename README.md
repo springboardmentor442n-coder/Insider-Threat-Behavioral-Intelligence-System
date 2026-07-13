@@ -106,6 +106,3 @@ dataset/processed/employee_features.csv
 - Machine Learning Model Training
   
 ---
-
-## Auth
-**Mohmed Mohsin**
