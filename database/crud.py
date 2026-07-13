@@ -87,6 +87,7 @@ def login_user(db: Session, username: str, password: str):
 
 def save_prediction(
     db,
+    employee_id,
     login_count,
     unique_pc_count,
     is_weekend,
@@ -96,6 +97,7 @@ def save_prediction(
     confidence
 ):
     new_prediction = Prediction(
+        employee_id=employee_id,
         login_count=login_count,
         unique_pc_count=unique_pc_count,
         is_weekend=is_weekend,

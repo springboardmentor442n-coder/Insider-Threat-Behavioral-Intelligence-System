@@ -13,6 +13,7 @@ class UserLogin(BaseModel):
 from pydantic import BaseModel
 
 class PredictionRequest(BaseModel):
+    employee_id: str
     login_count: int
     unique_pc_count: int
     is_weekend: int

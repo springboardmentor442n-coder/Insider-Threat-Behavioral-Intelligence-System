@@ -15,6 +15,7 @@ class Prediction(Base):
     __tablename__ = "predictions"
 
     id = Column(Integer, primary_key=True, index=True)
+    employee_id = Column(String)
     login_count = Column(Integer)
     unique_pc_count = Column(Integer)
     is_weekend = Column(Integer)

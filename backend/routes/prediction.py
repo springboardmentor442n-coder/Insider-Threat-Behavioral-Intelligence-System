@@ -32,6 +32,7 @@ def predict(
     risk = "HIGH" if prediction == 1 else "LOW"
     save_prediction(
     db=db,
+    employee_id=data.employee_id,
     login_count=data.login_count,
     unique_pc_count=data.unique_pc_count,
     is_weekend=data.is_weekend,
@@ -45,6 +46,7 @@ def predict(
         "prediction": prediction,
         "risk_level": risk,
         "confidence": round(probability * 100, 2)
+        
     }
 
 @router.get("/predictions")
