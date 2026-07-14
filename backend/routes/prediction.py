@@ -1,19 +1,23 @@
 from fastapi import APIRouter, Header
-from backend.schemas import PredictionRequest
+from schemas import PredictionRequest
 
 import joblib
 import pandas as pd
 from pathlib import Path
 
-from backend.security import verify_token
+from security import verify_token
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from database.config import get_db
-from database.crud import save_prediction, get_predictions
+from config import get_db
+from crud import save_prediction, get_predictions
 
 router = APIRouter()
+from pathlib import Path
 
-MODEL_PATH = Path("ml/models/random_forest_model.pkl")
+BASE_DIR = Path(__file__).resolve().parents[2]
+MODEL_PATH = BASE_DIR / "ml" / "models" / "random_forest_model.pkl"
+
+
 model = joblib.load(MODEL_PATH)
 
 @router.post("/predict")

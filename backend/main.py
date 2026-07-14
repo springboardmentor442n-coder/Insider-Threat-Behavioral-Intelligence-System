@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from backend.routes.prediction import router as prediction_router
+from routes.prediction import router as prediction_router
 
-from database.config import get_db
-from database.crud import (
+from config import get_db
+from crud import (
     create_user,
     get_users,
     get_user,
@@ -11,14 +11,14 @@ from database.crud import (
     delete_user,
     login_user
 )
-from backend.schemas import UserCreate, UserLogin
+from schemas import UserCreate, UserLogin
 from fastapi import FastAPI
-from database.config import engine, Base
-from backend.routes import auth
-from database.models import Prediction
+from config import engine, Base
+from routes import auth
+from models import Prediction
 from sqlalchemy.orm import Session
-from backend.routes.employee import router as employee_router
-from backend.routes.dashboard import router as dashboard_router
+from routes.employee import router as employee_router
+from routes.dashboard import router as dashboard_router
 from fastapi.middleware.cors import CORSMiddleware
 
 

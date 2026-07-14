@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
-from backend.schemas import LoginRequest, TokenResponse
-from backend.security import create_access_token
+from schemas import LoginRequest, TokenResponse
+from security import create_access_token
 
 router = APIRouter()
 
