@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/
+
+# Virtual Environments
+venv/
+.venv/
+env/
+
+# Logs
+*.log
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large datasets
+datasets/raw/
+datasets/processed/
+datasets/integrated/
+datasets/features/
+datasets/predictions/
+datasets/exports/
+
+# Large generated files
+*.parquet
