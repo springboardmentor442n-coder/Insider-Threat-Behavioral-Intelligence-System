@@ -35,6 +35,13 @@ function Sidebar() {
         🤖 Predictions
       </Link>
 
+      <Link
+        to="/behavior-profile"
+        className={location.pathname === "/behavior-profile" ? "active" : ""}
+      >
+        📊 Behavior Profile
+      </Link>
+
       <button className="logout-btn" onClick={logout}>
         🚪 Logout
       </button>

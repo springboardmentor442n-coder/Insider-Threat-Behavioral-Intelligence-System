@@ -20,6 +20,7 @@ from sqlalchemy.orm import Session
 from routes.employee import router as employee_router
 from routes.dashboard import router as dashboard_router
 from fastapi.middleware.cors import CORSMiddleware
+from routes.behavior import router as behavior_router
 
 
 app = FastAPI()
@@ -34,6 +35,7 @@ app.include_router(auth.router)
 app.include_router(prediction_router)
 app.include_router(employee_router)
 app.include_router(dashboard_router)
+app.include_router(behavior_router)
 Base.metadata.create_all(bind=engine)
 
 @app.get("/")

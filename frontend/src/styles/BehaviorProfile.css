@@ -1,0 +1,37 @@
+.behavior-container {
+  padding: 30px;
+}
+
+.behavior-container h1 {
+  margin-bottom: 20px;
+  color: #1f2937;
+}
+
+.behavior-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.behavior-table th {
+  background: #2563eb;
+  color: white;
+  padding: 14px;
+  text-align: left;
+}
+
+.behavior-table td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.behavior-table tr:hover {
+  background: #f3f4f6;
+}
+
+.behavior-table tr:last-child td {
+  border-bottom: none;
+}
