@@ -268,3 +268,93 @@ def get_risk_distribution(db: Session):
             "value": high,
         },
     ]
+
+# -----------------------------
+# BEHAVIOR PROFILE
+# -----------------------------
+
+def get_behavior_profiles(db: Session):
+    employees = db.query(Employee).all()
+
+    profiles = []
+
+    for employee in employees:
+
+        predictions = (
+            db.query(Prediction)
+            .filter(Prediction.employee_id == employee.employee_id)
+            .all()
+        )
+
+        if len(predictions) == 0:
+
+            profiles.append({
+                "employee_id": employee.employee_id,
+                "name": employee.name,
+                "department": employee.department,
+                "avg_login": 0,
+                "avg_devices": 0,
+                "avg_hour": 0,
+                "weekend_activity": "No Data",
+                "behavior_score": 100,
+                "status": "Normal"
+            })
+
+            continue
+
+        avg_login = sum(
+            p.login_count for p in predictions
+        ) / len(predictions)
+
+        avg_devices = sum(
+            p.unique_pc_count for p in predictions
+        ) / len(predictions)
+
+        avg_hour = sum(
+            p.hour for p in predictions
+        ) / len(predictions)
+
+        weekend_count = sum(
+            p.is_weekend for p in predictions
+        )
+
+        high_risk = sum(
+            1 for p in predictions
+            if p.risk_level == "HIGH"
+        )
+
+        score = 100
+
+        score -= high_risk * 20
+
+        if avg_login > 200:
+            score -= 10
+
+        if avg_devices > 5:
+            score -= 10
+
+        if avg_hour > 20 or avg_hour < 6:
+            score -= 10
+
+        score = max(score, 0)
+
+        if score >= 80:
+            status = "Normal"
+        elif score >= 60:
+            status = "Monitor"
+        else:
+            status = "Suspicious"
+
+        profiles.append({
+            "employee_id": employee.employee_id,
+            "name": employee.name,
+            "department": employee.department,
+            "avg_login": round(avg_login, 2),
+            "avg_devices": round(avg_devices, 2),
+            "avg_hour": round(avg_hour, 2),
+            "weekend_activity": weekend_count,
+            "behavior_score": score,
+            "status": status
+        })
+
+    return profiles

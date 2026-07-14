@@ -40,22 +40,30 @@ function BehaviorProfile() {
                 <th>Employee ID</th>
                 <th>Name</th>
                 <th>Department</th>
+                <th>Avg Login</th>
+                <th>Avg Devices</th>
+                <th>Avg Hour</th>
+                <th>Weekend Activity</th>
                 <th>Behavior Score</th>
                 <th>Status</th>
               </tr>
             </thead>
 
             <tbody>
-              {profiles.map((employee) => (
-                <tr key={employee.employee_id}>
-                  <td>{employee.employee_id}</td>
-                  <td>{employee.name}</td>
-                  <td>{employee.department}</td>
-                  <td>{employee.behavior_score}</td>
-                  <td>{employee.status}</td>
-                </tr>
-              ))}
-            </tbody>
+                {profiles.map((employee) => (
+                    <tr key={employee.employee_id}>
+                    <td>{employee.employee_id}</td>
+                    <td>{employee.name}</td>
+                    <td>{employee.department}</td>
+                    <td>{employee.avg_login}</td>
+                    <td>{employee.avg_devices}</td>
+                    <td>{employee.avg_hour}</td>
+                    <td>{employee.weekend_activity}</td>
+                    <td>{employee.behavior_score}</td>
+                    <td>{employee.status}</td>
+                    </tr>
+                ))}
+        </tbody>
           </table>
         )}
       </div>
