@@ -1,11 +1,9 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter
 from schemas import PredictionRequest
 
 import joblib
 import pandas as pd
 from pathlib import Path
-
-from security import verify_token
 from fastapi import Depends
 from sqlalchemy.orm import Session
 from config import get_db

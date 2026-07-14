@@ -8,5 +8,5 @@ router = APIRouter()
 
 
 @router.get("/behavior-profile")
-def behavior_profile(db: Session = Depends(get_db)):
+def read_behavior_profiles(db: Session = Depends(get_db)):
     return get_behavior_profiles(db)

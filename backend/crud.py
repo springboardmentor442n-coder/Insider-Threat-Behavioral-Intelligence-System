@@ -358,3 +358,80 @@ def get_behavior_profiles(db: Session):
         })
 
     return profiles
+
+from sqlalchemy import func
+from models import Employee, Prediction
+
+def get_behavior_profiles(db):
+    employees = db.query(Employee).all()
+
+    profiles = []
+
+    for emp in employees:
+
+        predictions = (
+            db.query(Prediction)
+            .filter(Prediction.employee_id == emp.employee_id)
+            .all()
+        )
+
+        if len(predictions) == 0:
+            profiles.append({
+                "employee_id": emp.employee_id,
+                "name": emp.name,
+                "department": emp.department,
+                "avg_login": 0,
+                "avg_devices": 0,
+                "avg_hour": 0,
+                "weekend_activity": "None",
+                "behavior_score": 100,
+                "status": "Normal"
+            })
+            continue
+
+        avg_login = round(sum(p.login_count for p in predictions) / len(predictions))
+        avg_devices = round(sum(p.unique_pc_count for p in predictions) / len(predictions))
+        avg_hour = round(sum(p.hour for p in predictions) / len(predictions))
+
+        weekend_count = sum(p.is_weekend for p in predictions)
+
+        if weekend_count == 0:
+            weekend = "Low"
+        elif weekend_count < len(predictions) / 2:
+            weekend = "Medium"
+        else:
+            weekend = "High"
+
+        high_risk = sum(1 for p in predictions if p.risk_level == "HIGH")
+
+        score = 100
+        score -= high_risk * 10
+
+        if avg_hour >= 22 or avg_hour <= 5:
+            score -= 5
+
+        if avg_devices > 4:
+            score -= 5
+
+        score = max(score, 0)
+
+        if score >= 80:
+            status = "Normal"
+        elif score >= 50:
+            status = "Monitor"
+        else:
+            status = "Suspicious"
+
+        profiles.append({
+            "employee_id": emp.employee_id,
+            "name": emp.name,
+            "department": emp.department,
+            "avg_login": avg_login,
+            "avg_devices": avg_devices,
+            "avg_hour": avg_hour,
+            "weekend_activity": weekend,
+            "behavior_score": score,
+            "status": status
+        })
+
+    return profiles
