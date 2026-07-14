@@ -46,15 +46,16 @@ user_pc_count = (
 
 df = df.merge(user_pc_count, on="user")
 
+print("\nUnique PCs used:")
 print(df[["user", "unique_pc_count"]].head())
 
 print("\nCreating weekend login feature...")
 
-df["is_weekend"] = df["day_of_week"].isin(
+df["is_weekend"] = df["day"].isin(
     ["Saturday", "Sunday"]
 ).astype(int)
 
-print(df[["day_of_week", "is_weekend"]].head())
+print(df[["day", "is_weekend"]].head())
 
 print("\nCreating suspicious login hour feature...")
 

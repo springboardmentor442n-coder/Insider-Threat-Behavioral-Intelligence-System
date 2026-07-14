@@ -3,28 +3,10 @@ from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 import joblib
-PROCESSED_DATA = Path("dataset/processed")
-
-print("=" * 50)
-print("INSIDER THREAT MODEL TRAINING")
-print("=" * 50)
-
-print("\nLoading feature engineered dataset...")
-
-df = pd.read_csv(PROCESSED_DATA / "logon_features.csv")
-
-print("Dataset loaded successfully!")
-
-print("\nDataset Shape:")
-print(df.shape)
-
-print("\nColumns:")
-print(df.columns.tolist())
-
-import pandas as pd
 from pathlib import Path
 
-PROCESSED_DATA = Path("dataset/processed")
+BASE_DIR = Path(__file__).resolve().parent.parent
+PROCESSED_DATA = BASE_DIR / "dataset" / "processed"
 
 print("=" * 50)
 print("INSIDER THREAT MODEL TRAINING")
@@ -41,9 +23,13 @@ print(df.shape)
 
 print("\nColumns:")
 print(df.columns.tolist())
+
+
 print("\nCreating target column...")
 
 df["target"] = df["late_night_login"]
+print("\nTarget Distribution:")
+print(df["target"].value_counts())
 
 print("Target column created!")
 
@@ -108,9 +94,30 @@ print(classification_report(y_test, y_pred))
 
 print("\nConfusion Matrix:")
 print(confusion_matrix(y_test, y_pred))
-model_path = "ml/models/random_forest_model.pkl"
+model_dir = Path("ml/models")
+model_dir.mkdir(parents=True, exist_ok=True)
+
+model_path = model_dir / "random_forest_model.pkl"
 
 joblib.dump(model, model_path)
 
 print("\nModel saved successfully!")
 print(model_path)
+
+print("\nFeature Importance")
+
+importance = pd.DataFrame({
+    "Feature": X.columns,
+    "Importance": model.feature_importances_
+})
+
+importance = importance.sort_values(
+    by="Importance",
+    ascending=False
+)
+
+print(importance)
+importance.to_csv(
+    PROCESSED_DATA /"feature_importance.csv",
+    index=False
+)
