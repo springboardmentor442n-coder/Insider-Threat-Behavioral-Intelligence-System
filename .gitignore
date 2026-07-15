@@ -18,12 +18,8 @@ env/
 .ipynb_checkpoints/
 
 # Large datasets
-datasets/raw/
-datasets/processed/
-datasets/integrated/
-datasets/features/
-datasets/predictions/
-datasets/exports/
+datasets/
 
-# Large generated files
-*.parquet
+# Temporary files
+*.tmp
+*.bak
