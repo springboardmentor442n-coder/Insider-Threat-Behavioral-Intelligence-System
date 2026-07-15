@@ -8,7 +8,7 @@ The project performs end-to-end data engineering, feature engineering, anomaly d
 
 # Project Status
 
-**Current Progress:** ~75%
+**Current Progress:** ~50%
 
 ## Completed
 
