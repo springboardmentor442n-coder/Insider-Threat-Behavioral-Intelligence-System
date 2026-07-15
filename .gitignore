@@ -17,8 +17,13 @@ env/
 # Jupyter
 .ipynb_checkpoints/
 
-# Large datasets
-datasets/
+# Ignore generated datasets
+datasets/raw/
+datasets/processed/
+datasets/integrated/
+datasets/features/
+datasets/predictions/
+datasets/exports/
 
 # Temporary files
 *.tmp
