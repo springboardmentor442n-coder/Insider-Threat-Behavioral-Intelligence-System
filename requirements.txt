@@ -1,0 +1,8 @@
+pandas
+numpy
+tabulate
+openpyxl
+matplotlib
+plotly
+tqdm
+pyarrow

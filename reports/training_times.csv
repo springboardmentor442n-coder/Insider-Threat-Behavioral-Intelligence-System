@@ -1,0 +1,8 @@
+Model,Training Time
+Isolation Forest,0.75
+One-Class SVM,0.02
+LOF,2.17
+Elliptic Envelope,0.43
+PCA,0.01
+DBSCAN,0.03
+KMeans,0.17

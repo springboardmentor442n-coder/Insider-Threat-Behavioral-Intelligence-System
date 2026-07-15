@@ -1,0 +1,17 @@
+======================================================================
+MULTI MODEL EVALUATION SUMMARY
+======================================================================
+
+Employees Evaluated : 1,000
+Models Evaluated : 7
+
+Model Comparison
+----------------------------------------------------------------------
+            Model  Suspicious Employees  Average Risk Score  Maximum Risk Score  Minimum Risk Score  Training Time (sec)
+ Isolation Forest                    30            0.436739        7.177084e-01            0.363713                 0.75
+    One-Class SVM                    62           -1.429683       -1.051679e+00           -2.000114                 0.02
+              LOF                    25            1.083555        2.153406e+00            0.955145                 2.17
+Elliptic Envelope                    30        33317.662046        1.261058e+06            4.079519                 0.43
+              PCA                    30            0.037075        9.682145e-01            0.000553                 0.01
+           DBSCAN                   139            0.139000        1.000000e+00            0.000000                 0.03
+           KMeans                    30            3.475882        1.405386e+01            1.110793                 0.17
