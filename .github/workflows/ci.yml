@@ -70,6 +70,7 @@ jobs:
           python -m scripts.ingest_cert
           python -m scripts.build_features
           python -m scripts.ingest_answers
+          python -m scripts.train_detect --save
           python -m scripts.generate_alerts
 
       - name: Run tests
