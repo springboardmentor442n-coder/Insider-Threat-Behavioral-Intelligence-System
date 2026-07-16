@@ -2,6 +2,7 @@ import { Outlet, NavLink, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAuth, ROLE_LABEL } from '../context/AuthContext';
 import './AppShell.css';
+import NotificationBell from './NotificationBell';
 
 // The name of each role's home screen, shown in the breadcrumb + header.
 const WORKSPACE = {
@@ -78,6 +79,7 @@ export default function AppShell() {
           </div>
 
           <div className="shell__user">
+            <NotificationBell />
             <div className="shell__user-meta">
               <div className="shell__user-name">{user?.full_name || user?.email}</div>
               <div className="shell__user-role">{ROLE_LABEL[user?.role] || user?.role}</div>

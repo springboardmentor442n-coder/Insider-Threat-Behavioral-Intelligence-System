@@ -13,6 +13,7 @@ what does a person with forty alerts and a coffee actually need?
 
 from __future__ import annotations
 
+import logging
 from datetime import UTC, datetime
 from typing import Annotated
 
@@ -42,6 +43,8 @@ from backend.app.schemas import (
 )
 
 router = APIRouter(prefix="/api/alerts", tags=["alerts"])
+
+logger = logging.getLogger(__name__)
 
 # Who may CLOSE an alert.
 #
@@ -301,6 +304,16 @@ def escalate(
            detail=f"alert={alert_id} from={was} subject={alert.user_id}", request=request)
     db.commit()
     db.refresh(alert)
+
+    # Notify oversight + the alert's owner that this was escalated. Best-effort:
+    # a notification failure must never break the escalation itself, so it is
+    # wrapped and swallowed - the status change is the thing that has to succeed.
+    try:
+        from backend.app.notifications import on_alert_escalated
+        on_alert_escalated(db, alert=alert, actor_id=current_user.id)
+    except Exception:  # noqa: BLE001 - notification is a side effect, not the action
+        logger.warning("escalation notification failed for alert %s", alert_id)
+
     return alert
 
 

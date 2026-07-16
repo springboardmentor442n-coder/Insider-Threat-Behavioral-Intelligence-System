@@ -153,6 +153,14 @@ export const investigate = {
     api(`/api/investigate/${encodeURIComponent(userId)}/explain?day=${day}`),
 };
 
+export const notifications = {
+  list: (unreadOnly = false) =>
+    api(`/api/notifications?unread_only=${unreadOnly}`),
+  unreadCount: () => api('/api/notifications/unread-count'),
+  markRead: (id) => api(`/api/notifications/${id}/read`, { method: 'POST' }),
+  markAllRead: () => api('/api/notifications/read-all', { method: 'POST' }),
+};
+
 export const entity = {
   analytics: (userId, recentDays = 30) =>
     api(`/api/entity/${encodeURIComponent(userId)}?recent_days=${recentDays}`),

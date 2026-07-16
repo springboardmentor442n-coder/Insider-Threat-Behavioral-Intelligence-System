@@ -595,3 +595,72 @@ class MaliciousEventDay(Base):
     # How many malicious events that day. A day with one wikileaks upload and a day
     # with forty file copies are both "malicious", and they are not the same day.
     event_count: Mapped[int] = mapped_column(Integer, default=0, server_default="0")
+
+
+class NotificationType(str, enum.Enum):
+    """What KIND of event produced a notification. Maps to the spec's five bullets
+    under Module 11: threat alerts, investigation notifications, escalation alerts,
+    compliance notifications, security event updates."""
+
+    THREAT_ALERT = "threat_alert"          # a high/critical alert was raised
+    INVESTIGATION = "investigation"        # an investigation was opened on someone
+    ESCALATION = "escalation"              # an alert was escalated
+    COMPLIANCE = "compliance"              # a compliance-relevant event
+    SECURITY_EVENT = "security_event"      # general security event update
+
+
+class Notification(Base):
+    """A single notification for a single operator.
+
+    Notifications are the delivery layer for events the operators need to KNOW
+    about without going looking - a critical alert fired, an alert they own was
+    escalated. One row per (recipient, event): the same escalation notifies the
+    analyst who owns it and the manager over the queue as two rows, because "read"
+    is per-person.
+
+    The row is the record; DELIVERY (in-app badge, and optionally a webhook) reads
+    from it. That separation means a webhook that is down cannot lose a
+    notification - it is already persisted, and the in-app centre still shows it.
+    """
+
+    __tablename__ = "notifications"
+    __table_args__ = (
+        # The query that backs the bell icon: this user's unread, newest first.
+        Index("ix_notifications_recipient_unread", "recipient_id", "is_read", "created_at"),
+    )
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+
+    # WHO sees it. A security operator (not a CERT employee).
+    recipient_id: Mapped[int] = mapped_column(
+        ForeignKey("security_users.id", ondelete="CASCADE"), index=True
+    )
+
+    type: Mapped[NotificationType] = mapped_column(
+        Enum(NotificationType, native_enum=False, length=30), index=True
+    )
+
+    # Human-readable. Title is the one-line summary; body is the detail.
+    title: Mapped[str] = mapped_column(String(200))
+    body: Mapped[str] = mapped_column(Text, default="", server_default="")
+
+    # The severity of the underlying event, so the UI can colour it. Reuses the
+    # alert severity scale rather than inventing a second one.
+    severity: Mapped[AlertSeverity | None] = mapped_column(
+        Enum(AlertSeverity, native_enum=False, length=20), nullable=True
+    )
+
+    # Optional deep-link target: the subject employee and/or the alert, so clicking
+    # a notification can jump straight to the case. Nullable - a compliance notice
+    # need not point at one person.
+    subject_user_id: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    alert_id: Mapped[int | None] = mapped_column(
+        ForeignKey("alerts.id", ondelete="CASCADE"), nullable=True
+    )
+
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, server_default="false")
+    read_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, server_default=func.now()
+    )
