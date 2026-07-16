@@ -64,3 +64,6 @@ frontend/build/
 Thumbs.db
 desktop.ini
 models/
+# Keep the tiny CI test fixture (the real 32GB CERT data stays ignored above)
+!backend/tests/fixtures/
+!backend/tests/fixtures/**

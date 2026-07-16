@@ -1,0 +1,16 @@
+employee_name,user_id,email,role,business_unit,functional_unit,department,team,supervisor
+User 0,NRM0001,nrm0001@dtaa.com,ComputerProgrammer,1,2 - ResearchAndEngineering,1 - Software,3 - Software,User 0
+User 1,NRM0002,nrm0002@dtaa.com,Salesman,1,2 - ResearchAndEngineering,2 - Sales,3 - Software,User 0
+User 2,NRM0003,nrm0003@dtaa.com,ITAdmin,1,2 - ResearchAndEngineering,3 - Engineering,3 - Software,User 0
+User 3,NRM0004,nrm0004@dtaa.com,HRSpecialist,1,2 - ResearchAndEngineering,4 - HR,3 - Software,User 0
+User 4,NRM0005,nrm0005@dtaa.com,ComputerProgrammer,1,2 - ResearchAndEngineering,1 - Software,3 - Software,User 0
+User 5,NRM0006,nrm0006@dtaa.com,Salesman,1,2 - ResearchAndEngineering,2 - Sales,3 - Software,User 0
+User 6,NRM0007,nrm0007@dtaa.com,ITAdmin,1,2 - ResearchAndEngineering,3 - Engineering,3 - Software,User 0
+User 7,NRM0008,nrm0008@dtaa.com,HRSpecialist,1,2 - ResearchAndEngineering,4 - HR,3 - Software,User 0
+User 8,NRM0009,nrm0009@dtaa.com,ComputerProgrammer,1,2 - ResearchAndEngineering,1 - Software,3 - Software,User 0
+User 9,NRM0010,nrm0010@dtaa.com,Salesman,1,2 - ResearchAndEngineering,2 - Sales,3 - Software,User 0
+User 10,NRM0011,nrm0011@dtaa.com,ITAdmin,1,2 - ResearchAndEngineering,3 - Engineering,3 - Software,User 0
+User 11,NRM0012,nrm0012@dtaa.com,HRSpecialist,1,2 - ResearchAndEngineering,4 - HR,3 - Software,User 0
+User 12,INS0001,ins0001@dtaa.com,ComputerProgrammer,1,2 - ResearchAndEngineering,1 - Software,3 - Software,User 0
+User 13,INS0002,ins0002@dtaa.com,Salesman,1,2 - ResearchAndEngineering,2 - Sales,3 - Software,User 0
+User 14,INS0003,ins0003@dtaa.com,ITAdmin,1,2 - ResearchAndEngineering,3 - Engineering,3 - Software,User 0
