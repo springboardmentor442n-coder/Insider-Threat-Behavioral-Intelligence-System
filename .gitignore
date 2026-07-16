@@ -71,3 +71,5 @@ models/
 # Installer backup files (created by setup scripts, never commit)
 *.bak
 *.bak2
+
+*.bak3

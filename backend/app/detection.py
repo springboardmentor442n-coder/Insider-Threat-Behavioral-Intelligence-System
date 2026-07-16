@@ -968,6 +968,51 @@ def run_detection(db: Session, save_models_to_disk: bool = False) -> dict:
     results["isolation_forest"]["n_features"] = len(iso_cols)
 
     # =====================================================================
+    # 1b. Local Outlier Factor - the SECOND unsupervised detector, and a
+    #     DIAGNOSTIC, not just another model.
+    # =====================================================================
+    #
+    # WHY ADD IT. Isolation Forest scores ~0.008 recall on the real data. The easy
+    # story is "unsupervised is just worse". LOF lets us test a SHARPER hypothesis
+    # about WHY it fails, because the two algorithms define "outlier" differently:
+    #
+    #   Isolation Forest - GLOBAL. A point is anomalous if it is easy to isolate
+    #                      from the WHOLE population with random splits.
+    #   LOF              - LOCAL. A point is anomalous if it sits in a much sparser
+    #                      region than its OWN nearest neighbours - it compares each
+    #                      point only to its local neighbourhood, not the whole set.
+    #
+    # If insiders are missed because they are unusual relative to their LOCAL peers
+    # but not globally extreme, LOF should beat Isolation Forest. If LOF ALSO fails,
+    # that is the stronger, more honest finding: the signal is not accessible to
+    # unsupervised density methods at all on this data, and the supervised approach
+    # is not a preference but a necessity.
+    #
+    # HYPOTHESIS, stated before measuring: LOF will do somewhat better than
+    # Isolation Forest (local beats global for per-user deviation) but will still
+    # fall far short of the supervised model. Whatever actually happens is reported
+    # as measured - see the FINDINGS note that train_detect prints.
+    #
+    # novelty=True so we fit on train and score unseen test rows (the default LOF
+    # only scores its own training set, which would be a leak here).
+    from sklearn.neighbors import LocalOutlierFactor
+
+    lof_contamination = float(np.clip(y_train.mean(), 1e-4, 0.5))
+    n_neighbors = int(min(20, max(5, len(X_train_iso) - 1)))
+    lof = LocalOutlierFactor(
+        n_neighbors=n_neighbors,
+        contamination=lof_contamination,
+        novelty=True,   # fit on train, predict on unseen test - no self-scoring leak
+        n_jobs=-1,
+    )
+    lof.fit(X_train_iso.to_numpy())                       # same deviation features as IF - fair comparison
+    lof_scores = -lof.score_samples(X_test_iso.to_numpy())  # lower = more anomalous -> negate
+    lof_pred = (lof.predict(X_test_iso.to_numpy()) == -1).astype(int)
+    results["local_outlier_factor"] = _metrics(y_test, lof_pred, lof_scores)
+    results["local_outlier_factor"]["n_features"] = len(iso_cols)
+    results["local_outlier_factor"]["n_neighbors"] = n_neighbors
+
+    # =====================================================================
     # 2. XGBoost - supervised
     # =====================================================================
     from xgboost import XGBClassifier
@@ -1086,6 +1131,71 @@ def run_detection(db: Session, save_models_to_disk: bool = False) -> dict:
         f"max F{F_BETA} over {len(val_users)} held-out training users "
         f"(never the test set)"
     )
+
+    # =====================================================================
+    # 2b. LightGBM - the SECOND supervised detector.
+    # =====================================================================
+    #
+    # WHY ADD IT. XGBoost and LightGBM are both gradient-boosted trees, so this is
+    # not a test of a different IDEA the way LOF-vs-IsolationForest is. It is a
+    # fair-comparison question a reviewer will reasonably ask: "you picked XGBoost -
+    # would a different, faster GBM do as well or better on this problem?" The
+    # honest way to answer that is to run it under IDENTICAL conditions - same
+    # features, same class-imbalance handling, same by-user validation split, same
+    # threshold-selection procedure - and report the numbers side by side.
+    #
+    # LightGBM's leaf-wise growth is typically faster and can fit imbalanced data
+    # differently from XGBoost's level-wise growth, so the comparison is not a
+    # foregone conclusion. Whichever wins on the real data, we KEEP BOTH in the
+    # report and pick the operational model on measured PR-AUC, not on reputation.
+    import lightgbm as lgb
+
+    lgbm = lgb.LGBMClassifier(
+        n_estimators=300,
+        max_depth=6,
+        learning_rate=0.1,
+        subsample=0.8,
+        colsample_bytree=0.8,
+        scale_pos_weight=scale_pos_weight,   # same imbalance handling as XGBoost
+        random_state=RANDOM_SEED,
+        n_jobs=-1,
+        verbose=-1,                          # silence LightGBM's per-round chatter
+    )
+    lgbm.fit(X_fit, y_fit)                    # same fit split as XGBoost
+
+    # Choose LightGBM's threshold by the SAME procedure used for XGBoost: maximise
+    # F-beta on the held-out validation users, never the test set. Copying the
+    # method (not the number) is what makes the comparison fair.
+    lgbm_val_proba = lgbm.predict_proba(X_val)[:, 1]
+    lgbm_best_thr, lgbm_best_f = 0.5, -1.0
+    for t in np.linspace(0.01, 0.99, 99):
+        vp = (lgbm_val_proba >= t).astype(int)
+        _, _, fb, _ = precision_recall_fscore_support(
+            y_val, vp, average="binary", beta=F_BETA, zero_division=0
+        )
+        if fb > lgbm_best_f:
+            lgbm_best_f, lgbm_best_thr = fb, t
+    lgbm_threshold = min(max(lgbm_best_thr, 1e-6), 1.0 - 1e-6)
+
+    lgbm_proba = lgbm.predict_proba(X_test)[:, 1]
+    lgbm_pred = (lgbm_proba >= lgbm_threshold).astype(int)
+    results["lightgbm"] = _metrics(y_test, lgbm_pred, lgbm_proba)
+    results["lightgbm"]["scale_pos_weight"] = round(scale_pos_weight, 1)
+    results["lightgbm"]["threshold"] = round(lgbm_threshold, 4)
+
+    # =====================================================================
+    # WHICH SUPERVISED MODEL WINS? Decide on measured PR-AUC (average precision),
+    # the honest headline metric on this imbalance - not on which name is more
+    # fashionable. Recorded so train_detect can report the verdict plainly.
+    # =====================================================================
+    xgb_ap = results["xgboost"].get("pr_auc", 0.0)
+    lgbm_ap = results["lightgbm"].get("pr_auc", 0.0)
+    results["supervised_comparison"] = {
+        "xgboost_pr_auc": xgb_ap,
+        "lightgbm_pr_auc": lgbm_ap,
+        "winner": "xgboost" if xgb_ap >= lgbm_ap else "lightgbm",
+        "margin": round(abs(xgb_ap - lgbm_ap), 4),
+    }
 
     # THE OPERATING CURVE.
     #
