@@ -1,0 +1,114 @@
+.analyst { max-width: 1400px; margin: 0 auto; }
+
+.analyst__header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: var(--sp-5);
+}
+.analyst__title {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--t-2xl); letter-spacing: -0.02em; margin-top: 4px;
+}
+.analyst__ts {
+  display: flex; align-items: center; gap: var(--sp-2);
+  font-size: var(--t-xs); color: var(--text-lo);
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+.analyst__ts-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--signal);
+  box-shadow: 0 0 8px var(--signal); animation: pulse 2s ease-in-out infinite;
+}
+
+/* metrics strip */
+.analyst__metrics {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4);
+  padding: var(--sp-5); margin-bottom: var(--sp-4);
+  background: var(--bg-raised); border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.analyst__metrics-load { grid-column: 1 / -1; }
+
+/* main grid */
+.analyst__grid {
+  display: grid; gap: var(--sp-4);
+  grid-template-columns: 2fr 1fr;
+  grid-template-areas:
+    "trend    breakdown"
+    "watch    queue";
+}
+.analyst__trend { grid-area: trend; }
+.analyst__breakdown { grid-area: breakdown; }
+.analyst__queue { grid-area: queue; }
+.analyst__watch { grid-area: watch; }
+
+/* chart wrappers */
+.chart-wrap { display: flex; flex-direction: column; gap: var(--sp-3); }
+.chart-wrap__meta { font-size: var(--t-sm); color: var(--text-lo); }
+.chart-wrap__meta .mono { color: var(--text-mid); }
+.chart-box { position: relative; height: 220px; }
+.chart-box--tall { height: 280px; }
+
+/* range toggle */
+.rangetoggle { display: flex; gap: 2px; background: var(--bg-inset);
+  padding: 2px; border-radius: var(--r-md); border: 1px solid var(--line); }
+.rangetoggle__btn {
+  padding: 4px 10px; border-radius: var(--r-sm);
+  font-family: var(--font-mono); font-size: var(--t-xs); color: var(--text-lo);
+  transition: all var(--dur-fast);
+}
+.rangetoggle__btn--on { background: var(--bg-raised-2); color: var(--signal); }
+
+/* queue breakdown */
+.queuebreak { display: flex; flex-direction: column; gap: var(--sp-5); }
+.queuebreak__bar {
+  display: flex; height: 10px; border-radius: 100px; overflow: hidden;
+  background: var(--bg-inset); gap: 1px;
+}
+.queuebreak__seg { height: 100%; }
+.queuebreak__seg--critical { background: var(--sev-critical); }
+.queuebreak__seg--high { background: var(--sev-high); }
+.queuebreak__seg--medium { background: var(--sev-medium); }
+.queuebreak__seg--low { background: var(--sev-low); }
+.queuebreak__seg--informational { background: var(--sev-informational); }
+.queuebreak__list { display: flex; flex-direction: column; gap: var(--sp-2); }
+.queuebreak__row { display: flex; align-items: center; justify-content: space-between; }
+.queuebreak__pct { font-size: var(--t-sm); color: var(--text-lo); }
+
+/* watch list */
+.watch { display: flex; flex-direction: column; }
+.watch__row {
+  display: grid; grid-template-columns: 24px 1fr 130px 32px;
+  align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3) 0; border-bottom: 1px solid var(--line);
+}
+.watch__row:last-child { border-bottom: none; }
+.watch__rank { font-size: var(--t-xs); color: var(--text-faint); }
+.watch__uid { font-size: var(--t-sm); font-weight: 600; color: var(--text-hi); }
+.watch__dept { font-size: var(--t-xs); color: var(--text-lo); margin-top: 1px; }
+.watch__meter { display: flex; align-items: center; gap: var(--sp-2); }
+.watch__meter-track {
+  flex: 1; height: 5px; background: var(--bg-inset);
+  border-radius: 100px; overflow: hidden;
+}
+.watch__meter-fill {
+  height: 100%; border-radius: 100px;
+  background: linear-gradient(90deg, var(--sev-medium), var(--sev-critical));
+}
+.watch__score { font-size: var(--t-sm); font-weight: 700; color: var(--text-hi); width: 24px; text-align: right; }
+.watch__count { font-size: var(--t-xs); color: var(--text-lo); text-align: right; }
+
+/* responsive */
+@media (max-width: 1000px) {
+  .analyst__grid { grid-template-columns: 1fr; grid-template-areas:
+    "trend" "breakdown" "watch" "queue"; }
+  .analyst__metrics { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .analyst__metrics { grid-template-columns: 1fr 1fr; gap: var(--sp-3); padding: var(--sp-4); }
+}
+
+/* labelled alert count in watch list */
+.watch__count { display: flex; flex-direction: column; align-items: flex-end; }
+.watch__count-cap {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-faint); margin-top: 1px;
+}

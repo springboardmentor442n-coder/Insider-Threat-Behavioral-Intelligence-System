@@ -1,0 +1,158 @@
+/* ============================================================================
+   ITBIS DESIGN TOKENS - "Forensic Console"
+   ============================================================================
+   The aesthetic is drawn from the analyst's actual world: forensic timelines,
+   signal-vs-noise, evidence under examination. Not a generic dark dashboard.
+
+   - The ground is a deep desaturated slate, cool and near-black but never pure
+     #000 (which reads as cheap neon-terminal). It recedes so data can sit forward.
+   - ONE signal colour - a cool cyan - marks the live, the current, the "attend
+     to this". Used sparingly; if everything is cyan, nothing is.
+   - Severity is a real scale, not decoration: it runs from calm slate up through
+     amber to a hot coral-red, mirroring how a threat actually escalates.
+   - Numerics are monospace. An analyst reads columns of figures; a proportional
+     font makes them dance. JetBrains Mono holds them still.
+   ============================================================================ */
+
+:root {
+  /* --- ground & surfaces (deep slate, layered) --- */
+  --bg-void:        #0a0e14;   /* the deepest layer - app background */
+  --bg-base:        #0e131b;   /* default surface */
+  --bg-raised:      #141b26;   /* cards, panels */
+  --bg-raised-2:    #1a2230;   /* hover, nested surfaces */
+  --bg-inset:       #080b10;   /* wells, code, inputs */
+
+  /* --- lines --- */
+  --line:           #1e2836;   /* default hairline */
+  --line-strong:    #2a3646;   /* emphasised divider */
+  --line-signal:    #164e5b;   /* cyan-tinted line on active elements */
+
+  /* --- text --- */
+  --text-hi:        #e7edf5;   /* primary */
+  --text-mid:       #9fb0c3;   /* secondary */
+  --text-lo:        #5f7186;   /* tertiary, captions */
+  --text-faint:     #3d4c5e;   /* disabled, watermarks */
+
+  /* --- the ONE signal colour --- */
+  --signal:         #22d3ee;   /* cyan - live, current, primary action */
+  --signal-dim:     #0e7490;   /* pressed / muted signal */
+  --signal-glow:    rgba(34, 211, 238, 0.15);
+
+  /* --- severity scale (calm -> hot) - these map to AlertSeverity exactly --- */
+  --sev-informational: #64748b;  /* slate - context only */
+  --sev-low:           #38bdf8;  /* sky - noted */
+  --sev-medium:        #fbbf24;  /* amber - watch */
+  --sev-high:          #fb923c;  /* orange - act soon */
+  --sev-critical:      #f43f5e;  /* coral-red - act now */
+
+  --sev-informational-bg: rgba(100, 116, 139, 0.12);
+  --sev-low-bg:           rgba(56, 189, 248, 0.12);
+  --sev-medium-bg:        rgba(251, 191, 36, 0.12);
+  --sev-high-bg:          rgba(251, 146, 60, 0.12);
+  --sev-critical-bg:      rgba(244, 63, 94, 0.14);
+
+  /* --- semantic --- */
+  --ok:             #34d399;   /* healthy, resolved-benign */
+  --warn:           #fbbf24;
+  --danger:         #f43f5e;
+
+  /* --- type --- */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', 'SF Mono', monospace;
+
+  /* --- type scale --- */
+  --t-xs:   0.6875rem;  /* 11px - labels, eyebrows */
+  --t-sm:   0.8125rem;  /* 13px - captions, meta */
+  --t-base: 0.9375rem;  /* 15px - body */
+  --t-lg:   1.125rem;   /* 18px */
+  --t-xl:   1.5rem;     /* 24px */
+  --t-2xl:  2rem;       /* 32px */
+  --t-3xl:  2.75rem;    /* 44px - hero numerics */
+
+  /* --- spacing --- */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px; --sp-4: 16px;
+  --sp-5: 24px; --sp-6: 32px; --sp-7: 48px; --sp-8: 64px;
+
+  /* --- radius (restrained - this is instrumentation, not a consumer app) --- */
+  --r-sm: 4px;  --r-md: 8px;  --r-lg: 12px; --r-xl: 16px;
+
+  /* --- shadow & glow --- */
+  --shadow-panel: 0 1px 2px rgba(0,0,0,0.4), 0 8px 24px rgba(0,0,0,0.3);
+  --shadow-float: 0 12px 48px rgba(0,0,0,0.5);
+
+  /* --- motion --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast: 140ms;
+  --dur-mid: 260ms;
+  --dur-slow: 480ms;
+}
+
+/* ============================================================================
+   RESET
+   ============================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--t-base);
+  line-height: 1.5;
+  color: var(--text-hi);
+  background: var(--bg-void);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* the void has a faint grid - like a forensic light table. Barely there. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 120% 80% at 50% 0%, black 20%, transparent 75%);
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: inherit; }
+
+::selection { background: var(--signal-glow); color: var(--text-hi); }
+
+/* scrollbar - thin, unobtrusive */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bg-void); }
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 10px;
+  border: 2px solid var(--bg-void);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* reduced motion - respected, not optional */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --- shared utility primitives --- */
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--t-xs);
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}

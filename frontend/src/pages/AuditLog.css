@@ -1,0 +1,40 @@
+.alog { max-width: 1400px; margin: 0 auto; }
+.alog__head { margin-bottom: var(--sp-5); }
+.alog__title { font-family: var(--font-display); font-weight: 600; font-size: var(--t-2xl); letter-spacing: -0.02em; margin-top: 4px; }
+.alog__filter {
+  background: var(--bg-inset); color: var(--text-mid); border: 1px solid var(--line-strong);
+  border-radius: var(--r-md); padding: 6px 10px; font-size: var(--t-sm); font-family: var(--font-mono); cursor: pointer;
+}
+.alog__filter:focus { outline: none; border-color: var(--signal-dim); }
+
+.alogtable { display: flex; flex-direction: column; }
+.alogtable__head, .alogrow {
+  display: grid; grid-template-columns: 190px 1fr 1fr 120px 130px; align-items: center; gap: var(--sp-3);
+}
+.alogtable__head {
+  padding: 0 0 var(--sp-3); border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-lo);
+}
+.alogtable__body { display: flex; flex-direction: column; }
+.alogrow { padding: var(--sp-3) 0; border-bottom: 1px solid var(--line); }
+.alogrow__action { font-family: var(--font-mono); font-size: var(--t-xs); font-weight: 500; padding: 3px 8px; border-radius: var(--r-sm); width: fit-content; border: 1px solid transparent; }
+.alogrow__action--auth { color: var(--text-mid); background: var(--bg-raised-2); border-color: var(--line-strong); }
+.alogrow__action--alert { color: var(--signal); background: var(--signal-glow); border-color: var(--line-signal); }
+.alogrow__action--user { color: var(--sev-medium); background: var(--sev-medium-bg); border-color: rgba(251,191,36,0.2); }
+.alogrow__action--fail { color: var(--sev-critical); background: var(--sev-critical-bg); border-color: rgba(244,63,94,0.2); }
+.alogrow__actor { display: flex; flex-direction: column; }
+.alogrow__actor-name { font-size: var(--t-sm); color: var(--text-hi); font-weight: 500; }
+.alogrow__actor-email { font-size: var(--t-xs); color: var(--text-lo); }
+.alogrow__detail { font-size: var(--t-sm); color: var(--text-mid); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.alogrow__ip { font-size: var(--t-xs); color: var(--text-lo); }
+.alogrow__time { font-size: var(--t-xs); color: var(--text-mid); text-align: right; }
+
+.alog__pager { display: flex; align-items: center; justify-content: center; gap: var(--sp-4); padding-top: var(--sp-5); }
+.alog__pageinfo { font-size: var(--t-sm); color: var(--text-lo); }
+
+@media (max-width: 1000px) {
+  .alogtable__head, .alogrow { grid-template-columns: 160px 1fr 110px; }
+  .alogtable__head > :nth-child(3), .alogrow__detail,
+  .alogtable__head > :nth-child(4), .alogrow__ip { display: none; }
+}

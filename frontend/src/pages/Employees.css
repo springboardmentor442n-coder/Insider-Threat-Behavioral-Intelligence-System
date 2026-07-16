@@ -1,0 +1,43 @@
+.emp { max-width: 1400px; margin: 0 auto; }
+.emp__head { margin-bottom: var(--sp-5); }
+.emp__title { font-family: var(--font-display); font-weight: 600; font-size: var(--t-2xl); letter-spacing: -0.02em; margin-top: 4px; }
+
+.emp__controls { display: flex; gap: var(--sp-3); }
+.emp__search {
+  width: 220px; padding: 7px 12px; background: var(--bg-inset); color: var(--text-hi);
+  border: 1px solid var(--line-strong); border-radius: var(--r-md); font-size: var(--t-sm);
+}
+.emp__search:focus { outline: none; border-color: var(--signal-dim); }
+.emp__dept {
+  background: var(--bg-inset); color: var(--text-mid);
+  border: 1px solid var(--line-strong); border-radius: var(--r-md);
+  padding: 7px 10px; font-size: var(--t-sm); cursor: pointer;
+}
+.emp__dept:focus { outline: none; border-color: var(--signal-dim); }
+
+.emptable { display: flex; flex-direction: column; }
+.emptable__head, .emprow {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr 0.8fr 0.9fr; align-items: center; gap: var(--sp-3);
+}
+.emptable__head {
+  padding: 0 var(--sp-2) var(--sp-3); border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono); font-size: var(--t-xs); text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--text-lo);
+}
+.emptable__body { display: flex; flex-direction: column; max-height: 640px; overflow-y: auto; }
+.emprow {
+  padding: var(--sp-3) var(--sp-2); border-bottom: 1px solid var(--line);
+  text-align: left; transition: background var(--dur-fast); border-radius: var(--r-sm);
+}
+.emprow:hover { background: var(--bg-raised-2); }
+.emprow__id { display: flex; flex-direction: column; }
+.emprow__uid { font-size: var(--t-sm); font-weight: 600; color: var(--signal); }
+.emprow__name { font-size: var(--t-xs); color: var(--text-lo); margin-top: 1px; }
+.emprow__role, .emprow__dept, .emprow__team, .emprow__sup { font-size: var(--t-sm); color: var(--text-mid); }
+.emptable__more { padding: var(--sp-4) var(--sp-2); font-size: var(--t-xs); color: var(--text-faint); }
+
+@media (max-width: 900px) {
+  .emptable__head, .emprow { grid-template-columns: 1.3fr 1fr 1fr; }
+  .emptable__head > :nth-child(4), .emprow__team,
+  .emptable__head > :nth-child(5), .emprow__sup { display: none; }
+}
