@@ -14,7 +14,15 @@ from slowapi.middleware import SlowAPIMiddleware
 from backend.app.config import get_settings
 from backend.app.database import Base, check_db_connection, engine
 from backend.app.ratelimit import limiter
-from backend.app.routers import alerts, auth, data, investigate, users
+from backend.app.routers import (
+    alerts,
+    audit,
+    auth,
+    dashboard,
+    data,
+    investigate,
+    users,
+)
 from backend.app.schema import schema_is_current
 
 settings = get_settings()
@@ -91,6 +99,8 @@ app.include_router(data.router)
 app.include_router(users.router)
 app.include_router(alerts.router)
 app.include_router(investigate.router)
+app.include_router(dashboard.router)
+app.include_router(audit.router)
 
 
 @app.get("/", tags=["meta"])
