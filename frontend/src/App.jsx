@@ -9,6 +9,7 @@ import AdminDashboard from './pages/dashboards/AdminDashboard';
 import AlertQueue from './pages/AlertQueue';
 import Investigations from './pages/Investigations';
 import Employees from './pages/Employees';
+import EntityAnalytics from './pages/EntityAnalytics';
 import AuditLog from './pages/AuditLog';
 import Loader from './components/Loader';
 
@@ -65,6 +66,8 @@ export default function App() {
         <Route path="investigations" element={<Investigations />} />
         <Route path="investigations/:userId" element={<Investigations />} />
         <Route path="employees" element={<Employees />} />
+        <Route path="entity" element={<EntityAnalytics />} />
+        <Route path="entity/:userId" element={<EntityAnalytics />} />
         <Route path="audit" element={<AdminOnly><AuditLog /></AdminOnly>} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

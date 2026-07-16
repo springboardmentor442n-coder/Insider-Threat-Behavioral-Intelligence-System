@@ -153,6 +153,11 @@ export const investigate = {
     api(`/api/investigate/${encodeURIComponent(userId)}/explain?day=${day}`),
 };
 
+export const entity = {
+  analytics: (userId, recentDays = 30) =>
+    api(`/api/entity/${encodeURIComponent(userId)}?recent_days=${recentDays}`),
+};
+
 export const audit = {
   list: (params = {}) => {
     const q = new URLSearchParams(params).toString();

@@ -15,6 +15,7 @@ from backend.app.config import get_settings
 from backend.app.database import Base, check_db_connection, engine
 from backend.app.ratelimit import limiter
 from backend.app.routers import (
+    entity,
     alerts,
     audit,
     auth,
@@ -101,6 +102,7 @@ app.include_router(alerts.router)
 app.include_router(investigate.router)
 app.include_router(dashboard.router)
 app.include_router(audit.router)
+app.include_router(entity.router)
 
 
 @app.get("/", tags=["meta"])

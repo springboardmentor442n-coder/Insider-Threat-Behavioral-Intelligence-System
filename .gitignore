@@ -67,3 +67,7 @@ models/
 # Keep the tiny CI test fixture (the real 32GB CERT data stays ignored above)
 !backend/tests/fixtures/
 !backend/tests/fixtures/**
+
+# Installer backup files (created by setup scripts, never commit)
+*.bak
+*.bak2

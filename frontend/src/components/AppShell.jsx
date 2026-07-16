@@ -17,13 +17,14 @@ const NAV = [
   { to: '/alerts', label: 'Alert Queue', glyph: '▲' },
   { to: '/investigations', label: 'Investigations', glyph: '◎' },
   { to: '/employees', label: 'Employees', glyph: '⬡' },
+  { to: '/entity', label: 'Entity Analytics', glyph: '◈' },
   { to: '/audit', label: 'Audit Log', glyph: '⧉', roles: ['administrator'] },
 ];
 
 // Human label for the current route, for the breadcrumb.
 const ROUTE_LABEL = {
   '/': 'Overview', '/alerts': 'Alert Queue', '/investigations': 'Investigations',
-  '/employees': 'Employees', '/audit': 'Audit Log',
+  '/employees': 'Employees', '/entity': 'Entity Analytics', '/audit': 'Audit Log',
 };
 
 export default function AppShell() {
