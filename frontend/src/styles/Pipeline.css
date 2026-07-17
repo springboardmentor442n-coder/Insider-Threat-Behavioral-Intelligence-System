@@ -1,0 +1,109 @@
+.pipeline-container {
+    display: flex;
+    background: #0f172a;
+    min-height: 100vh;
+    color: white;
+}
+
+.pipeline-content {
+    flex: 1;
+    padding: 40px;
+}
+
+.pipeline-content h1 {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.pipeline-content p {
+    color: #cbd5e1;
+    margin-bottom: 25px;
+}
+
+.upload-box {
+    background: #1e293b;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+}
+
+.upload-box input {
+    margin: 20px 0;
+}
+
+.run-btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.run-btn:hover {
+    background: #1d4ed8;
+}
+
+.result-grid {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.result-card {
+    background: #1e293b;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+.result-card h2 {
+    margin-bottom: 10px;
+}
+
+.result-card p {
+    font-size: 28px;
+    color: #38bdf8;
+    font-weight: bold;
+}
+.success-message {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #14532d;
+    color: #bbf7d0;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 6px solid #22c55e;
+    font-weight: bold;
+    animation: fadeIn 0.4s ease-in;
+}
+
+.error-message {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background: #7f1d1d;
+    color: #fecaca;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 6px solid #ef4444;
+    font-weight: bold;
+    animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.run-btn:disabled {
+    background: #64748b;
+    cursor: not-allowed;
+    opacity: 0.8;
+}

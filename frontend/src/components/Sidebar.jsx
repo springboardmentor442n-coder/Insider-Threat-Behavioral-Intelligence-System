@@ -42,6 +42,13 @@ function Sidebar() {
         📊 Behavior Profile
       </Link>
 
+      <Link
+        to="/pipeline"
+        className={location.pathname === "/pipeline" ? "active" : ""}
+      >
+        ⚙️ Pipeline
+      </Link>
+
       <button className="logout-btn" onClick={logout}>
         🚪 Logout
       </button>

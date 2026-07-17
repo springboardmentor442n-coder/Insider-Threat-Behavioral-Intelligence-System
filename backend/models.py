@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Float
-from config import Base
+from backend.config import Base
 
 
 class User(Base):
@@ -34,7 +34,6 @@ class Prediction(Base):
     unique_pc_count = Column(Integer)
     is_weekend = Column(Integer)
     hour = Column(Integer)
-
     prediction = Column(Integer)
     risk_level = Column(String)
     confidence = Column(Float)

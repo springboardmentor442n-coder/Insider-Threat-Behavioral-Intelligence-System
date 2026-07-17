@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from models import User, Employee, Prediction
+from backend.models import User, Employee, Prediction
 
 
 # -----------------------------
@@ -171,11 +171,15 @@ def save_prediction(
 
     return new_prediction
 
+def save_predictions_bulk(db, predictions):
+    db.bulk_save_objects(predictions)
+    db.commit()
 
 def get_predictions(db: Session):
     return (
         db.query(Prediction)
         .order_by(Prediction.id.desc())
+        .limit(100)
         .all()
     )
 
@@ -360,7 +364,7 @@ def get_behavior_profiles(db: Session):
     return profiles
 
 from sqlalchemy import func
-from models import Employee, Prediction
+from backend.models import Employee, Prediction
 
 def get_behavior_profiles(db):
     employees = db.query(Employee).all()
@@ -435,3 +439,22 @@ def get_behavior_profiles(db):
         })
 
     return profiles
+
+from backend.models import Prediction
+
+
+def save_predictions_bulk(db: Session, predictions):
+    """
+    Save multiple HIGH-risk predictions to the database
+    in a single transaction.
+    """
+
+    if not predictions:
+        return
+
+    db.bulk_save_objects(predictions)
+    db.commit()
+
+def clear_predictions(db: Session):
+    db.query(Prediction).delete()
+    db.commit()

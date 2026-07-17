@@ -1,24 +1,30 @@
 import pandas as pd
+from pathlib import Path
 
-# Load raw logon dataset
-df = pd.read_csv("dataset/raw/logon.csv")
 
-# Convert date column to datetime
-df["date"] = pd.to_datetime(df["date"])
+def preprocess_logon(input_file, output_file):
+    # Load dataset
+    df = pd.read_csv(input_file)
 
-# Extract useful features
-df["hour"] = df["date"].dt.hour
-df["day"] = df["date"].dt.day_name()
+    # Convert date column to datetime
+    df["date"] = pd.to_datetime(df["date"])
 
-# Weekend feature
-df["is_weekend"] = df["day"].isin(["Saturday", "Sunday"]).astype(int)
+    # Extract features
+    df["hour"] = df["date"].dt.hour
+    df["day"] = df["date"].dt.day_name()
 
-# Keep only login events
-df = df[df["activity"] == "Logon"]
+    # Weekend feature
+    df["is_weekend"] = df["day"].isin(["Saturday", "Sunday"]).astype(int)
 
-# Save processed dataset
-output_path = "dataset/processed/logon_processed.csv"
-df.to_csv(output_path, index=False)
+    # Keep only login events
+    df = df[df["activity"] == "Logon"]
 
-print("Processed dataset saved successfully!")
-print(df.head())
+    # Create output folder if needed
+    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+
+    # Save processed file
+    df.to_csv(output_file, index=False)
+
+    print(f"Processed dataset saved to {output_file}")
+
+    return output_file

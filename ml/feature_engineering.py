@@ -1,79 +1,53 @@
 import pandas as pd
 from pathlib import Path
 
-PROCESSED_DATA = Path("dataset/processed")
 
-file_path = PROCESSED_DATA / "logon_processed.csv"
+def generate_features(input_file, output_file):
+    print("=" * 50)
+    print("FEATURE ENGINEERING")
+    print("=" * 50)
 
-print("=" * 50)
-print("FEATURE ENGINEERING")
-print("=" * 50)
+    print("\nLoading processed dataset...")
 
-print("\nLoading processed dataset...")
+    df = pd.read_csv(input_file)
 
-df = pd.read_csv(file_path)
+    print("Dataset Loaded Successfully!")
 
-print("Dataset Loaded Successfully!")
+    # Login count for each user
+    user_login_count = (
+        df.groupby("user")
+          .size()
+          .reset_index(name="login_count")
+    )
 
-print("\nFirst 5 Rows:")
-print(df.head())
+    df = df.merge(user_login_count, on="user")
 
-print("\nDataset Shape:")
-print(df.shape)
+    # Number of unique PCs used by each user
+    user_pc_count = (
+        df.groupby("user")["pc"]
+          .nunique()
+          .reset_index(name="unique_pc_count")
+    )
 
-print("\nCalculating login count for each user...")
+    df = df.merge(user_pc_count, on="user")
 
-user_login_count = (
-    df.groupby("user")
-      .size()
-      .reset_index(name="login_count")
-)
+    # Weekend feature
+    df["is_weekend"] = df["day"].isin(
+        ["Saturday", "Sunday"]
+    ).astype(int)
 
-print(user_login_count.head())
+    # Late night login feature
+    df["late_night_login"] = (
+        (df["hour"] >= 22) |
+        (df["hour"] <= 5)
+    ).astype(int)
 
-df = df.merge(user_login_count, on="user")
+    # Create output folder if needed
+    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
 
-print("\nDataset after adding login_count:")
-print(df.head())
+    # Save engineered dataset
+    df.to_csv(output_file, index=False)
 
-print("\nCalculating number of PCs used by each user...")
+    print(f"\nFeature engineered dataset saved to {output_file}")
 
-user_pc_count = (
-    df.groupby("user")["pc"]
-      .nunique()
-      .reset_index(name="unique_pc_count")
-)
-
-df = df.merge(user_pc_count, on="user")
-
-print("\nUnique PCs used:")
-print(df[["user", "unique_pc_count"]].head())
-
-print("\nCreating weekend login feature...")
-
-df["is_weekend"] = df["day"].isin(
-    ["Saturday", "Sunday"]
-).astype(int)
-
-print(df[["day", "is_weekend"]].head())
-
-print("\nCreating suspicious login hour feature...")
-
-df["late_night_login"] = (
-    (df["hour"] >= 22) |
-    (df["hour"] <= 5)
-).astype(int)
-
-print(df[["hour", "late_night_login"]].head())
-
-engineered_file = PROCESSED_DATA / "logon_features.csv"
-
-df.to_csv(engineered_file, index=False)
-
-print("\nFeature engineered dataset saved successfully!")
-
-print("\nFinal Dataset Shape:")
-print(df.shape)
-
-print("\nFinal Columns:")
-print(df.columns.tolist())
+    return output_file

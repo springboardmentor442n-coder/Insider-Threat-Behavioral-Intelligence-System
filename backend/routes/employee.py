@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from config import get_db
-from crud import (
+from backend.config import get_db
+from backend.crud import (
     create_employee,
     get_employees,
     get_employee,
@@ -10,7 +10,7 @@ from crud import (
     delete_employee,
 )
 
-from schemas import EmployeeCreate
+from backend.schemas import EmployeeCreate
 
 router = APIRouter()
 
