@@ -1,4 +1,6 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+
 from backend.models import User, Employee, Prediction
 
 
@@ -6,19 +8,19 @@ from backend.models import User, Employee, Prediction
 # USER CRUD
 # -----------------------------
 
-def create_user(db, username, email, department, password):
-    new_user = User(
+def create_user(db: Session, username, email, department, password):
+    user = User(
         username=username,
         email=email,
         department=department,
-        password=password,
+        password=password
     )
 
-    db.add(new_user)
+    db.add(user)
     db.commit()
-    db.refresh(new_user)
+    db.refresh(user)
 
-    return new_user
+    return user
 
 
 def get_users(db: Session):
@@ -26,50 +28,79 @@ def get_users(db: Session):
 
 
 def get_user(db: Session, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+    return (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
 
 
-def update_user(db, user_id, username, email, department, password):
-    user = db.query(User).filter(User.id == user_id).first()
+def update_user(
+    db: Session,
+    user_id,
+    username,
+    email,
+    department,
+    password
+):
 
-    if user:
-        user.username = username
-        user.email = email
-        user.department = department
-        user.password = password
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
 
-        db.commit()
-        db.refresh(user)
+    if not user:
+        return None
+
+    user.username = username
+    user.email = email
+    user.department = department
+    user.password = password
+
+    db.commit()
+    db.refresh(user)
 
     return user
 
 
-def delete_user(db, user_id):
-    user = db.query(User).filter(User.id == user_id).first()
+def delete_user(db: Session, user_id):
 
-    if user:
-        db.delete(user)
-        db.commit()
+    user = (
+        db.query(User)
+        .filter(User.id == user_id)
+        .first()
+    )
 
-    return {"message": "User deleted"}
+    if not user:
+        return None
+
+    db.delete(user)
+    db.commit()
+
+    return {"message": "User deleted successfully"}
 
 
 def login_user(db: Session, username: str):
-    return db.query(User).filter(User.username == username).first()
 
-
+    return (
+        db.query(User)
+        .filter(User.username == username)
+        .first()
+    )
 # -----------------------------
 # EMPLOYEE CRUD
 # -----------------------------
 
 def create_employee(
-    db,
+    db: Session,
     employee_id,
     name,
     department,
     designation,
     email,
 ):
+
     employee = Employee(
         employee_id=employee_id,
         name=name,
@@ -86,57 +117,67 @@ def create_employee(
 
 
 def get_employees(db: Session):
-    return db.query(Employee).all()
+
+    return (
+        db.query(Employee)
+        .order_by(Employee.id)
+        .all()
+    )
 
 
 def get_employee(db: Session, employee_id: int):
+
     return (
         db.query(Employee)
         .filter(Employee.id == employee_id)
         .first()
     )
-# -----------------------------
-# UPDATE / DELETE EMPLOYEE
-# -----------------------------
+
 
 def update_employee(
-    db,
+    db: Session,
     employee_id,
     name,
     department,
     designation,
     email,
 ):
+
     employee = (
         db.query(Employee)
         .filter(Employee.id == employee_id)
         .first()
     )
 
-    if employee:
-        employee.name = name
-        employee.department = department
-        employee.designation = designation
-        employee.email = email
+    if not employee:
+        return None
 
-        db.commit()
-        db.refresh(employee)
+    employee.name = name
+    employee.department = department
+    employee.designation = designation
+    employee.email = email
+
+    db.commit()
+    db.refresh(employee)
 
     return employee
 
 
-def delete_employee(db, employee_id):
+def delete_employee(db: Session, employee_id):
+
     employee = (
         db.query(Employee)
         .filter(Employee.id == employee_id)
         .first()
     )
 
-    if employee:
-        db.delete(employee)
-        db.commit()
+    if not employee:
+        return None
 
-    return {"message": "Employee deleted"}
+    db.delete(employee)
+    db.commit()
+
+    return {"message": "Employee deleted successfully"}
 
 
 # -----------------------------
@@ -144,7 +185,7 @@ def delete_employee(db, employee_id):
 # -----------------------------
 
 def save_prediction(
-    db,
+    db: Session,
     employee_id,
     login_count,
     unique_pc_count,
@@ -154,6 +195,7 @@ def save_prediction(
     risk_level,
     confidence,
 ):
+
     new_prediction = Prediction(
         employee_id=employee_id,
         login_count=login_count,
@@ -171,30 +213,107 @@ def save_prediction(
 
     return new_prediction
 
-def save_predictions_bulk(db, predictions):
+
+def save_predictions_bulk(db: Session, predictions):
+    """
+    Save multiple predictions in one transaction.
+    """
+
+    if not predictions:
+        return
+
     db.bulk_save_objects(predictions)
     db.commit()
 
+
+def clear_predictions(db: Session):
+    """
+    Remove all prediction records.
+    Used before importing a fresh CERT dataset.
+    """
+
+    db.query(Prediction).delete()
+    db.commit()
+
+
 def get_predictions(db: Session):
-    return (
+
+    predictions = (
         db.query(Prediction)
         .order_by(Prediction.id.desc())
-        .limit(100)
+        .limit(1000)
         .all()
     )
 
+    results = []
 
-def get_prediction(db: Session, prediction_id: int):
+    for prediction in predictions:
+
+        employee = (
+            db.query(Employee)
+            .filter(
+                Employee.employee_id == prediction.employee_id
+            )
+            .first()
+        )
+
+        results.append({
+
+            "prediction_id": prediction.id,
+
+            "employee_id": prediction.employee_id,
+
+            "employee_name":
+                employee.name if employee else prediction.employee_id,
+
+            "department":
+                employee.department if employee else "Unknown",
+
+            "designation":
+                employee.designation if employee else "Employee",
+
+            "login_count":
+                prediction.login_count,
+
+            "unique_pc_count":
+                prediction.unique_pc_count,
+
+            "hour":
+                prediction.hour,
+
+            "is_weekend":
+                prediction.is_weekend,
+
+            "prediction":
+                prediction.prediction,
+
+            "risk_level":
+                prediction.risk_level,
+
+            "confidence":
+                round(prediction.confidence, 2)
+
+        })
+
+    return results
+
+
+def get_prediction(
+    db: Session,
+    prediction_id: int
+):
+
     return (
         db.query(Prediction)
         .filter(Prediction.id == prediction_id)
         .first()
     )
 # -----------------------------
-# DASHBOARD
+# DASHBOARD STATISTICS
 # -----------------------------
 
 def get_dashboard_stats(db: Session):
+
     total_employees = db.query(Employee).count()
 
     total_predictions = db.query(Prediction).count()
@@ -211,45 +330,69 @@ def get_dashboard_stats(db: Session):
         .count()
     )
 
+    average_confidence = (
+        db.query(func.avg(Prediction.confidence))
+        .scalar()
+    )
+
+    average_confidence = round(
+        average_confidence or 0,
+        2
+    )
+
+    recent_alerts = (
+        db.query(Prediction)
+        .filter(Prediction.risk_level == "HIGH")
+        .order_by(Prediction.id.desc())
+        .limit(10)
+        .count()
+    )
+
     return {
+
         "total_employees": total_employees,
+
         "total_predictions": total_predictions,
+
         "high_risk": high_risk,
+
         "low_risk": low_risk,
+
+        "average_confidence": average_confidence,
+
+        "recent_alerts": recent_alerts
+
     }
 
-
 # -----------------------------
-# DASHBOARD CHART DATA
+# DASHBOARD CHARTS
 # -----------------------------
 
 def get_department_statistics(db: Session):
-    employees = db.query(Employee).all()
 
-    department_count = {}
-
-    for employee in employees:
-        department = employee.department
-
-        if department in department_count:
-            department_count[department] += 1
-        else:
-            department_count[department] = 1
-
-    result = []
-
-    for department, count in department_count.items():
-        result.append(
-            {
-                "department": department,
-                "employees": count,
-            }
+    departments = (
+        db.query(
+            Employee.department,
+            func.count(Employee.id)
         )
+        .group_by(Employee.department)
+        .all()
+    )
 
-    return result
+    return [
+
+        {
+            "department": dept,
+            "employees": count
+        }
+
+        for dept, count in departments
+
+    ]
 
 
 def get_risk_distribution(db: Session):
+
     high = (
         db.query(Prediction)
         .filter(Prediction.risk_level == "HIGH")
@@ -263,21 +406,48 @@ def get_risk_distribution(db: Session):
     )
 
     return [
+
         {
-            "name": "Safe",
-            "value": low,
+            "name": "High Risk",
+            "value": high
         },
+
         {
-            "name": "Risk",
-            "value": high,
-        },
+            "name": "Low Risk",
+            "value": low
+        }
+
     ]
+
+
+def get_login_hour_distribution(db: Session):
+
+    hours = []
+
+    for hour in range(24):
+
+        count = (
+            db.query(Prediction)
+            .filter(Prediction.hour == hour)
+            .count()
+        )
+
+        hours.append({
+
+            "hour": hour,
+
+            "count": count
+
+        })
+
+    return hours
 
 # -----------------------------
 # BEHAVIOR PROFILE
 # -----------------------------
 
 def get_behavior_profiles(db: Session):
+
     employees = db.query(Employee).all()
 
     profiles = []
@@ -286,175 +456,422 @@ def get_behavior_profiles(db: Session):
 
         predictions = (
             db.query(Prediction)
-            .filter(Prediction.employee_id == employee.employee_id)
+            .filter(
+                Prediction.employee_id == employee.employee_id
+            )
             .all()
         )
 
-        if len(predictions) == 0:
+        # No activity found
+        if not predictions:
 
             profiles.append({
+
                 "employee_id": employee.employee_id,
+
                 "name": employee.name,
+
                 "department": employee.department,
+
+                "designation": employee.designation,
+
                 "avg_login": 0,
+
                 "avg_devices": 0,
+
                 "avg_hour": 0,
-                "weekend_activity": "No Data",
+
+                "weekend_activity": 0,
+
+                "risk_score": 0,
+
                 "behavior_score": 100,
-                "status": "Normal"
+
+                "status": "No Activity"
+
             })
 
             continue
 
-        avg_login = sum(
-            p.login_count for p in predictions
-        ) / len(predictions)
+        # --------------------------
+        # Behaviour Statistics
+        # --------------------------
 
-        avg_devices = sum(
-            p.unique_pc_count for p in predictions
-        ) / len(predictions)
+        avg_login = (
+            sum(p.login_count for p in predictions)
+            / len(predictions)
+        )
 
-        avg_hour = sum(
-            p.hour for p in predictions
-        ) / len(predictions)
+        avg_devices = (
+            sum(p.unique_pc_count for p in predictions)
+            / len(predictions)
+        )
+
+        avg_hour = (
+            sum(p.hour for p in predictions)
+            / len(predictions)
+        )
 
         weekend_count = sum(
-            p.is_weekend for p in predictions
+            p.is_weekend
+            for p in predictions
         )
 
         high_risk = sum(
-            1 for p in predictions
+
+            1
+
+            for p in predictions
+
             if p.risk_level == "HIGH"
+
         )
 
-        score = 100
+        # --------------------------
+        # Risk Score
+        # --------------------------
 
-        score -= high_risk * 20
+        risk_score = 0
 
+        # High-risk prediction ratio
+        risk_score += (
+            high_risk / len(predictions)
+        ) * 40
+
+        # Heavy login activity
         if avg_login > 200:
-            score -= 10
+
+            risk_score += 20
+
+        elif avg_login > 100:
+
+            risk_score += 10
+
+        # Multiple devices
 
         if avg_devices > 5:
-            score -= 10
 
-        if avg_hour > 20 or avg_hour < 6:
-            score -= 10
+            risk_score += 15
 
-        score = max(score, 0)
+        elif avg_devices > 2:
 
-        if score >= 80:
-            status = "Normal"
-        elif score >= 60:
-            status = "Monitor"
+            risk_score += 8
+
+        # Night logins
+
+        if avg_hour >= 22 or avg_hour <= 5:
+
+            risk_score += 15
+
+        # Weekend activity
+
+        if weekend_count > len(predictions) * 0.30:
+
+            risk_score += 10
+
+        risk_score = round(
+
+            min(risk_score, 100),
+
+            2
+
+        )
+
+        behavior_score = round(
+
+            100 - risk_score,
+
+            2
+
+        )
+
+        # --------------------------
+        # Risk Level
+        # --------------------------
+
+        if risk_score >= 80:
+
+            status = "Critical"
+
+        elif risk_score >= 60:
+
+            status = "High"
+
+        elif risk_score >= 40:
+
+            status = "Medium"
+
         else:
-            status = "Suspicious"
+
+            status = "Low"
 
         profiles.append({
+
             "employee_id": employee.employee_id,
             "name": employee.name,
             "department": employee.department,
+            "designation": employee.designation,
             "avg_login": round(avg_login, 2),
             "avg_devices": round(avg_devices, 2),
             "avg_hour": round(avg_hour, 2),
             "weekend_activity": weekend_count,
-            "behavior_score": score,
+            "risk_score": risk_score,
+            "behavior_score": behavior_score,
             "status": status
+
         })
+
+    profiles.sort(
+
+        key=lambda x: x["risk_score"],
+
+        reverse=True
+
+    )
 
     return profiles
 
-from sqlalchemy import func
-from backend.models import Employee, Prediction
+# -----------------------------
+# TOP HIGH RISK EMPLOYEES
+# -----------------------------
 
-def get_behavior_profiles(db):
-    employees = db.query(Employee).all()
+def get_top_risk_employees(db: Session, limit: int = 10):
 
-    profiles = []
+    profiles = get_behavior_profiles(db)
 
-    for emp in employees:
+    return profiles[:limit]
 
-        predictions = (
-            db.query(Prediction)
-            .filter(Prediction.employee_id == emp.employee_id)
-            .all()
+
+# -----------------------------
+# RECENT THREAT ALERTS
+# -----------------------------
+
+def get_recent_alerts(db: Session, limit: int = 10):
+
+    predictions = (
+        db.query(Prediction)
+        .filter(Prediction.risk_level == "HIGH")
+        .order_by(Prediction.id.desc())
+        .limit(limit)
+        .all()
+    )
+
+    alerts = []
+
+    for prediction in predictions:
+
+        employee = (
+            db.query(Employee)
+            .filter(
+                Employee.employee_id ==
+                prediction.employee_id
+            )
+            .first()
         )
 
-        if len(predictions) == 0:
-            profiles.append({
-                "employee_id": emp.employee_id,
-                "name": emp.name,
-                "department": emp.department,
-                "avg_login": 0,
-                "avg_devices": 0,
-                "avg_hour": 0,
-                "weekend_activity": "None",
-                "behavior_score": 100,
-                "status": "Normal"
-            })
-            continue
+        alerts.append({
 
-        avg_login = round(sum(p.login_count for p in predictions) / len(predictions))
-        avg_devices = round(sum(p.unique_pc_count for p in predictions) / len(predictions))
-        avg_hour = round(sum(p.hour for p in predictions) / len(predictions))
+            "employee_id": prediction.employee_id,
 
-        weekend_count = sum(p.is_weekend for p in predictions)
+            "employee_name":
+                employee.name if employee
+                else prediction.employee_id,
 
-        if weekend_count == 0:
-            weekend = "Low"
-        elif weekend_count < len(predictions) / 2:
-            weekend = "Medium"
-        else:
-            weekend = "High"
+            "department":
+                employee.department if employee
+                else "Unknown",
 
-        high_risk = sum(1 for p in predictions if p.risk_level == "HIGH")
+            "risk_level":
+                prediction.risk_level,
 
-        score = 100
-        score -= high_risk * 10
+            "confidence":
+                prediction.confidence,
 
-        if avg_hour >= 22 or avg_hour <= 5:
-            score -= 5
+            "hour":
+                prediction.hour
 
-        if avg_devices > 4:
-            score -= 5
-
-        score = max(score, 0)
-
-        if score >= 80:
-            status = "Normal"
-        elif score >= 50:
-            status = "Monitor"
-        else:
-            status = "Suspicious"
-
-        profiles.append({
-            "employee_id": emp.employee_id,
-            "name": emp.name,
-            "department": emp.department,
-            "avg_login": avg_login,
-            "avg_devices": avg_devices,
-            "avg_hour": avg_hour,
-            "weekend_activity": weekend,
-            "behavior_score": score,
-            "status": status
         })
 
-    return profiles
-
-from backend.models import Prediction
+    return alerts
 
 
-def save_predictions_bulk(db: Session, predictions):
-    """
-    Save multiple HIGH-risk predictions to the database
-    in a single transaction.
-    """
+# -----------------------------
+# EMPLOYEE DETAILS
+# -----------------------------
 
-    if not predictions:
-        return
+def get_employee_profile(
+    db: Session,
+    employee_id: str
+):
 
-    db.bulk_save_objects(predictions)
-    db.commit()
+    employee = (
+        db.query(Employee)
+        .filter(Employee.employee_id == employee_id)
+        .first()
+    )
 
-def clear_predictions(db: Session):
-    db.query(Prediction).delete()
-    db.commit()
+    if employee is None:
+        return None
+
+    predictions = (
+        db.query(Prediction)
+        .filter(Prediction.employee_id == employee_id)
+        .order_by(Prediction.id.desc())
+        .all()
+    )
+
+    employee_data = {
+        "employee_id": employee.employee_id,
+        "name": employee.name,
+        "department": employee.department,
+        "designation": employee.designation,
+        "email": employee.email,
+    }
+
+    prediction_data = []
+
+    for p in predictions:
+
+        prediction_data.append({
+
+            "id": p.id,
+
+            "login_count": p.login_count,
+
+            "unique_pc_count": p.unique_pc_count,
+
+            "hour": p.hour,
+
+            "is_weekend": p.is_weekend,
+
+            "prediction": p.prediction,
+
+            "risk_level": p.risk_level,
+
+            "confidence": p.confidence,
+
+        })
+
+    return {
+
+        "employee": employee_data,
+
+        "predictions": prediction_data,
+
+        "total_predictions": len(predictions),
+
+        "high_risk": sum(
+            1
+            for p in predictions
+            if p.risk_level == "HIGH"
+        )
+
+    }
+
+# -----------------------------
+# TOP HIGH RISK EMPLOYEES
+# -----------------------------
+
+def get_top_risk_employees(db: Session, limit: int = 10):
+
+    profiles = get_behavior_profiles(db)
+
+    return profiles[:limit]
+
+
+# -----------------------------
+# RECENT THREAT ALERTS
+# -----------------------------
+
+def get_recent_alerts(db: Session, limit: int = 10):
+
+    predictions = (
+        db.query(Prediction)
+        .filter(Prediction.risk_level == "HIGH")
+        .order_by(Prediction.id.desc())
+        .limit(limit)
+        .all()
+    )
+
+    alerts = []
+
+    for prediction in predictions:
+
+        employee = (
+            db.query(Employee)
+            .filter(
+                Employee.employee_id ==
+                prediction.employee_id
+            )
+            .first()
+        )
+
+        alerts.append({
+
+            "employee_id": prediction.employee_id,
+
+            "employee_name":
+                employee.name if employee
+                else prediction.employee_id,
+
+            "department":
+                employee.department if employee
+                else "Unknown",
+
+            "risk_level":
+                prediction.risk_level,
+
+            "confidence":
+                prediction.confidence,
+
+            "hour":
+                prediction.hour
+
+        })
+
+    return alerts
+
+
+# -----------------------------
+# EMPLOYEE DETAILS
+# -----------------------------
+
+def get_employee_profile(
+    db: Session,
+    employee_id: str
+):
+
+    employee = (
+        db.query(Employee)
+        .filter(
+            Employee.employee_id == employee_id
+        )
+        .first()
+    )
+
+    if not employee:
+        return None
+
+    predictions = (
+        db.query(Prediction)
+        .filter(
+            Prediction.employee_id == employee_id
+        )
+        .all()
+    )
+
+    return {
+
+        "employee": employee,
+
+        "predictions": predictions,
+
+        "total_predictions": len(predictions),
+
+        "high_risk": sum(
+            1
+            for p in predictions
+            if p.risk_level == "HIGH"
+        )
+
+    }

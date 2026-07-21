@@ -6,6 +6,7 @@ import Employee from "./pages/Employee";
 import Predictions from "./pages/Predictions";
 import BehaviorProfile from "./pages/BehaviorProfile";
 import Pipeline from "./pages/Pipeline";
+import EmployeeDetails from "./pages/EmployeeDetails";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
         <Route
           path="/pipeline"
           element={<Pipeline />}
+        />
+        <Route
+          path="/employee/:employee_id"
+          element={<EmployeeDetails />}
         />
       </Routes>
     </BrowserRouter>

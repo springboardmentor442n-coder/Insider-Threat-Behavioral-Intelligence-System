@@ -1,63 +1,42 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import Sidebar from "../components/Sidebar";
-import api from "../services/api";
 
-function Predictions() {
+export default function Predictions() {
   const [predictions, setPredictions] = useState([]);
-  const [employeeId, setEmployeeId] = useState("");
-  const [loginCount, setLoginCount] = useState("");
-  const [uniquePCCount, setUniquePCCount] = useState("");
-  const [hour, setHour] = useState("");
-  const [weekend, setWeekend] = useState(0);
-
-  const [result, setResult] = useState(null);
+  const [filtered, setFiltered] = useState([]);
+  const [search, setSearch] = useState("");
+  const [riskFilter, setRiskFilter] = useState("ALL");
 
   useEffect(() => {
-    fetchPredictions();
+    loadPredictions();
   }, []);
 
-  const fetchPredictions = async () => {
+  async function loadPredictions() {
     try {
-      const response = await api.get("/predictions");
-      setPredictions(response.data);
-    } catch (error) {
-      console.error("Error fetching predictions:", error);
+      const res = await axios.get("http://127.0.0.1:8000/predictions");
+      setPredictions(res.data);
+      setFiltered(res.data);
+    } catch (err) {
+      console.log(err);
     }
-  };
+  }
 
-  const handlePredict = async () => {
-    if (
-      employeeId === "" ||
-      loginCount === "" ||
-      uniquePCCount === "" ||
-      hour === ""
-    ) {
-      alert("Please fill all fields.");
-      return;
+  useEffect(() => {
+    let data = [...predictions];
+
+    if (search !== "") {
+      data = data.filter((item) =>
+        item.employee_id.toLowerCase().includes(search.toLowerCase())
+      );
     }
 
-    try {
-      const response = await api.post("/predict", {
-        employee_id: employeeId,
-        login_count: Number(loginCount),
-        unique_pc_count: Number(uniquePCCount),
-        is_weekend: Number(weekend),
-        hour: Number(hour),
-      });
-
-      setResult(response.data);
-      setEmployeeId("");
-      setLoginCount("");
-      setUniquePCCount("");
-      setHour("");
-      setWeekend(0);
-
-      fetchPredictions();
-    } catch (error) {
-      console.error(error);
-      alert("Prediction failed.");
+    if (riskFilter !== "ALL") {
+      data = data.filter((item) => item.risk_level === riskFilter);
     }
-  };
+
+    setFiltered(data);
+  }, [search, riskFilter, predictions]);
 
   return (
     <div
@@ -76,158 +55,98 @@ function Predictions() {
           color: "white",
         }}
       >
-        <h1>Threat Prediction</h1>
+        <h1>Threat Predictions</h1>
 
         <div
           style={{
-            background: "#1e293b",
-            padding: "25px",
-            borderRadius: "12px",
-            marginTop: "25px",
-            marginBottom: "30px",
+            display: "flex",
+            gap: "15px",
+            margin: "25px 0",
           }}
         >
-          <h2>Predict Insider Threat</h2>
           <input
             type="text"
-            placeholder="Employee ID"
-            value={employeeId}
-            onChange={(e) => setEmployeeId(e.target.value)}
-            style={inputStyle}
-          />
-          <input
-            type="number"
-            placeholder="Login Count"
-            value={loginCount}
-            onChange={(e) => setLoginCount(e.target.value)}
-            style={inputStyle}
-          />
-
-          <input
-            type="number"
-            placeholder="Unique PC Count"
-            value={uniquePCCount}
-            onChange={(e) => setUniquePCCount(e.target.value)}
-            style={inputStyle}
-          />
-
-          <input
-            type="number"
-            placeholder="Hour (0-23)"
-            value={hour}
-            onChange={(e) => setHour(e.target.value)}
-            style={inputStyle}
+            placeholder="Search Employee..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            style={{
+              padding: "10px",
+              width: "250px",
+              borderRadius: "8px",
+              border: "none",
+            }}
           />
 
           <select
-            value={weekend}
-            onChange={(e) => setWeekend(e.target.value)}
-            style={inputStyle}
-          >
-            <option value={0}>Weekday</option>
-            <option value={1}>Weekend</option>
-          </select>
-
-          <button
-            onClick={handlePredict}
+            value={riskFilter}
+            onChange={(e) => setRiskFilter(e.target.value)}
             style={{
-              marginTop: "15px",
-              padding: "12px 25px",
-              background: "#2563eb",
-              color: "white",
-              border: "none",
+              padding: "10px",
               borderRadius: "8px",
-              cursor: "pointer",
-              fontSize: "16px",
+              border: "none",
             }}
           >
-            Predict
-          </button>
-
-          {result && (
-            <div
-              style={{
-                marginTop: "25px",
-                padding: "20px",
-                background: "#273549",
-                borderRadius: "10px",
-              }}
-            >
-              <h3>Prediction Result</h3>
-
-              <p>
-                <strong>Risk Level:</strong>{" "}
-                <span
-                  style={{
-                    color:
-                      result.risk_level === "HIGH"
-                        ? "#ef4444"
-                        : "#22c55e",
-                  }}
-                >
-                  {result.risk_level}
-                </span>
-              </p>
-
-              <p>
-                <strong>Confidence:</strong> {result.confidence}%
-              </p>
-            </div>
-          )}
+            <option value="ALL">All</option>
+            <option value="HIGH">High</option>
+            <option value="LOW">Low</option>
+          </select>
         </div>
-
-        <h2>Prediction History</h2>
 
         <table
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            marginTop: "20px",
+            background: "#1e293b",
+            borderRadius: "10px",
+            overflow: "hidden",
           }}
         >
           <thead>
-            <tr style={{ background: "#1e293b" }}>
-              <th style={thStyle}>ID</th>
-              <th style={thStyle}>Login Count</th>
-              <th style={thStyle}>Unique PCs</th>
-              <th style={thStyle}>Hour</th>
-              <th style={thStyle}>Weekend</th>
-              <th style={thStyle}>Risk</th>
-              <th style={thStyle}>Confidence</th>
+            <tr style={{ background: "#334155" }}>
+              <th style={{ padding: "15px" }}>Employee</th>
+              <th>Department</th>
+              <th>Login Count</th>
+              <th>Devices</th>
+              <th>Hour</th>
+              <th>Risk</th>
+              <th>Confidence</th>
             </tr>
           </thead>
 
           <tbody>
-            {predictions.map((item) => (
+            {filtered.map((item) => (
               <tr
-                key={item.id}
+                key={item.prediction_id}
                 style={{
-                  background: "#273549",
                   textAlign: "center",
+                  borderBottom: "1px solid #334155",
                 }}
               >
-                <td style={tdStyle}>{item.id}</td>
-                <td style={tdStyle}>{item.login_count}</td>
-                <td style={tdStyle}>{item.unique_pc_count}</td>
-                <td style={tdStyle}>{item.hour}</td>
-                <td style={tdStyle}>
-                  {item.is_weekend ? "Yes" : "No"}
+                <td style={{ padding: "12px" }}>{item.employee_id}</td>
+
+                <td>{item.department}</td>
+
+                <td>{item.login_count}</td>
+
+                <td>{item.unique_pc_count}</td>
+
+                <td>{item.hour}:00</td>
+
+                <td>
+                  <span
+                    style={{
+                      color:
+                        item.risk_level === "HIGH"
+                          ? "#ef4444"
+                          : "#22c55e",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {item.risk_level}
+                  </span>
                 </td>
 
-                <td
-                  style={{
-                    ...tdStyle,
-                    color:
-                      item.risk_level === "HIGH"
-                        ? "#ef4444"
-                        : "#22c55e",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {item.risk_level}
-                </td>
-
-                <td style={tdStyle}>{item.confidence}%</td>
+                <td>{Number(item.confidence).toFixed(2)}%</td>
               </tr>
             ))}
           </tbody>
@@ -236,23 +155,3 @@ function Predictions() {
     </div>
   );
 }
-
-const inputStyle = {
-  display: "block",
-  width: "300px",
-  marginBottom: "15px",
-  padding: "10px",
-  borderRadius: "8px",
-  border: "none",
-  fontSize: "15px",
-};
-
-const thStyle = {
-  padding: "15px",
-};
-
-const tdStyle = {
-  padding: "15px",
-};
-
-export default Predictions;
