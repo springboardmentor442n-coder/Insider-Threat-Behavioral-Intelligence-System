@@ -11,7 +11,7 @@ from backend.routes.employee import router as employee_router
 from backend.routes.dashboard import router as dashboard_router
 from backend.routes.behavior import router as behavior_router
 from backend.routes.prediction import router as prediction_router
-
+from backend.routes import behavior
 # Create Database Tables
 Base.metadata.create_all(bind=engine)
 
@@ -36,7 +36,7 @@ app.include_router(dashboard_router)
 app.include_router(behavior_router)
 app.include_router(upload.router)
 app.include_router(pipeline.router)
-
+app.include_router(behavior.router)
 
 @app.get("/")
 def home():

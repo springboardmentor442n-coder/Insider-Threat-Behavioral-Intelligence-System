@@ -2,10 +2,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from backend.config import get_db
-from backend.crud import (
-    get_behavior_profiles,
-    get_employee_profile
-)
+from backend.crud import get_behavior_features
 
 router = APIRouter(
     prefix="/behavior",
@@ -14,18 +11,17 @@ router = APIRouter(
 
 
 @router.get("/")
-def behavior_profiles(
-    db: Session = Depends(get_db)
-):
-    return get_behavior_profiles(db)
+def get_behavior(db: Session = Depends(get_db)):
+    behavior = get_behavior_features(db)
 
-
-@router.get("/{employee_id}")
-def employee_profile(
-    employee_id: str,
-    db: Session = Depends(get_db)
-):
-    return get_employee_profile(
-        db,
-        employee_id
-    )
+    return [
+        {
+            "employee_id": b.employee_id,
+            "login_count": b.login_count,
+            "unique_pc_count": b.unique_pc_count,
+            "weekend_logins": b.weekend_logins,
+            "after_hours_logins": b.after_hours_logins,
+            "average_login_hour": b.average_login_hour,
+        }
+        for b in behavior
+    ]

@@ -68,92 +68,42 @@ export default function BehaviorProfile() {
         >
           <thead>
             <tr style={{ background: "#334155" }}>
-              <th style={{ padding: "15px" }}>Employee</th>
-              <th>Department</th>
-              <th>Avg Login</th>
-              <th>Avg Devices</th>
-              <th>Avg Hour</th>
-              <th>Weekend</th>
-              <th>Risk Score</th>
-              <th>Behavior Score</th>
-              <th>Status</th>
+                <th style={{ padding: "15px" }}>Employee ID</th>
+                <th>Login Count</th>
+                <th>Unique PCs</th>
+                <th>Weekend Logins</th>
+                <th>After Hours</th>
+                <th>Average Login Hour</th>
             </tr>
           </thead>
 
-          <tbody>
-            {filteredProfiles.map((profile) => (
-              <tr
-                key={profile.employee_id}
-                style={{
-                  textAlign: "center",
-                  borderBottom: "1px solid #334155",
-                }}
-              >
-                <td style={{ padding: "12px" }}>
-                  <Link
-                    to={`/employee/${profile.employee_id}`}
-                    style={{
-                      color: "#38bdf8",
-                      textDecoration: "none",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {profile.employee_id}
-                  </Link>
-                </td>
+         <tbody>
+    {filteredProfiles.map((profile) => (
+        <tr
+            key={profile.employee_id}
+            style={{
+                textAlign: "center",
+                borderBottom: "1px solid #334155",
+            }}
+        >
+            <td style={{ padding: "12px" }}>
+                {profile.employee_id}
+            </td>
 
-                <td>{profile.department}</td>
+            <td>{profile.login_count}</td>
 
-                <td>{profile.avg_login}</td>
+            <td>{profile.unique_pc_count}</td>
 
-                <td>{profile.avg_devices}</td>
+            <td>{profile.weekend_logins}</td>
 
-                <td>{profile.avg_hour}</td>
+            <td>{profile.after_hours_logins}</td>
 
-                <td>
-                  {profile.weekend_activity ? "Yes" : "No"}
-                </td>
-
-                <td>
-                  <span
-                    style={{
-                      color:
-                        profile.risk_score >= 80
-                          ? "#ef4444"
-                          : profile.risk_score >= 50
-                          ? "#f59e0b"
-                          : "#22c55e",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {profile.risk_score}
-                  </span>
-                </td>
-
-                <td>{profile.behavior_score}</td>
-
-                <td>
-                  <span
-                    style={{
-                      padding: "6px 12px",
-                      borderRadius: "20px",
-                      color: "white",
-                      background:
-                        profile.status === "Critical"
-                          ? "#dc2626"
-                          : profile.status === "High"
-                          ? "#ea580c"
-                          : profile.status === "Medium"
-                          ? "#ca8a04"
-                          : "#16a34a",
-                    }}
-                  >
-                    {profile.status}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+            <td>
+                {Number(profile.average_login_hour).toFixed(2)}
+            </td>
+        </tr>
+    ))}
+</tbody>
         </table>
 
         {filteredProfiles.length === 0 && (

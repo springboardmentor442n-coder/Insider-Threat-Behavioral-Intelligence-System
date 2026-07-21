@@ -145,17 +145,14 @@ def run_pipeline(input_csv, db: Session):
     # -----------------------------------------
     # Step 6 : Prediction
     # -----------------------------------------
-
     X = df[
         [
             "login_count",
-            "unique_pc_count"
+            "unique_pc_count",
+            "weekend_logins",
+            "after_hours_logins"
         ]
-    ].copy()
-
-    # Keep the same feature names as the trained model
-    X["is_weekend"] = (df["weekend_logins"] > 0).astype(int)
-    X["hour"] = df["average_login_hour"].fillna(0).astype(int)
+    ]
 
     predictions = model.predict(X)
 

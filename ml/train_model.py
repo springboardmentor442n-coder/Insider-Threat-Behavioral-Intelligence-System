@@ -27,7 +27,10 @@ print(df.columns.tolist())
 
 print("\nCreating target column...")
 
-df["target"] = df["late_night_login"]
+df["target"] = (
+    (df["after_hours_logins"] >= 5) |
+    (df["weekend_logins"] >= 3)
+).astype(int)
 print("\nTarget Distribution:")
 print(df["target"].value_counts())
 
@@ -38,10 +41,10 @@ print("\nSelecting features...")
 
 X = df[
     [
-        "login_count",
-        "unique_pc_count",
-        "is_weekend",
-        "hour"
+       "login_count",
+       "unique_pc_count",
+       "weekend_logins",
+       "after_hours_logins"
     ]
 ]
 

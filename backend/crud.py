@@ -875,3 +875,14 @@ def get_employee_profile(
         )
 
     }
+
+from sqlalchemy.orm import Session
+from backend.models import BehaviorFeature
+
+
+def get_behavior_features(db: Session):
+    return (
+        db.query(BehaviorFeature)
+        .order_by(BehaviorFeature.employee_id)
+        .all()
+    )
