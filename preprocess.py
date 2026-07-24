@@ -61,3 +61,16 @@ if __name__ == "__main__":
     print("=== Summary ===")
     for name, stats in summary.items():
         print(f"{name}: {stats['rows']} rows, {stats['users']} unique users")
+
+
+# ============================================
+# To run it in your notebook:
+# ============================================
+
+# os.makedirs("/kaggle/working/cleaned/", exist_ok=True)
+#
+# logon_rows, logon_users = clean_file_chunked("logon")
+# device_rows, device_users = clean_file_chunked("device")
+# email_rows, email_users = clean_file_chunked("email")
+# file_rows, file_users = clean_file_chunked("file")
+# http_rows, http_users = clean_file_chunked("http")
