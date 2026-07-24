@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from backend.models import User, Employee, Prediction
+from backend.models import User, Employee, Prediction, BehaviorFeature, PipelineRun, Alert
 
 
 # -----------------------------
@@ -419,7 +419,6 @@ def get_risk_distribution(db: Session):
 
     ]
 
-
 def get_login_hour_distribution(db: Session):
 
     hours = []
@@ -427,18 +426,21 @@ def get_login_hour_distribution(db: Session):
     for hour in range(24):
 
         count = (
-            db.query(Prediction)
-            .filter(Prediction.hour == hour)
+            db.query(BehaviorFeature)
+            .filter(
+                func.floor(
+                    BehaviorFeature.average_login_hour
+                ) == hour
+            )
             .count()
         )
 
-        hours.append({
-
-            "hour": hour,
-
-            "count": count
-
-        })
+        hours.append(
+            {
+                "hour": hour,
+                "count": count
+            }
+        )
 
     return hours
 
@@ -454,179 +456,88 @@ def get_behavior_profiles(db: Session):
 
     for employee in employees:
 
-        predictions = (
+        behavior = (
+            db.query(BehaviorFeature)
+            .filter(
+                BehaviorFeature.employee_id == employee.employee_id
+            )
+            .first()
+        )
+
+        prediction = (
             db.query(Prediction)
             .filter(
                 Prediction.employee_id == employee.employee_id
             )
-            .all()
+            .order_by(Prediction.id.desc())
+            .first()
         )
 
-        # No activity found
-        if not predictions:
+        if not behavior:
 
             profiles.append({
-
                 "employee_id": employee.employee_id,
-
                 "name": employee.name,
-
                 "department": employee.department,
-
                 "designation": employee.designation,
-
                 "avg_login": 0,
-
                 "avg_devices": 0,
-
                 "avg_hour": 0,
-
                 "weekend_activity": 0,
-
                 "risk_score": 0,
-
                 "behavior_score": 100,
-
                 "status": "No Activity"
-
             })
 
             continue
 
-        # --------------------------
-        # Behaviour Statistics
-        # --------------------------
+        if prediction:
+            status = prediction.risk_level
 
-        avg_login = (
-            sum(p.login_count for p in predictions)
-            / len(predictions)
-        )
-
-        avg_devices = (
-            sum(p.unique_pc_count for p in predictions)
-            / len(predictions)
-        )
-
-        avg_hour = (
-            sum(p.hour for p in predictions)
-            / len(predictions)
-        )
-
-        weekend_count = sum(
-            p.is_weekend
-            for p in predictions
-        )
-
-        high_risk = sum(
-
-            1
-
-            for p in predictions
-
-            if p.risk_level == "HIGH"
-
-        )
-
-        # --------------------------
-        # Risk Score
-        # --------------------------
-
-        risk_score = 0
-
-        # High-risk prediction ratio
-        risk_score += (
-            high_risk / len(predictions)
-        ) * 40
-
-        # Heavy login activity
-        if avg_login > 200:
-
-            risk_score += 20
-
-        elif avg_login > 100:
-
-            risk_score += 10
-
-        # Multiple devices
-
-        if avg_devices > 5:
-
-            risk_score += 15
-
-        elif avg_devices > 2:
-
-            risk_score += 8
-
-        # Night logins
-
-        if avg_hour >= 22 or avg_hour <= 5:
-
-            risk_score += 15
-
-        # Weekend activity
-
-        if weekend_count > len(predictions) * 0.30:
-
-            risk_score += 10
-
-        risk_score = round(
-
-            min(risk_score, 100),
-
-            2
-
-        )
-
-        behavior_score = round(
-
-            100 - risk_score,
-
-            2
-
-        )
-
-        # --------------------------
-        # Risk Level
-        # --------------------------
-
-        if risk_score >= 80:
-
-            status = "Critical"
-
-        elif risk_score >= 60:
-
-            status = "High"
-
-        elif risk_score >= 40:
-
-            status = "Medium"
+            if prediction.risk_level == "HIGH":
+                risk_score = round(prediction.confidence, 2)
+            else:
+                risk_score = round((1 - prediction.confidence), 2)
 
         else:
-
-            status = "Low"
+            risk_score = 0
+            status = "No Prediction"
 
         profiles.append({
 
             "employee_id": employee.employee_id,
+
             "name": employee.name,
+
             "department": employee.department,
+
             "designation": employee.designation,
-            "avg_login": round(avg_login, 2),
-            "avg_devices": round(avg_devices, 2),
-            "avg_hour": round(avg_hour, 2),
-            "weekend_activity": weekend_count,
+
+            "avg_login": behavior.login_count,
+
+            "avg_devices": behavior.unique_pc_count,
+
+            "avg_hour": round(
+                behavior.average_login_hour,
+                2
+            ) if behavior.average_login_hour else 0,
+
+            "weekend_activity": behavior.weekend_logins,
+
             "risk_score": risk_score,
-            "behavior_score": behavior_score,
+
+            "behavior_score": round(
+                100 - risk_score,
+                2
+            ),
+
             "status": status
 
         })
 
     profiles.sort(
-
         key=lambda x: x["risk_score"],
-
         reverse=True
-
     )
 
     return profiles
@@ -771,114 +682,6 @@ def get_employee_profile(
 # -----------------------------
 # TOP HIGH RISK EMPLOYEES
 # -----------------------------
-
-def get_top_risk_employees(db: Session, limit: int = 10):
-
-    profiles = get_behavior_profiles(db)
-
-    return profiles[:limit]
-
-
-# -----------------------------
-# RECENT THREAT ALERTS
-# -----------------------------
-
-def get_recent_alerts(db: Session, limit: int = 10):
-
-    predictions = (
-        db.query(Prediction)
-        .filter(Prediction.risk_level == "HIGH")
-        .order_by(Prediction.id.desc())
-        .limit(limit)
-        .all()
-    )
-
-    alerts = []
-
-    for prediction in predictions:
-
-        employee = (
-            db.query(Employee)
-            .filter(
-                Employee.employee_id ==
-                prediction.employee_id
-            )
-            .first()
-        )
-
-        alerts.append({
-
-            "employee_id": prediction.employee_id,
-
-            "employee_name":
-                employee.name if employee
-                else prediction.employee_id,
-
-            "department":
-                employee.department if employee
-                else "Unknown",
-
-            "risk_level":
-                prediction.risk_level,
-
-            "confidence":
-                prediction.confidence,
-
-            "hour":
-                prediction.hour
-
-        })
-
-    return alerts
-
-
-# -----------------------------
-# EMPLOYEE DETAILS
-# -----------------------------
-
-def get_employee_profile(
-    db: Session,
-    employee_id: str
-):
-
-    employee = (
-        db.query(Employee)
-        .filter(
-            Employee.employee_id == employee_id
-        )
-        .first()
-    )
-
-    if not employee:
-        return None
-
-    predictions = (
-        db.query(Prediction)
-        .filter(
-            Prediction.employee_id == employee_id
-        )
-        .all()
-    )
-
-    return {
-
-        "employee": employee,
-
-        "predictions": predictions,
-
-        "total_predictions": len(predictions),
-
-        "high_risk": sum(
-            1
-            for p in predictions
-            if p.risk_level == "HIGH"
-        )
-
-    }
-
-from sqlalchemy.orm import Session
-from backend.models import BehaviorFeature
-
 
 def get_behavior_features(db: Session):
     return (
