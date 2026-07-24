@@ -74,3 +74,41 @@ if __name__ == "__main__":
 # email_rows, email_users = clean_file_chunked("email")
 # file_rows, file_users = clean_file_chunked("file")
 # http_rows, http_users = clean_file_chunked("http")
+
+# for http files preprocessing 
+
+import pandas as pd
+import os
+
+chunk_size = 200_000
+base_path = "/kaggle/input/datasets/andrihjonior/cert-insider-threat-dataset-r4-2/r4.2/"
+out_dir = "/kaggle/working/cleaned/"
+os.makedirs(out_dir, exist_ok=True)
+
+path = os.path.join(base_path, "http.csv")
+out_path = os.path.join(out_dir, "http_clean.csv")
+
+first_chunk = True
+total_rows = 0
+users = set()
+
+for i, chunk in enumerate(pd.read_csv(path, chunksize=chunk_size)):
+    if "date" in chunk.columns:
+        chunk["date"] = pd.to_datetime(chunk["date"], errors="coerce")
+        chunk = chunk.dropna(subset=["date"])
+    chunk = chunk.drop_duplicates()
+    required = [c for c in ["user", "pc"] if c in chunk.columns]
+    if required:
+        chunk = chunk.dropna(subset=required)
+    for col in chunk.select_dtypes(include="object").columns:
+        chunk[col] = chunk[col].astype(str).str.strip()
+
+    chunk.to_csv(out_path, mode='w' if first_chunk else 'a', header=first_chunk, index=False)
+    first_chunk = False
+    total_rows += len(chunk)
+    if "user" in chunk.columns:
+        users.update(chunk["user"].unique())
+
+    print(f"Processed chunk {i+1}, {len(chunk)} rows")
+
+print(f"\nDone. http: {total_rows} rows, {len(users)} unique users")
