@@ -1,105 +1,63 @@
-"""
-preprocess.py
------------------
-Loads and cleans the CERT r4.2 insider threat dataset (logon, device, email,
-file, http logs). This is step 1 of the ml pipeline.
-
-Usage (in a notebook or script):
-    from ml.preprocess import load_and_clean_all
-
-    cleaned = load_and_clean_all(
-        base_path="/kaggle/working/r4.2/r4.2/",
-        out_path="/kaggle/working/cleaned/"
-    )
-    logon = cleaned["logon"]
-    device = cleaned["device"]
-    ...
-"""
-
 import os
 import pandas as pd
 
-FILES = ["logon", "device", "email", "file", "http"]
+CHUNK_SIZE = 200_000
+BASE_PATH = "/kaggle/input/datasets/andrihjonior/cert-insider-threat-dataset-r4-2/r4.2/"
+OUT_PATH = "/kaggle/working/cleaned/"
+
+os.makedirs(OUT_PATH, exist_ok=True)
 
 
-def _clean_single(df: pd.DataFrame, name: str, verbose: bool = True) -> pd.DataFrame:
-    """Clean one raw CERT log dataframe."""
-    if verbose:
-        print(f"\n--- Cleaning {name} ---")
-        print("Raw shape:", df.shape)
+def clean_file_chunked(name, verbose=True):
+    """Clean one CERT log file using chunked reading (memory-safe)."""
+    path = os.path.join(BASE_PATH, f"{name}.csv")
+    out_file = os.path.join(OUT_PATH, f"{name}_clean.csv")
 
-    # Parse dates
-    if "date" in df.columns:
-        df["date"] = pd.to_datetime(df["date"], errors="coerce")
-        before = len(df)
-        df = df.dropna(subset=["date"])
+    first_chunk = True
+    total_rows = 0
+    users = set()
+
+    for i, chunk in enumerate(pd.read_csv(path, chunksize=CHUNK_SIZE)):
+        if "date" in chunk.columns:
+            chunk["date"] = pd.to_datetime(chunk["date"], errors="coerce")
+            chunk = chunk.dropna(subset=["date"])
+
+        chunk = chunk.drop_duplicates()
+
+        required = [c for c in ["user", "pc"] if c in chunk.columns]
+        if required:
+            chunk = chunk.dropna(subset=required)
+
+        for col in chunk.select_dtypes(include="object").columns:
+            chunk[col] = chunk[col].astype(str).str.strip()
+
+        chunk.to_csv(out_file, mode="w" if first_chunk else "a", header=first_chunk, index=False)
+        first_chunk = False
+
+        total_rows += len(chunk)
+        if "user" in chunk.columns:
+            users.update(chunk["user"].unique())
+
         if verbose:
-            print(f"Dropped {before - len(df)} rows with unparseable dates")
-
-    # Drop exact duplicates
-    before = len(df)
-    df = df.drop_duplicates()
-    if verbose:
-        print(f"Dropped {before - len(df)} duplicate rows")
-
-    # Drop rows missing critical identifiers
-    required = [c for c in ["user", "pc"] if c in df.columns]
-    if required:
-        before = len(df)
-        df = df.dropna(subset=required)
-        if verbose:
-            print(f"Dropped {before - len(df)} rows missing {required}")
-
-    # Strip whitespace from text columns
-    for col in df.select_dtypes(include="object").columns:
-        df[col] = df[col].astype(str).str.strip()
-
-    # Sort chronologically
-    if "date" in df.columns:
-        df = df.sort_values("date").reset_index(drop=True)
+            print(f"{name}: processed chunk {i+1}, {len(chunk)} rows")
 
     if verbose:
-        print("Clean shape:", df.shape)
+        print(f"\nDone. {name}: {total_rows} rows, {len(users)} unique users\n")
 
-    return df
+    return total_rows, len(users)
 
 
-def load_and_clean_all(base_path: str, out_path: str = None, verbose: bool = True) -> dict:
-    """
-    Load all 5 CERT log files from base_path, clean each one, optionally
-    save cleaned copies to out_path, and return them as a dict of DataFrames.
-    """
-    if out_path:
-        os.makedirs(out_path, exist_ok=True)
-
-    cleaned = {}
-    for name in FILES:
-        path = os.path.join(base_path, f"{name}.csv")
-        df = pd.read_csv(path)
-        df = _clean_single(df, name, verbose=verbose)
-        cleaned[name] = df
-
-        if out_path:
-            out_file = os.path.join(out_path, f"{name}_clean.csv")
-            df.to_csv(out_file, index=False)
-            if verbose:
-                print(f"Saved -> {out_file}")
-
-    if verbose:
-        print("\n=== Summary ===")
-        for name, df in cleaned.items():
-            n_users = df["user"].nunique() if "user" in df.columns else "N/A"
-            if "date" in df.columns and len(df) > 0:
-                date_range = f"{df['date'].min()} to {df['date'].max()}"
-            else:
-                date_range = "N/A"
-            print(f"{name}: {len(df)} rows, {n_users} unique users, dates: {date_range}")
-
-    return cleaned
+def load_and_clean_all(verbose=True):
+    """Clean all 5 CERT log files, one at a time, chunked."""
+    summary = {}
+    for name in ["logon", "device", "email", "file", "http"]:
+        rows, users = clean_file_chunked(name, verbose=verbose)
+        summary[name] = {"rows": rows, "users": users}
+    return summary
 
 
 if __name__ == "__main__":
-    # Adjust these paths to match your Kaggle environment
-    BASE_PATH = "/kaggle/working/r4.2/r4.2/"
-    OUT_PATH = "/kaggle/working/cleaned/"
-    cleaned = load_and_clean_all(BASE_PATH, OUT_PATH)
+    summary = load_and_clean_all()
+    print("=== Summary ===")
+    for name, stats in summary.items():
+        print(f"{name}: {stats['rows']} rows, {stats['users']} unique users")
