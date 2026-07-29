@@ -1,341 +1,254 @@
-
-
 # Insider Threat Behavioral Intelligence System
 
-An AI-powered Insider Threat Behavioral Intelligence System that continuously monitors employee activities, analyzes behavioral patterns, detects anomalies, predicts insider risk, and assists security teams in investigating potential insider threats.
+## Overview
 
-The system leverages the CERT R4.2 Insider Threat Dataset, Machine Learning, User and Entity Behavior Analytics (UEBA), FastAPI, React.js, PostgreSQL, and Docker to provide an end-to-end behavioral intelligence platform.
+The **Insider Threat Behavioral Intelligence System** is a Deep Learning-based cybersecurity project designed to identify and classify insider threats by analyzing employee behavioral patterns. The system utilizes the CERT Insider Threat Dataset and combines multiple organizational activity logs to detect suspicious behaviors that may indicate malicious insider actions.
 
----
-
-# Project Overview
-
-Insider threats are among the most challenging cybersecurity risks because they originate from trusted users within an organization. This project develops an intelligent platform capable of learning normal employee behavior and detecting suspicious activities such as abnormal login patterns, excessive file transfers, unauthorized USB usage, unusual email communication, and privilege misuse.
-
-The platform provides real-time risk assessment, behavioral profiling, anomaly detection, security dashboards, and investigation support for Security Operations Centers (SOC).
+Instead of relying on signature-based detection, this project performs **behavioral analytics**, extracting meaningful features from employee activities such as logon events, email communication, web browsing, file operations, USB device usage, and psychometric attributes. These features are then used to train a Multi-Layer Perceptron (MLP) neural network capable of classifying different categories of insider threats.
 
 ---
 
-# Features
+# Project Objectives
 
-- Role-Based Authentication
-- Employee Profile Management
-- Activity Log Monitoring
-- Behavioral Profiling Engine
-- User & Entity Behavior Analytics (UEBA)
-- Feature Engineering Pipeline
-- Machine Learning Risk Prediction
-- Insider Risk Scoring
-- Threat Alerts
-- Investigation Dashboard
-- Risk Trend Visualization
-- Report Generation
-- REST API using FastAPI
-- Responsive React Dashboard
-- Docker Deployment
-
----
-
-# Technology Stack
-
-## Frontend
-
-- React.js
-- Tailwind CSS
-- Chart.js
-
-## Backend
-
-- FastAPI
-- Python
-
-## Database
-
-- PostgreSQL
-
-## Machine Learning
-
-- Scikit-Learn
-- XGBoost
-- Pandas
-- NumPy
-- Joblib
-
-## Visualization
-
-- Plotly
-- Chart.js
-
-## Deployment
-
-- Docker
-- Docker Compose
-
----
-
-# Project Architecture
-
-```
-                 CERT R4.2 Dataset
-                        │
-                        ▼
-               Data Preprocessing
-                        │
-                        ▼
-              Feature Engineering
-                        │
-                        ▼
-            Behavioral Feature Dataset
-                        │
-                        ▼
-              Machine Learning Model
-                        │
-                        ▼
-               Insider Risk Prediction
-                        │
-                        ▼
-                FastAPI REST APIs
-                        │
-         PostgreSQL Database
-                        │
-                        ▼
-                React Dashboard
-                        │
-                        ▼
-       Security Analyst / SOC / Admin
-```
+- Detect abnormal employee behavior using machine learning.
+- Analyze multiple organizational data sources simultaneously.
+- Classify different types of insider threats.
+- Build an end-to-end behavioral analytics pipeline.
+- Generate a reusable trained model for future predictions.
 
 ---
 
 # Dataset
 
-Dataset Used
+The project uses the **CERT Insider Threat Dataset**, which contains simulated enterprise user activities.
 
-- CERT Insider Threat Dataset R4.2
+### Input Files
 
-Activity Sources
-
-- Logon Activity
-- Device Activity
-- Email Activity
-- File Activity
-- HTTP Activity
-
----
-
-# Machine Learning Pipeline
-
-```
-Raw CERT Dataset
-
-↓
-
-Data Cleaning
-
-↓
-
-Missing Value Handling
-
-↓
-
-Merge Activity Logs
-
-↓
-
-Feature Engineering
-
-↓
-
-Behavioral Indicators
-
-↓
-
-Feature Selection
-
-↓
-
-Model Training
-
-↓
-
-Risk Prediction
-
-↓
-
-Model Serialization (.pkl)
-```
+- **logon.csv** – User login and logout activities
+- **email.csv** – Email communication records
+- **http.csv** – Internet browsing history
+- **file.csv** – File access and file transfer records
+- **device.csv** – USB device connection activities
+- **psychometric.csv** – Employee personality scores
 
 ---
 
-# Behavioral Features
+# Workflow
 
-The feature engineering pipeline extracts behavioral indicators including:
+## 1. Data Loading
 
-- Total Login Count
-- Night Login Count
-- Weekend Login Count
-- USB Usage
-- Email Count
-- External Email Count
-- File Download Count
-- File Upload Count
-- Sensitive File Access
-- HTTP Requests
-- Unique Websites
-- Device Usage
-- Failed Login Attempts
-- Login Duration
-- Session Frequency
-- Data Transfer Volume
+The program imports all activity datasets into Pandas DataFrames.
 
-These features are aggregated per employee and used to train the machine learning model.
+Loaded datasets include:
+
+- Logon activities
+- Email records
+- HTTP browsing logs
+- File operations
+- USB device activities
+- Psychometric information
 
 ---
 
-# Risk Categories
+## 2. Feature Engineering
 
-The prediction engine classifies employees into four risk levels.
+The raw activity logs are transformed into meaningful behavioral features.
 
-- Low Risk
-- Medium Risk
-- High Risk
-- Critical Risk
+### Logon Features
 
----
+Examples:
 
-# Project Structure
-
-```
-Insider-Threat-System/
-
-│
-
-├── frontend/
-│   ├── src/
-│   ├── public/
-│   └── package.json
-│
-├── backend/
-│   ├── app.py
-│   ├── routes/
-│   ├── services/
-│   └── database.py
-│
-├── dataset/
-│   ├── logon.csv
-│   ├── email.csv
-│   ├── device.csv
-│   ├── file.csv
-│   └── http.csv
-│
-├── pipeline/
-│   ├── preprocess.py
-│   ├── feature_engineering.py
-│   ├── train_model.py
-│   └── predict.py
-│
-├── models/
-│   └── insider_model.pkl
-│
-├── reports/
-│
-├── docker/
-│
-├── requirements.txt
-│
-└── README.md
-```
-
----
-# Running the Machine Learning Pipeline
-
-Generate behavioral features
-
-```bash
-python pipeline/feature_engineering.py
-```
-
-Train the model
-
-```bash
-python pipeline/train_model.py
-```
-
-Predict insider risk
-
-```bash
-python pipeline/predict.py
-```
+- Number of unique computers used
+- Total logons
+- Total logoffs
+- Weekend logins
+- Weekday logins
+- Most frequently used PC
+- After-hours login count
+- Office-hours login count
 
 ---
 
-# Dashboard Modules
+### Email Features
 
-### Administrator
+Examples:
 
-- User Management
-- Employee Profiles
-- System Configuration
-- Audit Logs
-
-### Security Analyst
-
-- Threat Alerts
-- Risk Scores
-- Behavioral Analysis
-- Investigation Queue
-
-### SOC Engineer
-
-- Live Security Events
-- Activity Timeline
-- Event Correlation
-- Incident Management
-
-### Security Manager
-
-- Organization Risk Overview
-- Risk Trends
-- Compliance Reports
-- Executive Dashboard
+- Number of unique recipients
+- Average email size
+- External emails sent
+- Most contacted recipient
+- Total email size
 
 ---
 
+### HTTP Features
+
+Examples:
+
+- Unique websites visited
+- Total web activities
+- Number of upload activities
+- Average URL length
+
 ---
 
-# Performance Metrics
+### File Features
 
-- Accuracy
+Examples:
+
+- Unique files accessed
+- USB file transfers
+- Deleted files
+- Copied files
+
+---
+
+### Device Features
+
+Examples:
+
+- Total USB activities
+- After-hours USB usage
+- Device disconnections
+
+---
+
+### Psychometric Features
+
+Employee personality traits are included:
+
+- Openness
+- Conscientiousness
+- Extraversion
+- Agreeableness
+- Neuroticism
+
+---
+
+# Feature Merging
+
+All engineered features are merged into a single behavioral profile for each employee.
+
+Missing values are handled using:
+
+- Zero filling for activity counts
+- Median imputation for numerical features
+
+---
+
+# Behavioral Label Generation
+
+Instead of using manually labeled data, the project creates behavioral labels using deterministic organizational rules.
+
+The following threat categories are generated:
+
+| Label | Description |
+|--------|-------------|
+| Normal | Regular employee behavior |
+| Intellectual Property Theft | Excessive file copying and unusual device usage |
+| IT Sabotage | High deletion activity and abnormal device behavior |
+| Unauthorized Access | Excessive after-hours logins and suspicious web activity |
+| Data Exfiltration | Large external email communication and USB transfers |
+
+---
+
+# Data Preprocessing
+
+The preprocessing pipeline includes:
+
+- Label Encoding
+- Missing value handling
+- Standard Scaling
+- Train/Test Split (80% / 20%)
+
+---
+
+# Deep Learning Model
+
+The project uses a **Multi-Layer Perceptron (MLP)** implemented using **PyTorch**.
+
+### Model Architecture
+
+Input Layer
+
+↓
+
+Linear Layer (128 neurons)
+
+↓
+
+Batch Normalization
+
+↓
+
+ReLU Activation
+
+↓
+
+Dropout (30%)
+
+↓
+
+Linear Layer (64 neurons)
+
+↓
+
+Batch Normalization
+
+↓
+
+ReLU Activation
+
+↓
+
+Dropout (30%)
+
+↓
+
+Output Layer (5 Classes)
+
+---
+
+# Training Configuration
+
+| Parameter | Value |
+|-----------|-------|
+| Framework | PyTorch |
+| Optimizer | Adam |
+| Learning Rate | 0.001 |
+| Loss Function | CrossEntropyLoss |
+| Epochs | 30 |
+| Batch Size | 64 |
+
+---
+
+# Model Evaluation
+
+The trained model is evaluated using:
+
+- Classification Report
 - Precision
 - Recall
 - F1 Score
-- ROC-AUC
-- False Positive Rate
-- Mean Time to Detect (MTTD)
-- Mean Time to Investigate (MTTI)
-- Mean Time to Respond (MTTR)
+- Validation Loss
+- Training Loss
+
+A loss convergence graph is also generated to monitor training performance.
 
 ---
 
-# Contributors
+# Saved Outputs
 
-- G. Udaya Kumar
+After training, the following files are generated:
+
+| File | Purpose |
+|------|----------|
+| behavioral_intelligence_model.pth | Trained Deep Learning Model |
+| pipeline_scaler.pkl | Feature Standardization |
+| target_label_encoder.pkl | Threat Label Encoder |
+
+These files can be reused during deployment for real-time insider threat prediction.
 
 ---
-
-# License
-
-This project is developed for educational and research purposes. The CERT Insider Threat Dataset is used strictly in accordance with its licensing and research guidelines.
-
----
-
-# Acknowledgements
-
-- Carnegie Mellon University CERT Division
-- CERT Insider Threat Dataset
-- FastAPI
-- React.js
-- Scikit-Learn
-- XGBoost
-- PostgreSQL
-- Docker
+#reference notebook link
+https://www.kaggle.com/code/goseh11/major-project
