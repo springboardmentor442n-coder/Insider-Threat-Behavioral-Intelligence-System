@@ -1,0 +1,31 @@
+# keep the backend image small and clean
+.git
+.gitignore
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+env/
+*.bak
+*.bakR
+*.bak[0-9]
+# secrets never go in the image
+.env
+.env.local
+# the large dataset must not be copied into the image
+data/
+# trained models are produced at seed time / mounted as a volume
+models/*.joblib
+ml/models/*.joblib
+ml/models/*.pkl
+# frontend is built by its own image
+frontend/node_modules/
+frontend/dist/
+# installers and docs not needed at runtime
+setup_*.ps1
+fix_*.ps1
+*.md

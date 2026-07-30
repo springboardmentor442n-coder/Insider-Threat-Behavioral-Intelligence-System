@@ -1,0 +1,11 @@
+# Shell scripts must keep LF line endings even when checked out on Windows.
+# The backend container runs entrypoint.sh with bash; CRLF (\r) would make the
+# shebang and every line fail inside the Linux image. This overrides core.autocrlf
+# for these files so a Windows checkout still produces a container-safe script.
+*.sh            text eol=lf
+docker/entrypoint.sh text eol=lf
+
+# nginx config and Dockerfiles are read inside Linux containers too - keep LF.
+*.conf          text eol=lf
+Dockerfile      text eol=lf
+*.Dockerfile    text eol=lf
