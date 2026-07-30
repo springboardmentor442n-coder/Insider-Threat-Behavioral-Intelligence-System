@@ -153,6 +153,38 @@ export const investigate = {
     api(`/api/investigate/${encodeURIComponent(userId)}/explain?day=${day}`),
 };
 
+export const reports = {
+  catalog: () => api('/api/reports/catalog'),
+  // Downloads a report file. Reports are binary (PDF/xlsx), so this bypasses the
+  // JSON api() helper: it fetches with the auth token, reads a blob, and triggers
+  // a browser download with the server-provided filename.
+  download: async (slug, fmt, userId) => {
+    const qs = userId ? `?user_id=${encodeURIComponent(userId)}` : '';
+    const res = await fetch(`/api/reports/${slug}.${fmt}${qs}`, {
+      headers: { Authorization: `Bearer ${getAccessToken()}` },
+    });
+    if (!res.ok) {
+      let detail = `Report failed (${res.status})`;
+      try { detail = (await res.json()).detail || detail; } catch { /* non-json */ }
+      throw new Error(typeof detail === 'string' ? detail : 'Report failed');
+    }
+    const blob = await res.blob();
+    // pull filename out of Content-Disposition, fall back to a sensible default
+    const cd = res.headers.get('content-disposition') || '';
+    const m = cd.match(/filename="?([^"]+)"?/);
+    const filename = m ? m[1] : `${slug}.${fmt}`;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    return filename;
+  },
+};
+
 export const notifications = {
   list: (unreadOnly = false) =>
     api(`/api/notifications?unread_only=${unreadOnly}`),

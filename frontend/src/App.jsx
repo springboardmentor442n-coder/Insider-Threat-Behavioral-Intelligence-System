@@ -11,6 +11,7 @@ import Investigations from './pages/Investigations';
 import Employees from './pages/Employees';
 import EntityAnalytics from './pages/EntityAnalytics';
 import AuditLog from './pages/AuditLog';
+import Reports from './pages/Reports';
 import Loader from './components/Loader';
 
 // Each role sees the dashboard built for their job. The backend enforces what
@@ -67,6 +68,7 @@ export default function App() {
         <Route path="investigations/:userId" element={<Investigations />} />
         <Route path="employees" element={<Employees />} />
         <Route path="entity" element={<EntityAnalytics />} />
+        <Route path="reports" element={<Reports />} />
         <Route path="entity/:userId" element={<EntityAnalytics />} />
         <Route path="audit" element={<AdminOnly><AuditLog /></AdminOnly>} />
       </Route>

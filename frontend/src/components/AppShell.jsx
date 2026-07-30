@@ -19,6 +19,7 @@ const NAV = [
   { to: '/investigations', label: 'Investigations', glyph: '◎' },
   { to: '/employees', label: 'Employees', glyph: '⬡' },
   { to: '/entity', label: 'Entity Analytics', glyph: '◈' },
+  { to: '/reports', label: 'Reports', glyph: '▤' },
   { to: '/audit', label: 'Audit Log', glyph: '⧉', roles: ['administrator'] },
 ];
 

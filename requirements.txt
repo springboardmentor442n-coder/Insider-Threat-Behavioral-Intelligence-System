@@ -50,3 +50,5 @@ joblib==1.5.3
 pyflakes==3.2.0        # catches NameErrors on branches the tests never walk
 pytest-cov
 lightgbm==4.6.0
+reportlab==4.4.10           # PDF report generation (Module 12)
+openpyxl==3.1.5             # Excel report generation (Module 12)

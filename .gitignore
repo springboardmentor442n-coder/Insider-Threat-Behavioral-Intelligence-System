@@ -75,3 +75,7 @@ models/
 *.bak3
 
 *.bakN
+
+*.bakR
+
+setup_*.ps1

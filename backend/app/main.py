@@ -17,6 +17,7 @@ from backend.app.ratelimit import limiter
 from backend.app.routers import (
     entity,
     notifications,
+    reports,
     alerts,
     audit,
     auth,
@@ -105,6 +106,7 @@ app.include_router(dashboard.router)
 app.include_router(audit.router)
 app.include_router(entity.router)
 app.include_router(notifications.router)
+app.include_router(reports.router)
 
 
 @app.get("/", tags=["meta"])
