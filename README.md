@@ -209,23 +209,31 @@ The system successfully:
 
 ### Landing Page
 ![Landing Page](screenshots/landing-page.png)
+---
 
 ### Login
 ![Login](screenshots/login.png)
+
+---
 
 ### Dashboard
 ![Dashboard](screenshots/dashboard1.png)
 ![Dashboard](screenshots/dashboard2.png)
 ![Dashboard](screenshots/dashboard3.png)
 ![Dashboard](screenshots/dashboard4.png)
+---
 
 ### Employees
 ![Employees](screenshots/employees1.png)
 ![Employees](screenshots/employees2.png)
 ![Employees](screenshots/employees3.png)
 
+---
+
 ### Predictions
 ![Predictions](screenshots/prediction.png)
+
+---
 
 ### Pipeline Execution
 ![Pipeline](screenshots/pipeline.png)
