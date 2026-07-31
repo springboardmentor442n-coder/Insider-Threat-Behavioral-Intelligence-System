@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Employee from "./pages/Employee";
@@ -7,32 +8,89 @@ import Predictions from "./pages/Predictions";
 import BehaviorProfile from "./pages/BehaviorProfile";
 import Pipeline from "./pages/Pipeline";
 import EmployeeDetails from "./pages/EmployeeDetails";
+import Analytics from "./pages/Analytics";
+
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
+        {/* Public Routes */}
+        <Route path="/" element={<Landing />} />
+        <Route path="/login" element={<Login />} />
 
-        <Route path="/employees" element={<Employee />} />
+        {/* Protected Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
 
-        <Route path="/predictions" element={<Predictions />} />
+        {/* Protected Employees */}
+        <Route
+          path="/employees"
+          element={
+            <ProtectedRoute>
+              <Employee />
+            </ProtectedRoute>
+          }
+        />
 
+        {/* Protected Predictions */}
+        <Route
+          path="/predictions"
+          element={
+            <ProtectedRoute>
+              <Predictions />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Protected Behavior Profile */}
         <Route
           path="/behavior-profile"
-          element={<BehaviorProfile />}
+          element={
+            <ProtectedRoute>
+              <BehaviorProfile />
+            </ProtectedRoute>
+          }
         />
 
+        {/* Protected Pipeline */}
         <Route
           path="/pipeline"
-          element={<Pipeline />}
+          element={
+            <ProtectedRoute>
+              <Pipeline />
+            </ProtectedRoute>
+          }
         />
+
+        {/* Protected Employee Details */}
         <Route
           path="/employee/:employee_id"
-          element={<EmployeeDetails />}
+          element={
+            <ProtectedRoute>
+              <EmployeeDetails />
+            </ProtectedRoute>
+          }
         />
+
+        {/* Protected Analytics */}
+        <Route
+          path="/analytics"
+          element={
+            <ProtectedRoute>
+              <Analytics />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );

@@ -1,75 +1,212 @@
 import { useEffect, useState } from "react";
-import Sidebar from "../components/Sidebar";
-import api from "../services/api";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { Search, Eye, Users } from "lucide-react";
 
-function Employee() {
+import Layout from "../components/Layout";
+
+export default function Employee() {
+  const navigate = useNavigate();
+
   const [employees, setEmployees] = useState([]);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     fetchEmployees();
   }, []);
 
-  const fetchEmployees = async () => {
+  useEffect(() => {
+    const filtered = employees.filter((emp) => {
+      const query = search.toLowerCase();
+
+      return (
+        emp.employee_id?.toLowerCase().includes(query) ||
+        emp.name?.toLowerCase().includes(query) ||
+        emp.department?.toLowerCase().includes(query) ||
+        emp.designation?.toLowerCase().includes(query)
+      );
+    });
+
+    setFilteredEmployees(filtered);
+  }, [search, employees]);
+
+  async function fetchEmployees() {
     try {
-      const response = await api.get("/employees");
-      setEmployees(response.data);
-    } catch (error) {
-      console.error("Error fetching employees:", error);
+      const res = await axios.get(
+        "http://127.0.0.1:8000/employees"
+      );
+
+      setEmployees(res.data);
+      setFilteredEmployees(res.data);
+
+    } catch (err) {
+      console.error(err);
     }
-  };
+  }
 
   return (
-    <div
-      style={{
-        display: "flex",
-        minHeight: "100vh",
-        background: "#0f172a",
-      }}
-    >
-      <Sidebar />
+    <Layout title="Employee Monitoring">
 
-      <div style={{ flex: 1, padding: "40px", color: "white" }}>
-        <h1>Employees</h1>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+      >
 
-        <table
-          style={{
-            width: "100%",
-            marginTop: "30px",
-            borderCollapse: "collapse",
-          }}
-        >
-          <thead>
-            <tr style={{ background: "#1e293b" }}>
-              <th style={{ padding: "15px" }}>Employee ID</th>
-              <th>Name</th>
-              <th>Department</th>
-              <th>Designation</th>
-              <th>Email</th>
+        <h2 className="text-4xl font-bold text-white">
+          Employees
+        </h2>
+
+        <p className="mt-2 text-slate-400">
+          View and monitor employee information.
+        </p>
+
+      </motion.div>
+
+      <div className="mt-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+
+        <div className="relative w-full md:w-96">
+
+          <Search
+            size={18}
+            className="absolute left-4 top-3.5 text-slate-400"
+          />
+
+          <input
+            type="text"
+            placeholder="Search employee..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full rounded-xl border border-slate-700 bg-slate-900 py-3 pl-11 pr-4 text-white outline-none focus:border-cyan-400"
+          />
+
+        </div>
+
+        <div className="flex items-center gap-3 rounded-xl border border-slate-700 bg-slate-900 px-5 py-3">
+
+          <Users className="text-cyan-400" />
+
+          <span className="font-semibold text-white">
+            {filteredEmployees.length} Employees
+          </span>
+
+        </div>
+
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: .3 }}
+        className="mt-8 overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-xl"
+      >
+
+        <table className="w-full">
+
+          <thead className="bg-slate-800 text-slate-300">
+
+            <tr>
+
+              <th className="px-6 py-4 text-left">
+                Employee ID
+              </th>
+
+              <th className="px-6 py-4 text-left">
+                Name
+              </th>
+
+              <th className="px-6 py-4 text-left">
+                Department
+              </th>
+
+              <th className="px-6 py-4 text-left">
+                Designation
+              </th>
+
+              <th className="px-6 py-4 text-left">
+                Email
+              </th>
+
+              <th className="px-6 py-4 text-center">
+                Action
+              </th>
+
             </tr>
+
           </thead>
 
           <tbody>
-            {employees.map((emp) => (
-              <tr
-                key={emp.id}
-                style={{
-                  textAlign: "center",
-                  background: "#273549",
-                  borderBottom: "8px solid #0f172a",
-                }}
-              >
-                <td style={{ padding: "15px" }}>{emp.employee_id}</td>
-                <td>{emp.name}</td>
-                <td>{emp.department}</td>
-                <td>{emp.designation}</td>
-                <td>{emp.email}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+                        {filteredEmployees.length === 0 ? (
 
-export default Employee;
+              <tr>
+
+                <td
+                  colSpan="6"
+                  className="py-12 text-center text-slate-400"
+                >
+                  No employees found.
+                </td>
+
+              </tr>
+
+            ) : (
+
+              filteredEmployees.map((emp, index) => (
+
+                <tr
+                  key={emp.employee_id || index}
+                  className="border-t border-slate-800 transition-all hover:bg-slate-800/40"
+                >
+
+                  <td className="px-6 py-4 font-medium text-cyan-400">
+                    {emp.employee_id}
+                  </td>
+
+                  <td className="px-6 py-4 text-white">
+                    {emp.name}
+                  </td>
+
+                  <td className="px-6 py-4 text-slate-300">
+                    {emp.department}
+                  </td>
+
+                  <td className="px-6 py-4 text-slate-300">
+                    {emp.designation}
+                  </td>
+
+                  <td className="px-6 py-4 text-slate-400">
+                    {emp.email}
+                  </td>
+
+                  <td className="px-6 py-4 text-center">
+
+                    <button
+                      onClick={() =>
+                        navigate(`/employee/${emp.employee_id}`)
+                      }
+                      className="inline-flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 font-medium text-white transition hover:bg-cyan-600"
+                    >
+                      <Eye size={16} />
+                      View
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </motion.div>
+
+    </Layout>
+
+  );
+
+}

@@ -1,3 +1,4 @@
+import time
 import joblib
 import pandas as pd
 from pathlib import Path
@@ -10,8 +11,14 @@ from backend.models import Prediction, Employee, BehaviorFeature
 from backend.crud import (
     save_predictions_bulk,
     clear_predictions,
+    save_behavior_features,
 )
-
+from ml.http_features import HTTPFeatureExtractor
+from ml.feature_builder import FeatureBuilder
+from ml.email_features import EmailFeatureExtractor
+from ml.file_features import FileFeatureExtractor
+from ml.device_features import DeviceFeatureExtractor
+from ml.explainable_ai import generate_risk_reasons
 
 # -------------------------------------------------
 # Paths
@@ -33,10 +40,41 @@ LDAP_FILE = (
     / "raw"
     / "LDAP"
 )
+HTTP_FILE = (
+    BASE_DIR
+    / "dataset"
+    / "raw"
+    / "http.csv"
+)
+EMAIL_FILE = (
+    BASE_DIR
+    / "dataset"
+    / "raw"
+    / "email.csv"
+)
+FILE_FILE = (
+    BASE_DIR
+    / "dataset"
+    / "raw"
+    / "file.csv"
+)
+DEVICE_FILE = (
+    BASE_DIR
+    / "dataset"
+    / "raw"
+    / "device.csv"
+)
+FEATURE_COLUMNS_PATH = (
+    BASE_DIR
+    / "ml"
+    / "models"
+    / "feature_columns.pkl"
+)
+
 # -------------------------------------------------
 # Import Employees
 # -------------------------------------------------
-from pathlib import Path
+
 
 def import_employees(ldap_folder, db: Session):
 
@@ -87,26 +125,63 @@ def import_employees(ldap_folder, db: Session):
 # -------------------------------------------------
 # Main Pipeline
 # -------------------------------------------------
-
-def run_pipeline(input_csv, db: Session):
+def run_pipeline(
+    dataset_folder,
+    db: Session,
+):
 
     print("=" * 60)
     print("RUNNING INSIDER THREAT PIPELINE")
     print("=" * 60)
+    start_time = time.time()
+    dataset_folder = Path(dataset_folder)
 
+    LOGON_FILE = dataset_folder / "logon.csv"
+
+    HTTP_FILE = dataset_folder / "http.csv"
+
+    EMAIL_FILE = dataset_folder / "email.csv"
+
+    FILE_FILE = dataset_folder / "file.csv"
+
+    DEVICE_FILE = dataset_folder / "device.csv"
+
+    LDAP_FOLDER = dataset_folder / "LDAP"
+    required_files = {
+        "logon.csv": LOGON_FILE,
+        "http.csv": HTTP_FILE,
+        "email.csv": EMAIL_FILE,
+        "file.csv": FILE_FILE,
+        "device.csv": DEVICE_FILE,
+    }
+
+    for dataset_name, dataset_path in required_files.items():
+
+        if not Path(dataset_path).exists():
+
+            raise FileNotFoundError(
+                f"Required dataset '{dataset_name}' was not found.\n"
+                f"Expected location: {dataset_path}"
+            )
+
+    if not Path(LDAP_FOLDER).exists():
+
+        raise FileNotFoundError(
+            f"LDAP folder not found:\n{LDAP_FOLDER}"
+        )
     # -----------------------------------------
     # Step 1 : Preprocess
     # -----------------------------------------
-
+    PROCESSED_DATA.mkdir(parents=True, exist_ok=True)
     processed_file = (
         PROCESSED_DATA
         / "logon_processed.csv"
     )
 
     preprocess_logon(
-        input_csv,
-        processed_file
-    )
+    LOGON_FILE,
+    processed_file
+)
 
     # -----------------------------------------
     # Step 2 : Feature Engineering
@@ -117,46 +192,162 @@ def run_pipeline(input_csv, db: Session):
         / "logon_features.csv"
     )
 
-    generate_features(
+    df = generate_features(
         processed_file,
         feature_file
     )
-
+        
+    
     # -----------------------------------------
     # Step 3 : Load Feature Data
     # -----------------------------------------
 
-    df = pd.read_csv(feature_file)
+    # -----------------------------------------
+    # Step 3A : Initialize Feature Builder
+    # -----------------------------------------
 
+    builder = FeatureBuilder()
+
+    builder.load_login_features(df)
+
+    # -----------------------------------------
+    # Step 3B : HTTP Feature Extraction
+    # -----------------------------------------
+
+    print("=" * 60)
+    print("PROCESSING HTTP DATASET")
+    print("=" * 60)
+
+    http_extractor = HTTPFeatureExtractor()
+
+    chunk_size = 500000
+
+    for chunk in pd.read_csv(
+        HTTP_FILE,
+        chunksize=500000
+    ):
+
+        http_extractor.process_chunk(chunk)
+
+    http_features = http_extractor.finalize()
+
+    print(f"HTTP Users : {len(http_features)}")
+
+    builder.merge_http_features(http_features)
+    print("=" * 60)
+    print("PROCESSING EMAIL DATASET")
+    print("=" * 60)
+
+    email_extractor = EmailFeatureExtractor()
+
+    for chunk in pd.read_csv(
+        EMAIL_FILE,
+        chunksize=500000
+    ):
+        email_extractor.process_chunk(chunk)
+
+    email_features = email_extractor.finalize()
+
+    print(f"Email Users : {len(email_features)}")
+
+    builder.merge_email_features(email_features)
+    print("=" * 60)
+    print("PROCESSING FILE DATASET")
+    print("=" * 60)
+
+    file_extractor = FileFeatureExtractor()
+
+    for chunk in pd.read_csv(
+        FILE_FILE,
+        chunksize=500000
+    ):
+        file_extractor.process_chunk(chunk)
+
+    file_features = file_extractor.finalize()
+
+    print(f"File Users : {len(file_features)}")
+
+    builder.merge_file_features(file_features)
+    print("=" * 60)
+    print("PROCESSING DEVICE DATASET")
+    print("=" * 60)
+
+    device_extractor = DeviceFeatureExtractor()
+
+    for chunk in pd.read_csv(
+        DEVICE_FILE,
+        chunksize=500000
+    ):
+        device_extractor.process_chunk(chunk)
+
+    device_features = device_extractor.finalize()
+
+    print(f"Device Users : {len(device_features)}")
+
+    builder.merge_device_features(device_features)
+
+    # -----------------------------------------
+    # Step 3C : Final Feature Table
+    # -----------------------------------------
+
+    df = builder.finalize()
+    # -----------------------------------------
+    # Save Combined Behavior Features
+    # -----------------------------------------
+
+    behavior_file = (
+        PROCESSED_DATA
+        / "behavior_features.csv"
+    )
+
+    df.to_csv(
+        behavior_file,
+        index=False
+    )
+
+    print("=" * 60)
+    print("Behavior feature dataset saved")
+    print(behavior_file)
+    print("=" * 60)
+
+    print("=" * 60)
     print(f"Rows Loaded : {len(df)}")
 
+     # -----------------------------------------
+    # Step 4: Import employees
     # -----------------------------------------
-    # Step 4 : Import Employees
-    # -----------------------------------------
+    import_employees(
+        LDAP_FOLDER,
+        db
+    )
 
-    import_employees(LDAP_FILE, db)
+    print("=" * 60)
+    print("SAVING BEHAVIOR FEATURES")
+    print("=" * 60)
+
+    save_behavior_features(db, df)
 
     # -----------------------------------------
     # Step 5 : Load Model
     # -----------------------------------------
 
     model = joblib.load(MODEL_PATH)
+    feature_columns = joblib.load(
+    FEATURE_COLUMNS_PATH
+    )
 
     # -----------------------------------------
     # Step 6 : Prediction
     # -----------------------------------------
-    X = df[
-        [
-            "login_count",
-            "unique_pc_count",
-            "weekend_logins",
-            "after_hours_logins"
-        ]
-    ]
+    X = df[feature_columns]
 
     predictions = model.predict(X)
 
     confidence = model.predict_proba(X).max(axis=1)
+    df["risk_reasons"] = df.apply(
+        lambda row: ", ".join(generate_risk_reasons(row)),
+        axis=1
+    )
 
     df["prediction"] = predictions
 
@@ -213,7 +404,8 @@ def run_pipeline(input_csv, db: Session):
 
                 risk_level=row["risk_level"],
 
-                confidence=float(row["confidence"])
+                confidence=float(row["confidence"]),
+                event_timestamp=row["event_timestamp"]
             )
 
         )
@@ -222,9 +414,37 @@ def run_pipeline(input_csv, db: Session):
         db,
         prediction_objects
     )
+    execution_time = round(
+        time.time() - start_time,
+        2
+    )
+
+    print()
+    print("=" * 60)
+    print("PIPELINE SUMMARY")
+    print("=" * 60)
+
+    print(f"Employees Imported      : {df['employee_id'].nunique()}")
+    print(f"Behavior Profiles Saved : {len(df)}")
+    print(f"Predictions Generated   : {len(prediction_objects)}")
+
+    print()
+
+    print(f"High Risk Employees     : {(df['prediction'] == 1).sum()}")
+    print(f"Low Risk Employees      : {(df['prediction'] == 0).sum()}")
+
+    print()
+
+    print("Machine Learning Model  : Random Forest")
+    print("Dataset                : CERT 4.2")
+    print(f"Output CSV             : {output_file.name}")
+
+    print()
+
+    print(f"Execution Time         : {execution_time} seconds")
 
     print("=" * 60)
-    print("PIPELINE COMPLETED")
+    print("PIPELINE COMPLETED SUCCESSFULLY")
     print("=" * 60)
 
     return {

@@ -37,8 +37,7 @@ app.include_router(dashboard_router)
 app.include_router(behavior_router)
 app.include_router(upload.router)
 app.include_router(pipeline.router)
-app.include_router(behavior.router)
-app.include_router(dashboard.router)
+
 
 @app.get("/")
 def home():

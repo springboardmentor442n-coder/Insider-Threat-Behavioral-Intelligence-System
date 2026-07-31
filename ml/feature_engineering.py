@@ -2,7 +2,7 @@ import pandas as pd
 from pathlib import Path
 
 
-def generate_features(input_file, output_file):
+def generate_features(input_file, output_file=None):
 
     print("=" * 50)
     print("FEATURE ENGINEERING")
@@ -10,34 +10,39 @@ def generate_features(input_file, output_file):
 
     df = pd.read_csv(input_file)
 
-    # One row per employee
-    features = df.groupby("user").agg(
-
-        login_count=("user", "count"),
-
-        unique_pc_count=("pc", "nunique"),
-
-        weekend_logins=("day", lambda x: x.isin(["Saturday", "Sunday"]).sum()),
-
-        after_hours_logins=("hour", lambda x: ((x >= 22) | (x <= 5)).sum()),
-
-        average_login_hour=("hour", "mean"),
-
-        first_login=("hour", "min"),
-
-        last_login=("hour", "max")
-
-    ).reset_index()
+    features = (
+        df.groupby("user")
+        .agg(
+            login_count=("user", "count"),
+            unique_pc_count=("pc", "nunique"),
+            weekend_logins=("day", lambda x: x.isin(["Saturday", "Sunday"]).sum()),
+            after_hours_logins=("hour", lambda x: ((x >= 22) | (x <= 5)).sum()),
+            average_login_hour=("hour", "mean"),
+            first_login=("hour", "min"),
+            last_login=("hour", "max"),
+            latest_login_timestamp=("date", "max"),
+        )
+        .reset_index()
+    )
 
     features.rename(
         columns={"user": "employee_id"},
         inplace=True
     )
 
-    Path(output_file).parent.mkdir(parents=True, exist_ok=True)
+    # Optional CSV output
+    if output_file is not None:
 
-    features.to_csv(output_file, index=False)
+        Path(output_file).parent.mkdir(
+            parents=True,
+            exist_ok=True
+        )
 
-    print(f"Saved feature dataset to {output_file}")
+        features.to_csv(
+            output_file,
+            index=False
+        )
 
-    return output_file
+        print(f"Saved feature dataset to {output_file}")
+
+    return features
