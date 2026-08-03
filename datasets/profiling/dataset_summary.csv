@@ -1,0 +1,7 @@
+Dataset,Columns,Count
+device,"['id', 'date', 'user', 'pc', 'activity']",5
+email,"['id', 'date', 'user', 'pc', 'to', 'cc', 'bcc', 'from', 'size', 'attachments', 'content']",11
+file,"['id', 'date', 'user', 'pc', 'filename', 'content']",6
+http,"['id', 'date', 'user', 'pc', 'url', 'content']",6
+logon,"['id', 'date', 'user', 'pc', 'activity']",5
+psychometric,"['employee_name', 'user_id', 'O', 'C', 'E', 'A', 'N']",7
