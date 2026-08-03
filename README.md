@@ -1,39 +1,73 @@
 # Insider Threat Behavioral Intelligence System
 
-An AI-powered Insider Threat Detection System that leverages behavioral analytics and multiple unsupervised machine learning models to identify potentially malicious insider activities using the CERT Insider Threat Dataset.
+An AI-powered **Insider Threat Detection System** that leverages behavioral analytics and multiple unsupervised machine learning models to identify potentially malicious insider activities using the **CERT Insider Threat Dataset (R4.2)**.
 
-The project performs end-to-end data engineering, feature engineering, anomaly detection, model evaluation, and employee risk scoring to generate actionable security intelligence.
+The project performs **end-to-end data engineering, feature engineering, anomaly detection, model evaluation, employee risk scoring, backend API development, and an interactive React dashboard** to generate actionable security intelligence.
 
 ---
 
 # Project Status
 
-**Current Progress:** ~50%
+**Current Progress:** **~70%**
 
-## Completed
+## ✅ Completed
 
+### Data Engineering
 - Dataset Inventory
 - Dataset Profiling
 - Data Dictionary Generation
 - Data Cleaning
 - Data Integration
 - Feature Engineering
+
+### Machine Learning
 - Multi-Model Training
 - Model Evaluation
+- Consensus Risk Scoring
 - Employee Risk Scoring
 
-## Planned
+### Backend
+- FastAPI Backend
+- JWT Authentication
+- Employee CRUD APIs
+- Dashboard APIs
+- Employee Activity APIs
 
-- Explainable AI
-- Interactive Dashboard
-- Backend APIs
-- Deployment
+### Frontend
+- React + Vite Dashboard
+- Employee Management Module
+- Search & Filtering
+- Employee Profile Drawer
+- Employee Activity Timeline
+- Risk Summary Cards
+- CSV Export
+- React Query Integration
+- Responsive UI
+
+---
+
+## 🚧 In Progress
+
+- Threat Center
+- Analytics Module
+- Reports Module
+- Settings Module
+
+---
+
+## 📌 Planned
+
+- Explainable AI (XAI)
+- Automated Alert System
+- Real-Time Prediction
+- Docker Deployment
+- Cloud Deployment
 
 ---
 
 # Project Workflow
 
-```
+```text
 CERT Insider Threat Dataset
             │
             ▼
@@ -55,44 +89,62 @@ Data Integration
 Feature Engineering
             │
             ▼
-Multi-Model Training
-            │
-            ▼
-Model Evaluation
+Machine Learning Models
             │
             ▼
 Consensus Risk Scoring
             │
             ▼
-Employee Risk Reports
+Employee Risk Database
+            │
+            ▼
+FastAPI Backend
+            │
+            ▼
+React Dashboard
+            │
+            ▼
+Behavioral Intelligence Platform
 ```
 
 ---
 
 # Project Structure
 
-```
+```text
 Insider-Threat-Behavioral-Intelligence-System/
 
 │
+├── ai_engine/
+├── backend/
+│   ├── api/
+│   ├── core/
+│   ├── database/
+│   ├── models/
+│   ├── routers/
+│   ├── schemas/
+│   ├── services/
+│   └── app.py
+│
+├── insider-threat-frontend/
+│   ├── src/
+│   ├── public/
+│   ├── components/
+│   ├── pages/
+│   ├── hooks/
+│   └── services/
+│
 ├── datasets/
 ├── models/
-├── plots/
 ├── reports/
+├── plots/
 ├── scripts/
 │   ├── data_engineering/
-│   │   ├── 01_dataset_inventory.py
-│   │   ├── 02_dataset_profiler.py
-│   │   ├── 03_data_dictionary.py
-│   │   ├── 04_data_cleaner.py
-│   │   ├── 05_data_integrator.py
-│   │   ├── 06_feature_engineering.py
-│   │   ├── 07_model_training.py
-│   │   ├── 08_model_evaluation.py
-│   │   └── 09_risk_scoring.py
-│   │
 │   └── utilities/
 │
+├── notebooks/
+├── deployment/
+├── tests/
 ├── README.md
 ├── requirements.txt
 └── LICENSE
@@ -102,7 +154,7 @@ Insider-Threat-Behavioral-Intelligence-System/
 
 # Dataset
 
-This project utilizes the **CERT Insider Threat Dataset (R4.2)**, which contains enterprise behavioral logs including:
+This project utilizes the **CERT Insider Threat Dataset (R4.2)** containing enterprise behavioral logs such as:
 
 - Employee Logon Records
 - Device Usage
@@ -162,13 +214,13 @@ Behavioral features extracted include:
 - After-Hours Activity
 - Psychometric Features
 
-A total of **22 behavioral features** are generated for each employee.
+A total of **22 behavioral features** are generated for every employee.
 
 ---
 
 # Machine Learning Pipeline
 
-The system implements seven unsupervised anomaly detection models.
+The system implements **seven unsupervised anomaly detection models**.
 
 | Model | Purpose |
 |--------|----------|
@@ -179,6 +231,8 @@ The system implements seven unsupervised anomaly detection models.
 | PCA Reconstruction | Reconstruction-based anomaly detection |
 | DBSCAN | Density clustering |
 | K-Means | Distance-based anomaly detection |
+
+Predictions from all seven models are aggregated using a **consensus-based scoring strategy** to generate the final employee risk score.
 
 ---
 
@@ -214,9 +268,7 @@ Generated visualizations include:
 
 # Employee Risk Scoring
 
-Predictions from all seven models are combined using a consensus-based approach to produce a final employee risk score.
-
-Employees are categorized into four levels:
+Employees are categorized into four risk levels:
 
 - Critical
 - High
@@ -232,6 +284,55 @@ Generated outputs include:
 
 ---
 
+# Backend APIs
+
+The backend is built using **FastAPI** and exposes secure REST APIs.
+
+## Authentication
+
+- JWT Login
+- Role-Based Authorization
+
+## Employee APIs
+
+- Get Employees
+- Get Employee Details
+- Create Employee
+- Update Employee
+- Delete Employee
+
+## Dashboard APIs
+
+- Dashboard Summary
+- Risk Distribution
+- Top Suspicious Employees
+
+## Activity APIs
+
+- Employee Activity Timeline
+
+---
+
+# Frontend
+
+The frontend is developed using **React**, **Vite**, **Tailwind CSS**, **React Query**, and **Axios**.
+
+Implemented features include:
+
+- Interactive Dashboard
+- Employee Management
+- Search Employees
+- Department Filter
+- Risk Filter
+- Employee Profile Drawer
+- Activity Timeline
+- Risk Summary Cards
+- CSV Export
+- Responsive Design
+- Protected Routes
+
+---
+
 # Current Results
 
 | Metric | Value |
@@ -240,14 +341,31 @@ Generated outputs include:
 | Behavioral Features | 22 |
 | Machine Learning Models | 7 |
 | Risk Categories | 4 |
+| Backend APIs | 10+ |
+| Employee CRUD | Complete |
+| Frontend Framework | React + Vite |
 
 ---
 
 # Technologies Used
 
-## Programming Language
+## Backend
 
 - Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- JWT Authentication
+
+## Frontend
+
+- React
+- Vite
+- Tailwind CSS
+- React Query
+- Axios
+- Framer Motion
+- Lucide React
 
 ## Data Processing
 
@@ -258,20 +376,17 @@ Generated outputs include:
 ## Machine Learning
 
 - Scikit-learn
+- Joblib
 
-## Data Visualization
+## Visualization
 
 - Matplotlib
-
-## Model Serialization
-
-- Joblib
 
 ---
 
 # Generated Outputs
 
-### Models
+## Models
 
 - Isolation Forest
 - One-Class SVM
@@ -282,7 +397,7 @@ Generated outputs include:
 - K-Means
 - Standard Scaler
 
-### Reports
+## Reports
 
 - Evaluation Summary
 - Model Comparison
@@ -291,7 +406,7 @@ Generated outputs include:
 - Training Time Ranking
 - Top Suspicious Employees
 
-### Visualizations
+## Visualizations
 
 - Model Detection Comparison
 - Training Time Comparison
@@ -303,13 +418,16 @@ Generated outputs include:
 
 # Future Enhancements
 
-- Explainable AI
-- Interactive Dashboard
-- Backend APIs
+- Explainable AI (SHAP/LIME)
+- Threat Center
+- Advanced Analytics
 - Automated Alert System
+- Email Notifications
 - Real-Time Prediction
-- Docker Support
+- Docker Deployment
+- Kubernetes Deployment
 - Cloud Deployment
+- SIEM Integration
 
 ---
 
@@ -317,12 +435,12 @@ Generated outputs include:
 
 Springboard Mentor Program
 
-**Contributor**
+## Contributor
 
-- Nandan Kabra
+- **Nandan Kabra**
 
 ---
 
 # License
 
-This project is licensed under the MIT License.
+This project is licensed under the **MIT License**.
