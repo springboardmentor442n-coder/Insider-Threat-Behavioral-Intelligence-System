@@ -209,6 +209,7 @@ The system successfully:
 
 ### Landing Page
 ![Landing Page](screenshots/landing-page.png)
+
 ---
 
 ### Login
@@ -218,14 +219,16 @@ The system successfully:
 
 ### Dashboard
 ![Dashboard](screenshots/dashboard1.png)
+
 ![Dashboard](screenshots/dashboard2.png)
-![Dashboard](screenshots/dashboard3.png)
-![Dashboard](screenshots/dashboard4.png)
+
 ---
 
 ### Employees
 ![Employees](screenshots/employees1.png)
+
 ![Employees](screenshots/employees2.png)
+
 ![Employees](screenshots/employees3.png)
 
 ---
