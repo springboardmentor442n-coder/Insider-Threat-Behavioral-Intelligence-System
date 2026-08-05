@@ -1,297 +1,208 @@
-import pandas as pd
+"""
+Insider Threat Detection — Model Training
+Uses REAL ground-truth labels (matched from CERT r4.2 official answer files
+by log-row ID), not synthetic thresholds.
+"""
+import os, glob, pickle
 import numpy as np
-import os
-import pickle
-from functools import reduce
-
-from sklearn.ensemble import IsolationForest
+import pandas as pd
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
-from sklearn.model_selection import train_test_split, cross_val_score, StratifiedKFold
-from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, IsolationForest
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.svm import SVC
+from sklearn.model_selection import GroupShuffleSplit
+from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
-    accuracy_score, precision_score, recall_score, f1_score,
+    precision_score, recall_score, f1_score, precision_recall_curve, auc,
     classification_report, confusion_matrix
 )
+import xgboost as xgb
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-# =====================================================================
-# 0. CHECK AVAILABLE FILES (run once to confirm paths / look for real labels)
-# =====================================================================
-print("Files available in /kaggle/input:")
-for root, dirs, files in os.walk('/kaggle/input'):
-    for f in files:
-        print(os.path.join(root, f))
-print("\n--- Look for insiders.csv / answers.csv / answers folder above ---\n")
+from feature_engineering import engineer_features, attach_ldap_context
 
 # =====================================================================
 # 1. LOAD RAW DATA
 # =====================================================================
-DATA_DIR = "/kaggle/input/datasets/mrajaxnp/cert-insider-threat-detection-research"
+BASE_PATH = "data/r4.2/"          # adjust to your data location
+ANSWERS_BASE = "data/answers/"    # adjust to your data location
 
-logon_data = pd.read_csv(f"{DATA_DIR}/logon.csv")
-email_data = pd.read_csv(f"{DATA_DIR}/email.csv")
-http_data = pd.read_csv(f"{DATA_DIR}/http.csv")  # remove nrows limit — read full file if memory allows
-file_data = pd.read_csv(f"{DATA_DIR}/file.csv")
-device_data = pd.read_csv(f"{DATA_DIR}/device.csv")
-psychometric_data = pd.read_csv(f"{DATA_DIR}/psychometric.csv")
+logon = pd.read_csv(os.path.join(BASE_PATH, "logon.csv"), parse_dates=["date"])
+device = pd.read_csv(os.path.join(BASE_PATH, "device.csv"), parse_dates=["date"])
+file_df = pd.read_csv(os.path.join(BASE_PATH, "file.csv"), parse_dates=["date"])
+email = pd.read_csv(os.path.join(BASE_PATH, "email.csv"), parse_dates=["date"])
 
-# Sanity check — confirm logon.csv has both Logon and Logoff events combined
-print("Logon activity values:", logon_data['activity'].unique())
+print("Logon activity values:", logon["activity"].unique())
 
-# =====================================================================
-# 2. PREP DATE / DAY / HOUR COLUMNS
-# =====================================================================
-for df in [logon_data, email_data, http_data, file_data, device_data]:
-    df['date'] = pd.to_datetime(df['date'])
-    df['day'] = df['date'].dt.dayofweek       # 0=Mon ... 6=Sun
-    df['hour'] = df['date'].dt.hour
-    df['calendar_day'] = df['date'].dt.date
-
-file_data['to_removable_media'] = file_data['to_removable_media'].astype(bool)
-file_data['from_removable_media'] = file_data['from_removable_media'].astype(bool)
-email_data['attachments'] = pd.to_numeric(email_data['attachments'], errors='coerce').fillna(0).astype(int)
+# Capture ID tables (needed for real label matching)
+id_tables = {}
+for name, df in [("logon", logon), ("device", device), ("file", file_df), ("email", email)]:
+    df["day"] = df["date"].dt.date
+    id_tables[name] = df[["id", "user", "day"]].copy()
 
 # =====================================================================
-# 3. FEATURE ENGINEERING (per user-day)
+# 2. FEATURE ENGINEERING (per user-day)
 # =====================================================================
+combined_df = engineer_features(logon, device, file_df, email,
+                                 pd.read_csv(os.path.join(BASE_PATH, "http.csv"), parse_dates=["date"]))
 
-# ---- LOGON ----
-logon_features = logon_data.groupby(['user', 'calendar_day']).agg(
-    L1=('pc', 'nunique'),
-    L2=('activity', lambda x: (x == 'Logon').sum()),
-    L3=('activity', lambda x: (x == 'Logoff').sum()),
-    L6=('day', lambda x: int(x.iloc[0] >= 5)),
-    L8=('pc', lambda x: x.value_counts().idxmax()),
-    L9=('hour', lambda x: ((x < 6) | (x > 18)).sum()),
-    L10=('hour', lambda x: ((x >= 6) & (x <= 18)).sum()),
-    L11=('pc', lambda x: x.value_counts().max() / len(x)),
-    L12=('hour', lambda x: (x > 22).sum()),
-    L13=('hour', lambda x: (x < 6).sum()),
-).reset_index().rename(columns={'calendar_day': 'date'})
+# Recapture http IDs separately (large file, chunked)
+http_id_parts = []
+for chunk in pd.read_csv(os.path.join(BASE_PATH, "http.csv"), usecols=["id", "date", "user"],
+                          parse_dates=["date"], chunksize=2_000_000):
+    chunk["day"] = chunk["date"].dt.date
+    http_id_parts.append(chunk[["id", "user", "day"]])
+id_tables["http"] = pd.concat(http_id_parts, ignore_index=True)
 
-# ---- EMAIL ----
-email_features = email_data.groupby(['user', 'calendar_day']).agg(
-    E1=('to', 'nunique'),
-    E2=('cc', 'count'),
-    E3=('bcc', 'count'),
-    E4=('size', 'mean'),
-    E5=('attachments', 'sum'),
-    E6=('to', lambda x: sum('@' in str(a) and not str(a).endswith('dtaa.com') for a in x.astype(str))),
-    E7=('attachments', lambda x: x.gt(0).sum()),
-    E8=('hour', lambda x: ((x < 6) | (x > 18)).sum()),
-    E9=('pc', 'nunique'),
-    E11=('size', 'sum'),
-    E12=('to', lambda x: x.dropna().astype(str).str.contains('gmail.com|yahoo.com|msn.com|juno.com|.net').sum()),
-    E13=('content', lambda x: x.dropna().astype(str).str.count('confidential|password|secure').sum()),
-    E16=('content', lambda x: x.dropna().astype(str).str.len().mean()),
-).reset_index().rename(columns={'calendar_day': 'date'})
-
-# ---- HTTP ----
-http_features = http_data.groupby(['user', 'calendar_day']).agg(
-    H1=('url', 'nunique'),
-    H2=('activity', 'count'),
-    H3=('hour', lambda x: ((x < 6) | (x > 18)).sum()),
-    H5=('activity', lambda x: x.str.contains('WWW Upload', case=False, na=False).sum()),
-    H6=('url', lambda x: x.str.contains('alibaba|amazon|ebay', na=False).sum()),
-    H7=('url', lambda x: x.str.contains('examiner|discovery|foodnetwork|thechive|wsj', na=False).sum()),
-    H8=('url', lambda x: x.str.contains('soundcloud|m-w|youtube|cafemom|netflix', na=False).sum()),
-    H9=('url', lambda x: x.str.len().mean()),
-    H10=('activity', lambda x: x.str.contains('WWW Download', case=False, na=False).sum()),
-    H11=('content', lambda x: x.dropna().astype(str).str.count(r'\bsecure\b|\bpassword\b').sum()),
-    H12=('content', lambda x: x.dropna().astype(str).str.len().mean()),
-).reset_index().rename(columns={'calendar_day': 'date'})
-
-# ---- FILE ----
-file_features = file_data.groupby(['user', 'calendar_day']).agg(
-    F1=('filename', 'nunique'),
-    F2=('activity', 'count'),
-    F3=('to_removable_media', 'sum'),
-    F4=('from_removable_media', 'sum'),
-    F5=('hour', lambda x: ((x < 6) | (x > 18)).sum()),
-    F7=('activity', lambda x: x.str.contains('delete', case=False, na=False).sum()),
-    F8=('activity', lambda x: x.str.contains('copy', case=False, na=False).sum()),
-    F9=('activity', lambda x: x.str.contains('write', case=False, na=False).sum()),
-    F10=('content', lambda x: x.dropna().astype(str).str.count('confidential|password|sensitive').sum()),
-    F11=('content', lambda x: x.dropna().astype(str).str.len().mean()),
-).reset_index().rename(columns={'calendar_day': 'date'})
-
-# ---- DEVICE ----
-device_features = device_data.groupby(['user', 'calendar_day']).agg(
-    D1=('pc', 'nunique'),
-    D2=('activity', 'count'),
-    D3=('hour', lambda x: ((x < 6) | (x > 18)).sum()),
-    D5=('activity', lambda x: x.str.contains('connect', case=False, na=False).sum()),
-    D6=('activity', lambda x: x.str.contains('disconnect', case=False, na=False).sum()),
-).reset_index().rename(columns={'calendar_day': 'date'})
-
-# ---- PSYCHOMETRIC (static per user) ----
-psychometric_features = psychometric_data[['user_id', 'O', 'C', 'E', 'A', 'N']].rename(columns={'user_id': 'user'})
-
-# ---- MERGE ALL (per user-day) ----
-daily_dfs = [logon_features, email_features, http_features, file_features, device_features]
-combined_df = reduce(lambda l, r: pd.merge(l, r, on=['user', 'date'], how='outer'), daily_dfs)
-combined_df = combined_df.fillna(0)
-
-combined_df = combined_df.merge(psychometric_features, on='user', how='left')
-psych_cols = ['O', 'C', 'E', 'A', 'N']
-combined_df[psych_cols] = combined_df[psych_cols].fillna(combined_df[psych_cols].mean())
-
-print("\nFeature table shape:", combined_df.shape)
-combined_df.to_csv('/kaggle/working/features_final.csv', index=False)
+print(f"Feature table shape: {combined_df.shape}")
 
 # =====================================================================
-# 4. LABELING — TEMPORARY THRESHOLD-BASED (placeholder)
-# NOTE: Replace this block once real CERT ground-truth answer files
-# are located — merge them on ['user','date'] instead of computing
-# labels from feature thresholds.
+# 3. LDAP INTEGRATION
 # =====================================================================
-feature_columns = ['F8', 'D3', 'F7', 'D6', 'H5', 'L9', 'F3', 'E6']
-feature_means = combined_df[feature_columns].mean()
+ldap_files = glob.glob(os.path.join(BASE_PATH, "LDAP", "*.csv"))
+ldap_list = []
+for f in ldap_files:
+    df = pd.read_csv(f)
+    df["month_year"] = os.path.basename(f).split(".csv")[0]
+    ldap_list.append(df)
+master_ldap = pd.concat(ldap_list, ignore_index=True)
+master_ldap = master_ldap.drop_duplicates(subset=["user_id", "month_year"], keep="last")
 
-def assign_label(row):
-    if all(row[f] <= feature_means[f] * 0.9 for f in feature_columns):
-        return "Normal"
-    elif row['F8'] > feature_means['F8'] * 1.2 or row['D3'] > feature_means['D3'] * 1.2:
-        return "Intellectual Property Theft"
-    elif row['F7'] > feature_means['F7'] * 1.2 or row['D6'] > feature_means['D6'] * 1.2:
-        return "IT Sabotage"
-    elif row['H5'] > feature_means['H5'] * 1.2 or row['L9'] > feature_means['L9'] * 1.2:
-        return "Unauthorized Access"
-    elif row['F3'] > feature_means['F3'] * 1.2 or row['E6'] > feature_means['E6'] * 1.2:
-        return "Data Exfiltration"
-    else:
-        return "Normal"
-
-combined_df['Label'] = combined_df.apply(assign_label, axis=1)
-print("\nLabel distribution:\n", combined_df['Label'].value_counts())
-
-# =====================================================================
-# 5. PREPARE X / y
-# =====================================================================
-X = combined_df.drop(columns=['user', 'date', 'Label'], errors='ignore')
-y = combined_df['Label']
-
-categorical_cols = X.select_dtypes(include=['object']).columns
-for col in categorical_cols:
+le_dict = {}
+combined_df["day"] = pd.to_datetime(combined_df["day"])
+combined_df["month_year"] = combined_df["day"].dt.strftime("%Y-%m")
+combined_df = pd.merge(combined_df, master_ldap.rename(columns={"user_id": "user"}),
+                        on=["user", "month_year"], how="left")
+combined_df = combined_df.sort_values(by=["user", "day"])
+for col in ["role", "department", "team", "supervisor"]:
+    combined_df[col] = combined_df.groupby("user")[col].ffill()
+    combined_df[col] = combined_df[col].fillna("Unknown").astype(str)
     le = LabelEncoder()
-    X[col] = le.fit_transform(X[col].astype(str))
+    combined_df[f"{col}_encoded"] = le.fit_transform(combined_df[col])
+    le_dict[col] = le
+combined_df.drop(columns=["role", "department", "team", "supervisor", "month_year"], inplace=True)
 
-X = X.fillna(X.mean(numeric_only=True))
-
-# =====================================================================
-# 6. SCALE + SPLIT
-# =====================================================================
-scaler = MinMaxScaler()
-X_scaled = pd.DataFrame(scaler.fit_transform(X), columns=X.columns)
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X_scaled, y, test_size=0.3, random_state=42, stratify=y
-)
+print(f"Shape after LDAP: {combined_df.shape}")
 
 # =====================================================================
-# 7. TRAIN + COMPARE SUPERVISED MODELS
+# 4. REAL GROUND-TRUTH LABELS (row-level ID matching against answer files)
 # =====================================================================
-models = {
-    "Logistic Regression": LogisticRegression(max_iter=1000),
-    "Random Forest": RandomForestClassifier(n_estimators=200, random_state=42),
-    "Gradient Boosting": GradientBoostingClassifier(random_state=42),
-    "KNN": KNeighborsClassifier(),
-    "SVM": SVC(),
+SCHEMAS = {
+    "logon":  ["type", "id", "date", "user", "pc", "activity"],
+    "device": ["type", "id", "date", "user", "pc", "activity"],
+    "http":   ["type", "id", "date", "user", "pc", "url", "content"],
+    "file":   ["type", "id", "date", "user", "pc", "filename", "content"],
+    "email":  ["type", "id", "date", "user", "pc", "to", "cc", "bcc",
+               "from", "size", "attachment_count", "content"],
 }
 
-results = {}
-skf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+def parse_answer_file(path):
+    rows_by_type = {k: [] for k in SCHEMAS}
+    with open(path, encoding="utf-8", errors="replace") as f:
+        for line in f:
+            line = line.rstrip("\r\n")
+            if not line:
+                continue
+            row_type = line.split(",", 1)[0]
+            if row_type not in SCHEMAS:
+                continue
+            n_fields = len(SCHEMAS[row_type])
+            parts = line.split(",", n_fields - 1)
+            if len(parts) == n_fields:
+                rows_by_type[row_type].append(parts)
+    return rows_by_type
 
-for name, model in models.items():
-    print(f"\n================= {name} =================")
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
+def build_malicious_id_tables(answers_base, scenario_folders=("r4.2-1", "r4.2-2", "r4.2-3")):
+    all_rows = {k: [] for k in SCHEMAS}
+    for folder in scenario_folders:
+        for path in glob.glob(os.path.join(answers_base, folder, "*.csv")):
+            parsed = parse_answer_file(path)
+            for k, rows in parsed.items():
+                for r in rows:
+                    all_rows[k].append(r + [folder])
+    return {k: pd.DataFrame(v, columns=SCHEMAS[k] + ["scenario"]) for k, v in all_rows.items()}
 
-    acc = accuracy_score(y_test, y_pred)
-    precision = precision_score(y_test, y_pred, average="macro", zero_division=0)
-    recall = recall_score(y_test, y_pred, average="macro", zero_division=0)
-    f1 = f1_score(y_test, y_pred, average="macro", zero_division=0)
-    results[name] = acc
+malicious_tables = build_malicious_id_tables(ANSWERS_BASE)
+mal_id_sets = {k: set(v["id"]) for k, v in malicious_tables.items()}
 
-    print("Test Accuracy:", acc)
-    print("Precision (macro):", precision)
-    print("Recall (macro):", recall)
-    print("F1 (macro):", f1)
-    print("\nClassification Report:\n", classification_report(y_test, y_pred, zero_division=0))
+day_label_parts = []
+for source, mal_ids in mal_id_sets.items():
+    matched = id_tables[source][id_tables[source]["id"].isin(mal_ids)][["user", "day"]]
+    day_label_parts.append(matched)
 
-    cv_scores = cross_val_score(model, X_train, y_train, cv=skf, scoring='accuracy')
-    print("CV Fold Scores:", cv_scores)
-    print("CV Mean Accuracy:", cv_scores.mean())
+day_labels = pd.concat(day_label_parts, ignore_index=True).drop_duplicates()
+day_labels["is_insider"] = 1
+print(f"Malicious user-days: {len(day_labels)} | Unique insiders: {day_labels['user'].nunique()}")
 
-    cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
-    plt.figure(figsize=(7, 5))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                xticklabels=model.classes_, yticklabels=model.classes_)
-    plt.xlabel("Predicted")
-    plt.ylabel("Actual")
-    plt.title(f"{name} — Confusion Matrix")
-    plt.xticks(rotation=45, ha='right')
-    plt.tight_layout()
-    plt.show()
-
-results_df = pd.DataFrame(list(results.items()), columns=["Model", "Test Accuracy"])
-results_df = results_df.sort_values(by="Test Accuracy", ascending=False)
-print("\n================= MODEL COMPARISON =================")
-print(results_df)
-
-# =====================================================================
-# 8. ISOLATION FOREST (unsupervised anomaly detection)
-# =====================================================================
-print("\n================= Isolation Forest =================")
-
-iso_forest = IsolationForest(n_estimators=200, contamination=0.05, random_state=42)
-iso_forest.fit(X_train)
-
-iso_pred_test = iso_forest.predict(X_test)
-iso_labels_test = np.where(iso_pred_test == -1, "Anomaly", "Normal")
-
-y_test_binary = np.where(y_test == "Normal", "Normal", "Anomaly")
-
-print("Isolation Forest flagged anomalies (test set):", (iso_labels_test == "Anomaly").sum(),
-      "out of", len(iso_labels_test))
-print("\nComparison against threshold-based labels (Normal vs Any-Threat):")
-print(classification_report(y_test_binary, iso_labels_test, zero_division=0))
-
-cm_iso = confusion_matrix(y_test_binary, iso_labels_test, labels=["Normal", "Anomaly"])
-plt.figure(figsize=(6, 5))
-sns.heatmap(cm_iso, annot=True, fmt='d', cmap='Oranges',
-            xticklabels=["Normal", "Anomaly"], yticklabels=["Normal", "Anomaly"])
-plt.xlabel("Predicted")
-plt.ylabel("Actual (threshold-based)")
-plt.title("Isolation Forest — Confusion Matrix")
-plt.tight_layout()
-plt.show()
-
-anomaly_scores = iso_forest.decision_function(X_test)
-combined_df.loc[X_test.index, 'iso_anomaly_score'] = anomaly_scores
-combined_df.loc[X_test.index, 'iso_prediction'] = iso_labels_test
+combined_df["day"] = pd.to_datetime(combined_df["day"]).dt.date
+combined_df = combined_df.merge(day_labels[["user", "day", "is_insider"]], on=["user", "day"], how="left")
+combined_df["is_insider"] = combined_df["is_insider"].fillna(0).astype(int)
+print(combined_df["is_insider"].value_counts())
 
 # =====================================================================
-# 9. SAVE ARTIFACTS
+# 5. USER-BASED TRAIN/TEST SPLIT (prevents identity leakage)
 # =====================================================================
-best_model_name = results_df.iloc[0]['Model']
-best_model = models[best_model_name]
-print(f"\nBest performing model: {best_model_name}")
+gss = GroupShuffleSplit(n_splits=1, test_size=0.3, random_state=42)
+train_idx, test_idx = next(gss.split(combined_df, groups=combined_df["user"]))
+train_df = combined_df.iloc[train_idx].copy()
+test_df = combined_df.iloc[test_idx].copy()
 
-with open("/kaggle/working/model.pkl", "wb") as f:
-    pickle.dump(best_model, f)
-with open("/kaggle/working/isolation_forest.pkl", "wb") as f:
-    pickle.dump(iso_forest, f)
-with open("/kaggle/working/scaler.pkl", "wb") as f:
+assert len(set(train_df["user"]) & set(test_df["user"])) == 0, "User leakage between train/test!"
+
+X_cols = [c for c in combined_df.columns if c not in ["user", "day", "is_insider"]]
+assert "is_insider" not in X_cols, "Label leaked into features!"
+
+X_train, y_train = train_df[X_cols], train_df["is_insider"]
+X_test, y_test = test_df[X_cols], test_df["is_insider"]
+
+# =====================================================================
+# 6. SCALE + TRAIN XGBOOST
+# =====================================================================
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+neg, pos = (y_train == 0).sum(), (y_train == 1).sum()
+model = xgb.XGBClassifier(
+    n_estimators=150, max_depth=6, learning_rate=0.05,
+    scale_pos_weight=neg / pos, random_state=42, eval_metric="aucpr"
+)
+model.fit(X_train_scaled, y_train)
+
+y_pred = model.predict(X_test_scaled)
+y_prob = model.predict_proba(X_test_scaled)[:, 1]
+
+precision, recall, _ = precision_recall_curve(y_test, y_prob)
+pr_auc = auc(recall, precision)
+
+print(f"PR-AUC: {pr_auc:.4f}")
+print(f"Precision: {precision_score(y_test, y_pred):.4f}")
+print(f"Recall: {recall_score(y_test, y_pred):.4f}")
+print(f"F1: {f1_score(y_test, y_pred):.4f}")
+
+flagged_users = set(test_df.loc[y_pred == 1, "user"])
+true_insiders_test = set(test_df.loc[y_test == 1, "user"])
+print(f"User-level recall: {len(flagged_users & true_insiders_test)}/{len(true_insiders_test)}")
+
+# =====================================================================
+# 7. ISOLATION FOREST (unsupervised comparison)
+# =====================================================================
+iso_forest = IsolationForest(n_estimators=200, contamination=0.003, random_state=42)
+iso_forest.fit(X_train_scaled)
+iso_pred = np.where(iso_forest.predict(X_test_scaled) == -1, 1, 0)
+print("\nIsolation Forest F1:", f1_score(y_test, iso_pred, zero_division=0))
+
+# =====================================================================
+# 8. SAVE ARTIFACTS
+# =====================================================================
+os.makedirs("model", exist_ok=True)
+with open("model/model.pkl", "wb") as f:
+    pickle.dump(model, f)
+with open("model/scaler.pkl", "wb") as f:
     pickle.dump(scaler, f)
-with open("/kaggle/working/feature_means.pkl", "wb") as f:
-    pickle.dump(X.mean().to_dict(), f)
+with open("model/feature_columns.pkl", "wb") as f:
+    pickle.dump(X_cols, f)
+with open("model/le_dict.pkl", "wb") as f:
+    pickle.dump(le_dict, f)
+with open("model/isolation_forest.pkl", "wb") as f:
+    pickle.dump(iso_forest, f)
 
-combined_df.to_csv('/kaggle/working/labeled_with_isoforest.csv', index=False)
-
-print("\nAll artifacts saved to /kaggle/working/")
-print("\nModel, scaler, and feature means saved.")
+print("\nAll artifacts saved to model/")
