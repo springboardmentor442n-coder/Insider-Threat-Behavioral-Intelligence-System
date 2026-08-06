@@ -1,446 +1,319 @@
 # Insider Threat Behavioral Intelligence System
 
-An AI-powered **Insider Threat Detection System** that leverages behavioral analytics and multiple unsupervised machine learning models to identify potentially malicious insider activities using the **CERT Insider Threat Dataset (R4.2)**.
+<div align="center">
 
-The project performs **end-to-end data engineering, feature engineering, anomaly detection, model evaluation, employee risk scoring, backend API development, and an interactive React dashboard** to generate actionable security intelligence.
+# 🛡️ Insider Threat Behavioral Intelligence System
+
+### AI-Powered Enterprise Insider Threat Detection & Behavioral Analytics Platform
+
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688.svg)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-Frontend-646CFF.svg)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-Styling-38B2AC.svg)](https://tailwindcss.com/)
+[![Machine Learning](https://img.shields.io/badge/Machine%20Learning-7%20Models-orange.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+
+An Enterprise-grade AI-powered Behavioral Intelligence Platform capable of detecting malicious insider activities using behavioral analytics, anomaly detection, machine learning, and interactive security dashboards.
+
+</div>
 
 ---
 
-# Project Status
+# 📖 Overview
 
-**Current Progress:** **~70%**
+The **Insider Threat Behavioral Intelligence System** is a complete end-to-end cybersecurity platform developed for detecting malicious insider activities within enterprise organizations.
+
+Instead of relying only on signature-based detection, the system analyzes employee behavioral patterns from multiple enterprise logs to identify suspicious users using unsupervised machine learning techniques.
+
+The platform combines:
+
+- Behavioral Analytics
+- Machine Learning
+- Enterprise Security Dashboard
+- Threat Management
+- Employee Risk Scoring
+- Interactive Investigation Tools
+- FastAPI REST APIs
+- Modern React Frontend
+
+The project uses the **CERT Insider Threat Dataset (R4.2)** as its primary dataset.
+
+---
+
+# 🎯 Objectives
+
+The primary objective of this project is to build an intelligent insider threat detection platform capable of
+
+- Detecting suspicious employee behavior
+- Calculating employee risk scores
+- Ranking high-risk employees
+- Providing AI-assisted threat investigation
+- Visualizing enterprise security metrics
+- Supporting cybersecurity analysts during investigations
+
+---
+
+# 🚀 Current Project Progress
+
+**Overall Progress:** **~88%**
+
+---
 
 ## ✅ Completed
 
-### Data Engineering
+### 📂 Data Engineering
+
 - Dataset Inventory
 - Dataset Profiling
 - Data Dictionary Generation
-- Data Cleaning
-- Data Integration
+- Data Cleaning Pipeline
+- Dataset Integration
 - Feature Engineering
-
-### Machine Learning
-- Multi-Model Training
-- Model Evaluation
-- Consensus Risk Scoring
-- Employee Risk Scoring
-
-### Backend
-- FastAPI Backend
-- JWT Authentication
-- Employee CRUD APIs
-- Dashboard APIs
-- Employee Activity APIs
-
-### Frontend
-- React + Vite Dashboard
-- Employee Management Module
-- Search & Filtering
-- Employee Profile Drawer
-- Employee Activity Timeline
-- Risk Summary Cards
-- CSV Export
-- React Query Integration
-- Responsive UI
+- Data Validation
+- Data Quality Reports
 
 ---
 
-## 🚧 In Progress
-
-- Threat Center
-- Analytics Module
-- Reports Module
-- Settings Module
-
----
-
-## 📌 Planned
-
-- Explainable AI (XAI)
-- Automated Alert System
-- Real-Time Prediction
-- Docker Deployment
-- Cloud Deployment
-
----
-
-# Project Workflow
-
-```text
-CERT Insider Threat Dataset
-            │
-            ▼
-Dataset Inventory
-            │
-            ▼
-Dataset Profiling
-            │
-            ▼
-Data Dictionary
-            │
-            ▼
-Data Cleaning
-            │
-            ▼
-Data Integration
-            │
-            ▼
-Feature Engineering
-            │
-            ▼
-Machine Learning Models
-            │
-            ▼
-Consensus Risk Scoring
-            │
-            ▼
-Employee Risk Database
-            │
-            ▼
-FastAPI Backend
-            │
-            ▼
-React Dashboard
-            │
-            ▼
-Behavioral Intelligence Platform
-```
-
----
-
-# Project Structure
-
-```text
-Insider-Threat-Behavioral-Intelligence-System/
-
-│
-├── ai_engine/
-├── backend/
-│   ├── api/
-│   ├── core/
-│   ├── database/
-│   ├── models/
-│   ├── routers/
-│   ├── schemas/
-│   ├── services/
-│   └── app.py
-│
-├── insider-threat-frontend/
-│   ├── src/
-│   ├── public/
-│   ├── components/
-│   ├── pages/
-│   ├── hooks/
-│   └── services/
-│
-├── datasets/
-├── models/
-├── reports/
-├── plots/
-├── scripts/
-│   ├── data_engineering/
-│   └── utilities/
-│
-├── notebooks/
-├── deployment/
-├── tests/
-├── README.md
-├── requirements.txt
-└── LICENSE
-```
-
----
-
-# Dataset
-
-This project utilizes the **CERT Insider Threat Dataset (R4.2)** containing enterprise behavioral logs such as:
-
-- Employee Logon Records
-- Device Usage
-- Email Communications
-- HTTP Browsing Activity
-- File Access Events
-- Psychometric Data
-- Employee Information
-
----
-
-# Data Engineering Pipeline
-
-The raw enterprise datasets undergo multiple preprocessing stages before machine learning.
-
-### Dataset Inventory
-
-- Dataset discovery
-- File validation
-- Dataset inventory generation
-
-### Dataset Profiling
-
-- Missing value analysis
-- Duplicate detection
-- Statistical profiling
-- Data quality assessment
-
-### Data Dictionary
-
-- Metadata generation
-- Schema documentation
-- Column descriptions
-
-### Data Cleaning
-
-- Missing value handling
-- Duplicate removal
-- Timestamp standardization
-- Data normalization
-
-### Data Integration
-
-Multiple enterprise logs are merged into a unified employee activity timeline.
-
-### Feature Engineering
-
-Behavioral features extracted include:
-
-- Total Events
-- Active Days
-- Device Activity
-- Web Activity
-- Email Activity
-- File Activity
-- Weekend Activity
-- After-Hours Activity
-- Psychometric Features
-
-A total of **22 behavioral features** are generated for every employee.
-
----
-
-# Machine Learning Pipeline
-
-The system implements **seven unsupervised anomaly detection models**.
-
-| Model | Purpose |
-|--------|----------|
-| Isolation Forest | Tree-based anomaly detection |
-| One-Class SVM | Boundary-based anomaly detection |
-| Local Outlier Factor (LOF) | Density-based anomaly detection |
-| Elliptic Envelope | Statistical anomaly detection |
-| PCA Reconstruction | Reconstruction-based anomaly detection |
-| DBSCAN | Density clustering |
-| K-Means | Distance-based anomaly detection |
-
-Predictions from all seven models are aggregated using a **consensus-based scoring strategy** to generate the final employee risk score.
-
----
-
-# Model Evaluation
-
-The trained models are evaluated using:
-
-- Model Comparison
-- Training Time Analysis
-- Detection Comparison
-- Consensus Analysis
-- Risk Distribution
-- Feature Statistics
-
-Generated reports include:
-
-- Evaluation Summary
-- Model Comparison
-- Training Time Ranking
-- Consensus Predictions
-- Model Statistics
-- Top Suspicious Employees
-
-Generated visualizations include:
-
-- Model Detection Comparison
-- Training Time Comparison
-- Consensus Distribution
-- Risk Score Distribution
-- Feature Correlation Matrix
-
----
-
-# Employee Risk Scoring
-
-Employees are categorized into four risk levels:
-
-- Critical
-- High
-- Medium
-- Low
-
-Generated outputs include:
-
-- Employee Risk Report
-- Dashboard Dataset
-- Top 100 High-Risk Employees
-- Critical Employee Report
-
----
-
-# Backend APIs
-
-The backend is built using **FastAPI** and exposes secure REST APIs.
-
-## Authentication
-
-- JWT Login
-- Role-Based Authorization
-
-## Employee APIs
-
-- Get Employees
-- Get Employee Details
-- Create Employee
-- Update Employee
-- Delete Employee
-
-## Dashboard APIs
-
-- Dashboard Summary
-- Risk Distribution
-- Top Suspicious Employees
-
-## Activity APIs
-
-- Employee Activity Timeline
-
----
-
-# Frontend
-
-The frontend is developed using **React**, **Vite**, **Tailwind CSS**, **React Query**, and **Axios**.
-
-Implemented features include:
-
-- Interactive Dashboard
-- Employee Management
-- Search Employees
-- Department Filter
-- Risk Filter
-- Employee Profile Drawer
-- Activity Timeline
-- Risk Summary Cards
-- CSV Export
-- Responsive Design
-- Protected Routes
-
----
-
-# Current Results
-
-| Metric | Value |
-|---------|------:|
-| Employees Processed | 1,000 |
-| Behavioral Features | 22 |
-| Machine Learning Models | 7 |
-| Risk Categories | 4 |
-| Backend APIs | 10+ |
-| Employee CRUD | Complete |
-| Frontend Framework | React + Vite |
-
----
-
-# Technologies Used
-
-## Backend
-
-- Python
-- FastAPI
-- SQLAlchemy
-- Pydantic
-- JWT Authentication
-
-## Frontend
-
-- React
-- Vite
-- Tailwind CSS
-- React Query
-- Axios
-- Framer Motion
-- Lucide React
-
-## Data Processing
-
-- Pandas
-- NumPy
-- DuckDB
-
-## Machine Learning
-
-- Scikit-learn
-- Joblib
-
-## Visualization
-
-- Matplotlib
-
----
-
-# Generated Outputs
-
-## Models
+### 🤖 Machine Learning
 
 - Isolation Forest
 - One-Class SVM
 - Local Outlier Factor
 - Elliptic Envelope
-- PCA
+- PCA Reconstruction
 - DBSCAN
 - K-Means
-- Standard Scaler
 
-## Reports
+Additional completed work
 
-- Evaluation Summary
+- Consensus Risk Scoring
+- Employee Risk Ranking
 - Model Comparison
-- Model Statistics
-- Consensus Predictions
-- Training Time Ranking
-- Top Suspicious Employees
-
-## Visualizations
-
-- Model Detection Comparison
-- Training Time Comparison
-- Consensus Distribution
-- Risk Score Distribution
-- Feature Correlation Matrix
+- Model Evaluation
+- Risk Distribution
+- Employee Risk Reports
 
 ---
 
-# Future Enhancements
+### ⚙ Backend
 
-- Explainable AI (SHAP/LIME)
+Completed backend modules
+
+- FastAPI Backend
+- JWT Authentication
+- Role-Based Authorization
+- Employee CRUD APIs
+- Dashboard APIs
+- Threat APIs
+- Activity APIs
+- Analytics APIs
+- Report APIs
+- Authentication APIs
+
+Implemented features
+
+- REST API Architecture
+- Modular Backend
+- SQLAlchemy ORM
+- Pydantic Validation
+- LDAP Employee Integration
+- Risk Scoring APIs
+
+---
+
+### 💻 Frontend
+
+Completed modules
+
+- Login
+- Enterprise Dashboard
 - Threat Center
-- Advanced Analytics
-- Automated Alert System
-- Email Notifications
-- Real-Time Prediction
+- Employee Management
+- Protected Routes
+- React Query Integration
+
+Completed Dashboard
+
+- Hero Banner
+- Animated Metric Cards
+- Live Activity Feed
+- AI Insights Panel
+- Threat Trend Chart
+- Investigation Queue
+- Top Suspicious Employees
+- System Status Panel
+
+Completed Threat Center
+
+- Threat Overview Cards
+- Threat Table
+- Search
+- Filtering
+- Sorting
+- Threat Details Drawer
+- Resolve Threat Dialog
+- Delete Threat Dialog
+
+Completed UI
+
+- Enterprise Layout
+- Glassmorphism Design
+- Animated Sidebar
+- Modern Navigation
+- Cyber Theme
+- Responsive Design
+- Framer Motion Animations
+- Animated Counters
+
+---
+
+## 🚧 In Progress
+
+- Investigation Module
+- Analytics Dashboard
+- Reports Module
+- Settings Module
+- Explainable AI
+- Deployment
+
+---
+
+## 📌 Planned
+
 - Docker Deployment
 - Kubernetes Deployment
 - Cloud Deployment
+- Email Notifications
 - SIEM Integration
+- WebSocket Live Alerts
+- SHAP Explainability
+- LIME Explainability
+- AI Chat Assistant
 
 ---
 
-# Contributors
+# 🏗 System Workflow
 
-Springboard Mentor Program
-
-## Contributor
-
-- **Nandan Kabra**
+```text
+                CERT Insider Threat Dataset
+                           │
+                           ▼
+                 Dataset Inventory Engine
+                           │
+                           ▼
+                   Dataset Profiling Engine
+                           │
+                           ▼
+                 Data Dictionary Generator
+                           │
+                           ▼
+                    Data Cleaning Pipeline
+                           │
+                           ▼
+                  Enterprise Data Integration
+                           │
+                           ▼
+                 Behavioral Feature Engineering
+                           │
+                           ▼
+                 Machine Learning Models (7)
+                           │
+                           ▼
+                Consensus Risk Score Generator
+                           │
+                           ▼
+               Employee Behavioral Intelligence
+                           │
+                           ▼
+                    FastAPI Backend Services
+                           │
+                           ▼
+             Enterprise React Dashboard (Vite)
+                           │
+                           ▼
+              Security Analyst Investigation
+```
 
 ---
 
-# License
+# 📂 Project Structure
 
-This project is licensed under the **MIT License**.
+```text
+Insider-Threat-Behavioral-Intelligence-System
+│
+├── ai_engine/
+│
+├── backend/
+│   ├── api/
+│   ├── core/
+│   ├── crud/
+│   ├── data/
+│   ├── auth_service/
+│   ├── activity_service/
+│   ├── anomaly_service/
+│   ├── api_gateway/
+│   ├── app.py
+│   ├── settings.py
+│   └── __init__.py
+│
+├── insider-threat-frontend/
+│   ├── public/
+│   ├── src/
+│   │
+│   ├── assets/
+│   ├── components/
+│   │   ├── ai/
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── investigation/
+│   │   ├── layout/
+│   │   ├── threat/
+│   │   └── ui/
+│   │
+│   ├── features/
+│   │   ├── dashboard/
+│   │   ├── employees/
+│   │   ├── threats/
+│   │   ├── reports/
+│   │   └── analytics/
+│   │
+│   ├── hooks/
+│   ├── layouts/
+│   ├── pages/
+│   ├── routes/
+│   ├── services/
+│   ├── styles/
+│   └── utils/
+│
+├── datasets/
+├── models/
+├── reports/
+├── plots/
+├── notebooks/
+├── deployment/
+├── scripts/
+├── tests/
+├── README.md
+└── requirements.txt
+```
+
+---
+
+# 📊 Dataset
+
+The project utilizes the **CERT Insider Threat Dataset (R4.2)**.
+
+The dataset contains multiple enterprise behavioral logs, including:
+
+- Employee Information
+- Logon Activities
+- Device Usage
+- Email Communications
+- HTTP Browsing History
+- File Access Logs
+- USB Activity
+- Psychometric Data
+
+> **Note:** Due to the large size of the CERT dataset, raw CSV files are **not included** in this repository. Users should download the dataset separately and place it in the appropriate local data directory before running the project.
+> 
