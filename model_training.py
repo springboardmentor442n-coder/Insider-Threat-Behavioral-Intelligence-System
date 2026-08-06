@@ -2,6 +2,7 @@
 Insider Threat Detection — Model Training
 Uses REAL ground-truth labels (matched from CERT r4.2 official answer files
 by log-row ID), not synthetic thresholds.
+Reads cleaned data from preprocess.py's output.
 """
 import os, glob, pickle
 import numpy as np
@@ -10,54 +11,43 @@ from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from sklearn.model_selection import GroupShuffleSplit
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import (
-    precision_score, recall_score, f1_score, precision_recall_curve, auc,
-    classification_report, confusion_matrix
+    precision_score, recall_score, f1_score, precision_recall_curve, auc
 )
 import xgboost as xgb
-import matplotlib.pyplot as plt
-import seaborn as sns
 
 from feature_engineering import engineer_features, attach_ldap_context
 
 # =====================================================================
-# 1. LOAD RAW DATA
+# 1. LOAD CLEANED DATA (output of preprocess.py)
 # =====================================================================
-BASE_PATH = "data/r4.2/"          # adjust to your data location
-ANSWERS_BASE = "data/answers/"    # adjust to your data location
+BASE_PATH = "/kaggle/working/cleaned/"
+ANSWERS_BASE = "/kaggle/input/datasets/andrihjonior/cert-insider-threat-dataset-r4-2/answers/"
 
-logon = pd.read_csv(os.path.join(BASE_PATH, "logon.csv"), parse_dates=["date"])
-device = pd.read_csv(os.path.join(BASE_PATH, "device.csv"), parse_dates=["date"])
-file_df = pd.read_csv(os.path.join(BASE_PATH, "file.csv"), parse_dates=["date"])
-email = pd.read_csv(os.path.join(BASE_PATH, "email.csv"), parse_dates=["date"])
+logon = pd.read_csv(os.path.join(BASE_PATH, "logon_clean.csv"), parse_dates=["date"])
+device = pd.read_csv(os.path.join(BASE_PATH, "device_clean.csv"), parse_dates=["date"])
+file_df = pd.read_csv(os.path.join(BASE_PATH, "file_clean.csv"), parse_dates=["date"])
+email = pd.read_csv(os.path.join(BASE_PATH, "email_clean.csv"), parse_dates=["date"])
+http = pd.read_csv(os.path.join(BASE_PATH, "http_clean.csv"), parse_dates=["date"])
 
 print("Logon activity values:", logon["activity"].unique())
 
 # Capture ID tables (needed for real label matching)
 id_tables = {}
-for name, df in [("logon", logon), ("device", device), ("file", file_df), ("email", email)]:
+for name, df in [("logon", logon), ("device", device), ("file", file_df), ("email", email), ("http", http)]:
     df["day"] = df["date"].dt.date
     id_tables[name] = df[["id", "user", "day"]].copy()
 
 # =====================================================================
 # 2. FEATURE ENGINEERING (per user-day)
 # =====================================================================
-combined_df = engineer_features(logon, device, file_df, email,
-                                 pd.read_csv(os.path.join(BASE_PATH, "http.csv"), parse_dates=["date"]))
-
-# Recapture http IDs separately (large file, chunked)
-http_id_parts = []
-for chunk in pd.read_csv(os.path.join(BASE_PATH, "http.csv"), usecols=["id", "date", "user"],
-                          parse_dates=["date"], chunksize=2_000_000):
-    chunk["day"] = chunk["date"].dt.date
-    http_id_parts.append(chunk[["id", "user", "day"]])
-id_tables["http"] = pd.concat(http_id_parts, ignore_index=True)
-
+combined_df = engineer_features(logon, device, file_df, email, http)
 print(f"Feature table shape: {combined_df.shape}")
 
 # =====================================================================
 # 3. LDAP INTEGRATION
 # =====================================================================
-ldap_files = glob.glob(os.path.join(BASE_PATH, "LDAP", "*.csv"))
+LDAP_PATH = "/kaggle/input/datasets/andrihjonior/cert-insider-threat-dataset-r4-2/r4.2/LDAP/"
+ldap_files = glob.glob(os.path.join(LDAP_PATH, "*.csv"))
 ldap_list = []
 for f in ldap_files:
     df = pd.read_csv(f)
