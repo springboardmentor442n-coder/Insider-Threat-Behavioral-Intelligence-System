@@ -841,3 +841,400 @@ PATCH /threats/{id}/resolve
 | Threat Management | Complete |
 | Authentication | Complete |
 | UI Theme | Enterprise Glassmorphism |
+
+---
+
+# 🎨 Enterprise User Interface
+
+The application is designed with an enterprise-grade cybersecurity theme inspired by modern Security Operations Center (SOC) dashboards.
+
+The frontend emphasizes usability, clarity, and rapid threat investigation through an intuitive interface powered by React, Tailwind CSS, and Framer Motion.
+
+---
+
+## ✨ UI Highlights
+
+- Enterprise Cyber Security Theme
+- Glassmorphism Design
+- Responsive Layout
+- Animated Background
+- Neon Glow Effects
+- Framer Motion Animations
+- Modern Sidebar Navigation
+- Interactive Data Tables
+- Animated Metric Cards
+- Responsive Drawers
+- Animated Dialogs
+- Loading Animations
+- Smooth Page Transitions
+
+---
+
+## 🌌 Glassmorphism Design
+
+The UI adopts a modern glassmorphism approach using
+
+- Frosted Glass Cards
+- Transparent Panels
+- Backdrop Blur
+- Soft Shadows
+- Gradient Borders
+- Neon Highlights
+
+The objective is to provide a premium enterprise experience while maintaining excellent readability.
+
+---
+
+## 🎞 Animations
+
+Implemented using **Framer Motion**
+
+Features include
+
+- Page Transitions
+- Card Hover Effects
+- Drawer Animations
+- Dialog Animations
+- Animated Counters
+- Interactive Hover States
+- Smooth Fade Effects
+- Slide Animations
+
+---
+
+# 📊 Enterprise Dashboard
+
+The Dashboard provides security analysts with a centralized view of enterprise activity.
+
+---
+
+## Dashboard Components
+
+### 🏠 Hero Banner
+
+Displays
+
+- Welcome Banner
+- Security Status
+- Animated Background
+- Enterprise Branding
+
+---
+
+### 📈 Metric Cards
+
+Interactive cards displaying
+
+- Total Employees
+- Total Threats
+- High Risk Employees
+- Active Alerts
+- System Health
+
+Features
+
+- Animated Counters
+- Hover Animation
+- Glassmorphism Cards
+- Color-coded Metrics
+
+---
+
+### 📉 Threat Trend Chart
+
+Displays
+
+- Threat Growth
+- Monthly Incidents
+- Trend Analysis
+- Historical Activity
+
+---
+
+### 🤖 AI Insights Panel
+
+Provides intelligent recommendations based on employee behavior.
+
+Examples
+
+- High-risk employee notifications
+- Suspicious activity summaries
+- AI-generated investigation suggestions
+
+---
+
+### 📋 Activity Feed
+
+Displays recent enterprise events including
+
+- Employee Activity
+- Threat Detection
+- Login Events
+- File Activities
+- Device Activities
+
+---
+
+### 🔍 Investigation Queue
+
+Shows
+
+- Pending Investigations
+- Critical Cases
+- High Priority Alerts
+
+---
+
+### 👥 Top Suspicious Employees
+
+Displays
+
+- Employee Name
+- Department
+- Role
+- Risk Score
+- Threat Severity
+
+Integrated directly with backend APIs.
+
+---
+
+### 🖥 System Status
+
+Displays
+
+- API Status
+- Database Status
+- ML Engine Status
+- Security Status
+
+---
+
+# 🛡 Threat Center
+
+The Threat Center provides centralized threat management capabilities.
+
+---
+
+## Features
+
+### Threat Overview Cards
+
+Displays
+
+- Total Threats
+- Critical Threats
+- High Threats
+- Medium Threats
+- Low Threats
+
+---
+
+### Threat Search
+
+Search by
+
+- Employee Name
+- Department
+- Threat Type
+
+---
+
+### Advanced Filtering
+
+Supports filtering by
+
+- Severity
+- Status
+- Department
+
+---
+
+### Sorting
+
+Sort threats by
+
+- Highest Risk
+- Latest
+- Oldest
+
+---
+
+### Threat Table
+
+Displays
+
+- Employee
+- Department
+- Threat Type
+- Risk Score
+- Severity
+- Status
+- Date
+
+Interactive row selection opens detailed investigation.
+
+---
+
+### Threat Details Drawer
+
+Provides detailed information including
+
+- Employee Information
+- Department
+- Risk Score
+- Threat Severity
+- Threat Description
+- Evidence
+- Triggered ML Models
+- Investigation Timestamp
+
+---
+
+### Threat Resolution
+
+Security analysts can
+
+- Resolve Threat
+- Delete Threat
+- Update Investigation Status
+
+All operations communicate directly with backend APIs.
+
+---
+
+# 👨‍💼 Employee Management
+
+The Employee Management module enables analysts to inspect employee information and behavioral risk.
+
+Features
+
+- Employee Directory
+- Employee Search
+- Department Filter
+- Risk Filter
+- Employee Profile
+- Activity Summary
+- Risk Summary
+- Timeline
+- CRUD Operations
+
+---
+
+# 🔍 Investigation Module
+
+The Investigation module consolidates employee activity into a single investigative view.
+
+Current Features
+
+- Employee Summary
+- Risk Timeline
+- Email Activity
+- HTTP Activity
+- File Activity
+- USB Activity
+- AI Recommendations
+- Behavioral Timeline
+
+Designed for security analysts performing insider threat investigations.
+
+---
+
+# 📈 Analytics Module
+
+The Analytics dashboard provides organization-wide security insights.
+
+Planned Visualizations
+
+- Risk Distribution
+- Department Comparison
+- Employee Ranking
+- Threat Timeline
+- Model Comparison
+- Trend Analysis
+- Monthly Reports
+- Detection Statistics
+
+---
+
+# 📑 Reports Module
+
+The reporting module enables exporting enterprise reports.
+
+Supported Exports
+
+- CSV
+- PDF
+
+Available Reports
+
+- Employee Report
+- Threat Report
+- Risk Report
+- Investigation Report
+- Security Summary
+
+---
+
+# ⚙ Settings Module
+
+Provides application configuration options.
+
+Planned Features
+
+- User Profile
+- Password Management
+- Theme Selection
+- Notification Preferences
+- API Configuration
+- Security Settings
+
+---
+
+# 🤖 Artificial Intelligence Features
+
+Implemented AI capabilities include
+
+- Behavioral Analytics
+- Risk Prediction
+- Threat Detection
+- Employee Ranking
+- Consensus Risk Scoring
+- AI Recommendations
+
+Planned AI Enhancements
+
+- Explainable AI (SHAP)
+- Explainable AI (LIME)
+- AI Copilot
+- Natural Language Investigation Assistant
+
+---
+
+# 🎯 User Experience
+
+The application focuses on providing an intuitive analyst experience.
+
+Implemented improvements
+
+- Responsive Layout
+- Smooth Navigation
+- Animated Components
+- Professional Typography
+- Accessible Color Palette
+- Consistent Design Language
+- Mobile Compatibility
+- Enterprise Visual Identity
+
+---
+
+# 🔒 Security Features
+
+- JWT Authentication
+- Protected Routes
+- Role-Based Access Control
+- Secure REST APIs
+- Input Validation
+- API Authorization
+- Secure Password Handling
+- Backend Authentication Middleware
