@@ -1238,3 +1238,410 @@ Implemented improvements
 - API Authorization
 - Secure Password Handling
 - Backend Authentication Middleware
+
+---
+
+# 🚀 Installation Guide
+
+## Prerequisites
+
+Before running the project, ensure the following software is installed.
+
+### Backend
+
+- Python 3.12+
+- pip
+- Virtual Environment (recommended)
+
+### Frontend
+
+- Node.js 20+
+- npm
+
+### Database
+
+- SQLite (Default)
+- PostgreSQL (Optional)
+
+---
+
+# 📥 Clone Repository
+
+```bash
+git clone https://github.com/springboardmentor442n-coder/Insider-Threat-Behavioral-Intelligence-System.git
+
+cd Insider-Threat-Behavioral-Intelligence-System
+```
+
+---
+
+# ⚙ Backend Setup
+
+Create a virtual environment
+
+```bash
+python -m venv .venv
+```
+
+Activate it
+
+### Windows
+
+```bash
+.venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source .venv/bin/activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Run the backend
+
+```bash
+cd backend
+
+uvicorn app:app --reload
+```
+
+Backend will start at
+
+```
+http://localhost:8000
+```
+
+Swagger Documentation
+
+```
+http://localhost:8000/docs
+```
+
+ReDoc Documentation
+
+```
+http://localhost:8000/redoc
+```
+
+---
+
+# 💻 Frontend Setup
+
+```bash
+cd insider-threat-frontend
+
+npm install
+```
+
+Run the development server
+
+```bash
+npm run dev
+```
+
+Frontend URL
+
+```
+http://localhost:5173
+```
+
+---
+
+# 📁 Environment Variables
+
+Backend
+
+```env
+DATABASE_URL=sqlite:///./insider_threat.db
+
+SECRET_KEY=your_secret_key
+
+ALGORITHM=HS256
+
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+```
+
+Frontend
+
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
+
+---
+
+# 📸 Application Screenshots
+
+The following screenshots will be added as development progresses.
+
+## Authentication
+
+- Login Page
+
+---
+
+## Dashboard
+
+- Dashboard Overview
+- AI Insights
+- Threat Trend Chart
+- Live Activity Feed
+- Top Suspicious Employees
+- Investigation Queue
+
+---
+
+## Threat Center
+
+- Threat Overview
+- Threat Table
+- Threat Details Drawer
+- Resolve Threat Dialog
+- Delete Threat Dialog
+
+---
+
+## Employee Module
+
+- Employee Directory
+- Employee Profile
+- Employee Timeline
+- Risk Summary
+
+---
+
+## Investigation
+
+- Activity Timeline
+- Email Activities
+- HTTP Activities
+- File Activities
+- USB Activities
+- AI Recommendations
+
+---
+
+## Analytics
+
+- Risk Distribution
+- Department Analysis
+- Monthly Trends
+- Threat Statistics
+
+---
+
+# 📈 Performance Summary
+
+| Component | Status |
+|------------|---------|
+| Data Engineering | ✅ Complete |
+| Feature Engineering | ✅ Complete |
+| Machine Learning | ✅ Complete |
+| Risk Scoring | ✅ Complete |
+| Backend APIs | ✅ Complete |
+| Authentication | ✅ Complete |
+| Dashboard | ✅ Complete |
+| Threat Center | ✅ Complete |
+| Employee Module | ✅ Complete |
+| Investigation Module | 🚧 In Progress |
+| Analytics | 🚧 In Progress |
+| Reports | 🚧 In Progress |
+| Explainable AI | 🚧 In Progress |
+| Deployment | 🚧 Planned |
+
+---
+
+# 🗺 Project Roadmap
+
+## Phase 1
+
+- Dataset Processing
+- Data Cleaning
+- Feature Engineering
+
+Status
+
+✅ Completed
+
+---
+
+## Phase 2
+
+- Machine Learning
+- Consensus Risk Scoring
+- Employee Ranking
+
+Status
+
+✅ Completed
+
+---
+
+## Phase 3
+
+- Backend Development
+- Authentication
+- Employee APIs
+- Dashboard APIs
+
+Status
+
+✅ Completed
+
+---
+
+## Phase 4
+
+- React Dashboard
+- Employee Management
+- Threat Center
+
+Status
+
+✅ Completed
+
+---
+
+## Phase 5
+
+- Investigation Module
+- Analytics
+- Reports
+
+Status
+
+🚧 In Progress
+
+---
+
+## Phase 6
+
+- Explainable AI
+- Docker
+- Kubernetes
+- Cloud Deployment
+- SIEM Integration
+
+Status
+
+📌 Planned
+
+---
+
+# 🔮 Future Enhancements
+
+The following features are planned to further enhance the platform.
+
+## Artificial Intelligence
+
+- Explainable AI (SHAP)
+- Explainable AI (LIME)
+- AI Copilot
+- Natural Language Investigation
+
+---
+
+## Enterprise Features
+
+- Role-Based Access Control (RBAC)
+- LDAP Integration
+- Multi-Tenant Support
+- Audit Logging
+
+---
+
+## Real-Time Features
+
+- Live Threat Detection
+- WebSocket Notifications
+- Email Alerts
+- Slack Integration
+
+---
+
+## DevOps
+
+- Docker
+- Docker Compose
+- Kubernetes
+- GitHub Actions CI/CD
+
+---
+
+## Cloud
+
+- AWS Deployment
+- Azure Deployment
+- GCP Deployment
+
+---
+
+# 🤝 Contributors
+
+This project is developed as part of the **Springboard Mentor Program**.
+
+## Primary Contributor
+
+**Nandan Kabra**
+
+Artificial Intelligence & Data Science
+
+Vishwakarma Institute of Technology (VIT), Pune
+
+GitHub
+
+https://github.com/springboardmentor442n-coder
+
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to
+
+- CERT Insider Threat Dataset
+- Scikit-learn
+- FastAPI
+- React
+- Vite
+- Tailwind CSS
+- Framer Motion
+- Lucide React
+
+---
+
+# 📚 References
+
+- CERT Insider Threat Dataset R4.2
+- FastAPI Documentation
+- React Documentation
+- Tailwind CSS Documentation
+- Scikit-learn Documentation
+
+---
+
+# 📄 License
+
+This project is licensed under the **MIT License**.
+
+See the **LICENSE** file for additional details.
+
+---
+
+<div align="center">
+
+## ⭐ Support the Project
+
+If you found this project useful, please consider giving it a **⭐ Star** on GitHub.
+
+Your support helps improve the project and motivates future development.
+
+---
+
+**Made with ❤️ using FastAPI, React, Machine Learning, and Cybersecurity Concepts**
+
+</div>
