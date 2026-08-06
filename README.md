@@ -314,4 +314,530 @@ The dataset contains multiple enterprise behavioral logs, including:
 - Psychometric Data
 
 > **Note:** Due to the large size of the CERT dataset, raw CSV files are **not included** in this repository. Users should download the dataset separately and place it in the appropriate local data directory before running the project.
-> 
+>
+
+---
+
+# 🏭 Data Engineering Pipeline
+
+The project follows a structured enterprise-grade data engineering workflow before applying machine learning models.
+
+Each dataset undergoes multiple preprocessing stages to ensure high-quality behavioral analysis.
+
+---
+
+## 📦 Dataset Inventory
+
+The inventory engine automatically discovers and validates every enterprise dataset.
+
+Features
+
+- Dataset Discovery
+- CSV Validation
+- Dataset Inventory Generation
+- Metadata Collection
+- Missing Dataset Detection
+
+Generated Outputs
+
+- dataset_inventory.csv
+- dataset_inventory.json
+- dataset_inventory.md
+
+---
+
+## 📊 Dataset Profiling
+
+Each dataset is profiled to understand its quality and statistical characteristics.
+
+Generated Information
+
+- Row Count
+- Column Count
+- Missing Values
+- Duplicate Records
+- Data Types
+- Memory Usage
+- Null Percentage
+- Unique Values
+
+Outputs
+
+- Dataset Summary
+- Profiling Report
+- Statistics Report
+
+---
+
+## 📖 Data Dictionary
+
+The system automatically generates documentation for every dataset.
+
+Includes
+
+- Column Name
+- Data Type
+- Description
+- Nullable Status
+- Sample Values
+
+Outputs
+
+- data_dictionary.csv
+- data_dictionary.json
+- data_dictionary.md
+
+---
+
+## 🧹 Data Cleaning
+
+Data preprocessing includes
+
+- Duplicate Removal
+- Missing Value Handling
+- Timestamp Conversion
+- Invalid Record Removal
+- Data Normalization
+- Standardized Formatting
+
+Supported datasets
+
+- Device Logs
+- Email Logs
+- File Logs
+- HTTP Logs
+- Logon Logs
+- Psychometric Dataset
+
+---
+
+## 🔗 Data Integration
+
+Enterprise activity logs are merged into a unified behavioral timeline.
+
+Integrated datasets
+
+- Employees
+- Email
+- HTTP
+- File
+- Device
+- Logon
+- Psychometric
+
+Result
+
+One integrated employee behavioral dataset ready for feature engineering.
+
+---
+
+## ⚙ Feature Engineering
+
+Behavioral features are extracted for every employee.
+
+Generated Features
+
+### User Activity
+
+- Total Events
+- Active Days
+- Average Daily Activity
+- Login Frequency
+- Logout Frequency
+
+### Device Behaviour
+
+- USB Insertions
+- USB Removals
+- Device Events
+
+### Email Behaviour
+
+- Emails Sent
+- Emails Received
+- External Emails
+- Attachment Count
+
+### File Behaviour
+
+- File Reads
+- File Writes
+- File Copies
+- Sensitive File Access
+
+### HTTP Behaviour
+
+- Website Visits
+- External Domains
+- Browsing Frequency
+
+### Time-Based Features
+
+- Weekend Activity
+- Night Activity
+- After-Hours Access
+
+### Psychometric Features
+
+- Personality Indicators
+- Behavioral Scores
+
+A total of **22+ behavioral features** are generated for each employee.
+
+---
+
+# 🤖 Machine Learning Pipeline
+
+The project implements multiple unsupervised anomaly detection models.
+
+Instead of relying on a single model, predictions are combined using a consensus-based strategy.
+
+---
+
+## Implemented Models
+
+| Model | Purpose |
+|--------|----------|
+| Isolation Forest | Tree-Based Anomaly Detection |
+| One-Class SVM | Boundary-Based Detection |
+| Local Outlier Factor | Density-Based Detection |
+| Elliptic Envelope | Statistical Detection |
+| PCA Reconstruction | Reconstruction Error |
+| DBSCAN | Density Clustering |
+| K-Means | Distance-Based Detection |
+
+---
+
+## Consensus Risk Scoring
+
+Outputs from all seven models are aggregated.
+
+Each employee receives
+
+- Model Votes
+- Consensus Percentage
+- Final Risk Score
+- Threat Severity
+- Risk Category
+
+Risk Categories
+
+- 🔴 Critical
+- 🟠 High
+- 🟡 Medium
+- 🟢 Low
+
+---
+
+## Model Evaluation
+
+Performance metrics generated
+
+- Detection Count
+- Consensus Analysis
+- Risk Distribution
+- Feature Statistics
+- Training Time
+- Model Comparison
+
+---
+
+## Generated Reports
+
+- Evaluation Summary
+- Consensus Predictions
+- Model Comparison
+- Training Time Ranking
+- Risk Statistics
+- Employee Rankings
+
+---
+
+## Generated Visualizations
+
+- Model Comparison
+- Risk Distribution
+- Consensus Distribution
+- Training Time Analysis
+- Correlation Matrix
+- Employee Risk Histogram
+
+---
+
+# 🏗 Backend Architecture
+
+The backend follows a modular enterprise architecture using **FastAPI**.
+
+```
+                Client
+                   │
+                   ▼
+            FastAPI Gateway
+                   │
+     ┌─────────────┼──────────────┐
+     ▼             ▼              ▼
+ Authentication   Dashboard    Threat APIs
+     │             │              │
+     └─────────────┼──────────────┘
+                   ▼
+              CRUD Layer
+                   │
+                   ▼
+           SQLAlchemy ORM
+                   │
+                   ▼
+              Database
+```
+
+---
+
+## Backend Modules
+
+### Authentication
+
+- JWT Login
+- Password Hashing
+- Role-Based Authorization
+- Secure Routes
+
+---
+
+### Dashboard APIs
+
+Provides
+
+- Dashboard Summary
+- Risk Statistics
+- Threat Distribution
+- Model Comparison
+- System Statistics
+- Top Suspicious Employees
+
+---
+
+### Threat APIs
+
+- List Threats
+- Threat Details
+- Resolve Threat
+- Delete Threat
+- Update Threat
+
+---
+
+### Employee APIs
+
+- Employee CRUD
+- Employee Details
+- Employee Risk Score
+- Employee Activity Timeline
+
+---
+
+### Investigation APIs
+
+- Activity Logs
+- Email History
+- HTTP Activity
+- USB Events
+- File Events
+
+---
+
+# 🌐 Frontend Architecture
+
+The frontend is developed using **React + Vite** with a modern enterprise architecture.
+
+```
+                 React Application
+                        │
+         ┌──────────────┼──────────────┐
+         ▼              ▼              ▼
+     Dashboard      Threat Center   Employees
+         │              │              │
+         └──────────────┼──────────────┘
+                        ▼
+                 React Query
+                        │
+                        ▼
+                     Axios
+                        │
+                        ▼
+                  FastAPI Backend
+```
+
+---
+
+## Frontend Modules
+
+### Dashboard
+
+- Hero Banner
+- Metric Cards
+- Threat Trends
+- AI Insights
+- Activity Feed
+- Investigation Queue
+- System Status
+- Suspicious Employees
+
+---
+
+### Threat Center
+
+- Threat Overview
+- Search
+- Filtering
+- Sorting
+- Threat Table
+- Threat Drawer
+- Resolve Dialog
+- Delete Dialog
+
+---
+
+### Employee Module
+
+- Employee Directory
+- Employee Details
+- Search
+- Department Filter
+- Risk Filter
+- Employee Profile
+
+---
+
+### Investigation Module
+
+- Timeline
+- Email Activities
+- HTTP Activities
+- Device Activities
+- Risk Timeline
+- AI Recommendations
+
+---
+
+### Shared Components
+
+- Glass Cards
+- Animated Counters
+- Sidebar
+- Top Navigation
+- Dialogs
+- Drawers
+- Status Badges
+- Risk Indicators
+
+---
+
+# 🔌 REST API Endpoints
+
+## Authentication
+
+```http
+POST /auth/login
+POST /auth/logout
+```
+
+---
+
+## Dashboard
+
+```http
+GET /dashboard/summary
+GET /dashboard/risk-distribution
+GET /dashboard/model-comparison
+GET /dashboard/system-statistics
+GET /dashboard/top-suspicious
+```
+
+---
+
+## Employees
+
+```http
+GET /employees
+GET /employees/{id}
+POST /employees
+PUT /employees/{id}
+DELETE /employees/{id}
+```
+
+---
+
+## Threats
+
+```http
+GET /threats
+GET /threats/{id}
+POST /threats
+PUT /threats/{id}
+DELETE /threats/{id}
+PATCH /threats/{id}/resolve
+```
+
+---
+
+# 🛠 Technologies Used
+
+## Backend
+
+- Python
+- FastAPI
+- SQLAlchemy
+- Pydantic
+- JWT Authentication
+- Uvicorn
+
+---
+
+## Frontend
+
+- React
+- Vite
+- Tailwind CSS
+- React Router
+- React Query
+- Axios
+- Framer Motion
+- Lucide React
+
+---
+
+## Data Processing
+
+- Pandas
+- NumPy
+- DuckDB
+
+---
+
+## Machine Learning
+
+- Scikit-learn
+- Joblib
+
+---
+
+## Visualization
+
+- Matplotlib
+- Plotly
+
+---
+
+# 📈 Current Results
+
+| Metric | Value |
+|---------|-------|
+| Employees Processed | 1,000+ |
+| Behavioral Features | 22+ |
+| ML Models | 7 |
+| Risk Categories | 4 |
+| Backend APIs | 15+ |
+| React Pages | 8 |
+| Dashboard Widgets | 10+ |
+| Threat Management | Complete |
+| Authentication | Complete |
+| UI Theme | Enterprise Glassmorphism |
