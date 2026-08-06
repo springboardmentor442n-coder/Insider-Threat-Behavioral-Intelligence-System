@@ -1,8 +1,6 @@
-# Insider Threat Behavioral Intelligence System
-
 <div align="center">
 
-# 🛡️ Insider Threat Behavioral Intelligence System
+# Insider Threat Behavioral Intelligence System
 
 ### AI-Powered Enterprise Insider Threat Detection & Behavioral Analytics Platform
 
