@@ -4,4 +4,7 @@
 # Add model training and evaluation for insider threats
 # Refactor feature engineering functions and add LDAP context
 # Add required packages to requirements.txt
-# 
+# Remove duplicate log file entry from .gitignore
+# Initialize Flask app with prediction endpoints
+# Add env example
+
