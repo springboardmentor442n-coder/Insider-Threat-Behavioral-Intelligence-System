@@ -7,4 +7,9 @@
 # Remove duplicate log file entry from .gitignore
 # Initialize Flask app with prediction endpoints
 # Add env example
+# Add trained ML model files
+# Add dashboard frontend
 
+
+kaggle notebook link:
+https://www.kaggle.com/code/srinidhigolla/insider-threat-real-labels
