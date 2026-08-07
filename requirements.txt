@@ -1,0 +1,34 @@
+﻿# Data Processing
+polars
+pandas
+numpy
+
+# Machine Learning
+scikit-learn
+
+# Deep Learning
+# tensorflow
+
+# Backend API
+fastapi
+uvicorn
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Environment Variables
+python-dotenv
+
+# Model Serialization
+joblib
+
+# Data Visualization
+matplotlib
+seaborn
+
+
+
+# Utilities
+tqdm
+requests
