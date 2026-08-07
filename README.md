@@ -1589,10 +1589,6 @@ This project is developed as part of the **Springboard Mentor Program**.
 
 **Nandan Kabra**
 
-Artificial Intelligence & Data Science
-
-Vishwakarma Institute of Technology (VIT), Pune
-
 GitHub
 
 https://github.com/springboardmentor442n-coder
@@ -1629,19 +1625,3 @@ Special thanks to
 This project is licensed under the **MIT License**.
 
 See the **LICENSE** file for additional details.
-
----
-
-<div align="center">
-
-## ⭐ Support the Project
-
-If you found this project useful, please consider giving it a **⭐ Star** on GitHub.
-
-Your support helps improve the project and motivates future development.
-
----
-
-**Made with ❤️ using FastAPI, React, Machine Learning, and Cybersecurity Concepts**
-
-</div>
