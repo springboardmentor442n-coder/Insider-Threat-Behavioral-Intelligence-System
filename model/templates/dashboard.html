@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Insider Threat Detection Dashboard</title>
+<style>
+  :root {
+    --bg:#0f172a; --card:#1e293b; --border:#334155;
+    --accent:#38bdf8; --danger:#f87171; --success:#4ade80;
+    --text:#e2e8f0; --muted:#94a3b8;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--bg); color:var(--text); font-family:'Segoe UI',sans-serif; padding:2rem; }
+  h1 { font-size:1.5rem; margin-bottom:0.25rem; }
+  .subtitle { color:var(--muted); margin-bottom:2rem; }
+  .card {
+    background:var(--card); border:1px solid var(--border); border-radius:12px;
+    padding:1.5rem; margin-bottom:1.5rem;
+  }
+  .upload-row { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1rem; }
+  .upload-field { flex:1; min-width:150px; }
+  .upload-field label { display:block; font-size:0.8rem; color:var(--muted); margin-bottom:0.3rem; }
+  .upload-field input[type=file] {
+    width:100%; padding:0.5rem; background:#0f172a; border:1px solid var(--border);
+    border-radius:6px; color:var(--text); font-size:0.8rem;
+  }
+  button {
+    background:var(--accent); color:#0f172a; border:none; padding:0.7rem 1.5rem;
+    border-radius:8px; font-weight:600; cursor:pointer; font-size:0.9rem;
+  }
+  button:hover { opacity:0.9; }
+  button:disabled { opacity:0.5; cursor:not-allowed; }
+  table { width:100%; border-collapse:collapse; margin-top:1rem; }
+  th, td { text-align:left; padding:0.6rem; border-bottom:1px solid var(--border); font-size:0.85rem; }
+  th { color:var(--muted); font-weight:600; }
+  .badge { padding:0.2rem 0.6rem; border-radius:12px; font-size:0.75rem; font-weight:600; }
+  .badge.insider { background:rgba(248,113,113,0.15); color:var(--danger); }
+  .badge.normal { background:rgba(74,222,128,0.15); color:var(--success); }
+  .stats { display:flex; gap:1rem; margin-bottom:1.5rem; }
+  .stat { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:1rem 1.5rem; flex:1; }
+  .stat-label { font-size:0.75rem; color:var(--muted); text-transform:uppercase; }
+  .stat-value { font-size:1.8rem; font-weight:700; margin-top:0.3rem; }
+  #status { margin-top:1rem; font-size:0.85rem; color:var(--muted); }
+</style>
+</head>
+<body>
+
+<h1>🛡️ Insider Threat Detection</h1>
+<p class="subtitle">Upload raw log CSVs — the model engineers features and predicts automatically</p>
+
+<div class="card">
+  <div class="upload-row">
+    <div class="upload-field"><label>logon.csv</label><input type="file" id="logon" accept=".csv"></div>
+    <div class="upload-field"><label>device.csv</label><input type="file" id="device" accept=".csv"></div>
+    <div class="upload-field"><label>file.csv</label><input type="file" id="file" accept=".csv"></div>
+    <div class="upload-field"><label>email.csv</label><input type="file" id="email" accept=".csv"></div>
+    <div class="upload-field"><label>http.csv</label><input type="file" id="http" accept=".csv"></div>
+    <div class="upload-field"><label>LDAP.csv (optional)</label><input type="file" id="ldap" accept=".csv"></div>
+  </div>
+  <button id="runBtn" onclick="runPrediction()">Run Detection</button>
+  <div id="status"></div>
+</div>
+
+<div class="stats" id="statsRow" style="display:none;">
+  <div class="stat"><div class="stat-label">Total Rows</div><div class="stat-value" id="totalRows">0</div></div>
+  <div class="stat"><div class="stat-label">Flagged Insiders</div><div class="stat-value" id="flaggedCount" style="color:var(--danger);">0</div></div>
+</div>
+
+<div class="card" id="resultsCard" style="display:none;">
+  <table>
+    <thead><tr><th>User</th><th>Date</th><th>Prediction</th><th>Risk Score</th></tr></thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+</div>
+
+<script>
+async function runPrediction() {
+  const btn = document.getElementById('runBtn');
+  const status = document.getElementById('status');
+  const required = ['logon', 'device', 'file', 'email', 'http'];
+
+  const formData = new FormData();
+  for (const id of required) {
+    const fileInput = document.getElementById(id);
+    if (!fileInput.files[0]) {
+      status.textContent = `Missing required file: ${id}.csv`;
+      return;
+    }
+    formData.append(id, fileInput.files[0]);
+  }
+  const ldapInput = document.getElementById('ldap');
+  if (ldapInput.files[0]) formData.append('ldap', ldapInput.files[0]);
+
+  btn.disabled = true;
+  status.textContent = 'Processing... this may take a moment.';
+
+  try {
+    const res = await fetch('/predict_csv', { method: 'POST', body: formData });
+    const data = await res.json();
+
+    if (data.error) {
+      status.textContent = 'Error: ' + data.error;
+      btn.disabled = false;
+      return;
+    }
+
+    document.getElementById('totalRows').textContent = data.total_rows;
+    document.getElementById('flaggedCount').textContent = data.flagged_count;
+    document.getElementById('statsRow').style.display = 'flex';
+    document.getElementById('resultsCard').style.display = 'block';
+
+    const tbody = document.getElementById('resultsBody');
+    tbody.innerHTML = '';
+    data.results
+      .sort((a, b) => b.risk_score - a.risk_score)
+      .forEach(r => {
+        const badgeClass = r.prediction === 'INSIDER' ? 'insider' : 'normal';
+        tbody.innerHTML += `
+          <tr>
+            <td>${r.user}</td>
+            <td>${r.date}</td>
+            <td><span class="badge ${badgeClass}">${r.prediction}</span></td>
+            <td>${r.risk_score}</td>
+          </tr>`;
+      });
+
+    status.textContent = `Done — ${data.total_rows} rows processed, ${data.flagged_count} flagged.`;
+  } catch (err) {
+    status.textContent = 'Request failed: ' + err.message;
+  }
+  btn.disabled = false;
+}
+</script>
+
+</body>
+</html>
