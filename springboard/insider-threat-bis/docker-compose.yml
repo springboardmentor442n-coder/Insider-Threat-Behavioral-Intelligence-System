@@ -1,0 +1,24 @@
+services:
+  itbis:
+    build: .
+    image: itbis:latest
+    container_name: itbis
+    ports:
+      - "8000:8000"
+    environment:
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-admin123}
+      ANALYST_PASSWORD: ${ANALYST_PASSWORD:-analyst123}
+      VIEWER_PASSWORD: ${VIEWER_PASSWORD:-viewer123}
+      ALERT_THRESHOLD: ${ALERT_THRESHOLD:-60}
+      # Uncomment together with the bind mount below to use the real dataset.
+      # CERT_RAW_DIR: /data/r4.2
+    volumes:
+      # Analyst accounts, cases and the audit trail survive a rebuild.
+      - itbis-instance:/app/instance
+      # - /path/to/cert/r4.2:/data/r4.2:ro
+    restart: unless-stopped
+
+volumes:
+  itbis-instance:

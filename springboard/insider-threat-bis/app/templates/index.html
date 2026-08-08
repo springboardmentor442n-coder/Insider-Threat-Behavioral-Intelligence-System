@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Insider Threat Behavioral Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/console.css') }}">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#128737;</text></svg>">
+</head>
+<body class="viz-root">
+
+<!-- ───────────────────────── Login ───────────────────────── -->
+<div id="login-screen" class="login-screen">
+  <form class="login-card" id="login-form" autocomplete="on">
+    <div class="login-brand">
+      <span class="login-mark">🛡</span>
+      <div>
+        <h1>Insider Threat</h1>
+        <p>Behavioral Intelligence System</p>
+      </div>
+    </div>
+
+    <label for="username">Analyst ID</label>
+    <input id="username" name="username" type="text" required autocomplete="username"
+           placeholder="analyst" value="analyst">
+
+    <label for="password">Passphrase</label>
+    <input id="password" name="password" type="password" required
+           autocomplete="current-password" placeholder="••••••••" value="analyst123">
+
+    <button type="submit" id="login-btn">Authenticate</button>
+    <p class="login-error" id="login-error" role="alert" hidden></p>
+
+    <div class="login-hint">
+      <span><b>admin</b>/admin123</span>
+      <span><b>analyst</b>/analyst123</span>
+      <span><b>viewer</b>/viewer123</span>
+    </div>
+  </form>
+</div>
+
+<!-- ───────────────────────── Console ───────────────────────── -->
+<div id="console" class="console" hidden>
+
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <span class="login-mark">🛡</span>
+      <div><b>ITBIS</b><small>UEBA Console</small></div>
+    </div>
+
+    <nav class="nav" id="nav">
+      <button class="nav-item is-active" data-page="dashboard"><span>▤</span>Dashboard</button>
+      <button class="nav-item" data-page="monitoring"><span>◉</span>Live Monitoring</button>
+      <button class="nav-item" data-page="profiling"><span>◐</span>Behavioral Profiling</button>
+      <button class="nav-item" data-page="alerts"><span>⚑</span>Threat Alerts<em id="nav-alert-count"></em></button>
+      <button class="nav-item" data-page="investigation"><span>⌕</span>Investigation</button>
+      <button class="nav-item" data-page="reports"><span>▼</span>Reports</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <div class="who"><b id="who-name">—</b><small id="who-role">—</small></div>
+      <button class="btn btn-ghost" id="logout-btn">Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <h2 id="page-title">Executive Dashboard</h2>
+        <p id="page-sub" class="muted">Enterprise insider-threat posture</p>
+      </div>
+      <div class="topbar-right">
+        <span class="pill" id="engine-pill">engine —</span>
+        <button class="btn btn-ghost" id="refresh-btn">↻ Refresh</button>
+      </div>
+    </header>
+
+    <!-- ── Dashboard ── -->
+    <section class="page is-active" data-page="dashboard">
+      <div class="tiles" id="dash-tiles"></div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h3>Risk trend</h3>
+            <p class="muted">Daily mean and peak composite risk across the monitored population</p>
+          </div>
+          <div id="chart-trend" class="chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>Users by severity</h3>
+            <p class="muted">Each user counted at their highest observed risk</p>
+          </div>
+          <div id="chart-severity" class="chart"></div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head">
+            <h3>Dominant risk indicators</h3>
+            <p class="muted">Share of weighted risk across all current alerts</p>
+          </div>
+          <div id="chart-indicators" class="chart"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Detection model</h3><p class="muted">Held-out evaluation</p></div>
+          <div id="model-panel" class="kv"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Live monitoring ── -->
+    <section class="page" data-page="monitoring">
+      <div class="card">
+        <div class="card-head row">
+          <div>
+            <h3>Live activity stream</h3>
+            <p class="muted">Server-Sent Events · refreshes about every 1.5 s</p>
+          </div>
+          <div class="row gap">
+            <span class="pill" id="stream-status">disconnected</span>
+            <button class="btn" id="stream-toggle">Start stream</button>
+          </div>
+        </div>
+        <div class="tiles tiles-sm" id="stream-tiles"></div>
+        <div class="table-wrap tall">
+          <table class="table" id="stream-table">
+            <thead><tr>
+              <th>Time</th><th>User</th><th>Source</th><th>Host</th>
+              <th>Detail</th><th>Window</th><th class="num">Risk</th><th>Severity</th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Behavioral profiling ── -->
+    <section class="page" data-page="profiling">
+      <div class="card">
+        <div class="card-head row">
+          <div><h3>Employee behavioural profiles</h3>
+               <p class="muted">Per-user baselines and observed deviation</p></div>
+          <div class="row gap">
+            <input class="input" id="profile-search" placeholder="Search user or name…">
+            <select class="input" id="profile-severity">
+              <option value="">All severities</option>
+              <option>CRITICAL</option><option>HIGH</option>
+              <option>MEDIUM</option><option>LOW</option>
+            </select>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="table" id="users-table">
+            <thead><tr>
+              <th>User</th><th>Name</th><th>Department</th>
+              <th class="num">Peak risk</th><th class="num">Mean risk</th>
+              <th class="num">Flagged days</th><th>Severity</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <div class="pager" id="users-pager"></div>
+      </div>
+
+      <div class="card" id="profile-detail" hidden>
+        <div class="card-head row">
+          <div><h3 id="profile-name">—</h3><p class="muted" id="profile-meta">—</p></div>
+          <button class="btn btn-ghost" id="profile-close">Close</button>
+        </div>
+        <div class="grid-2">
+          <div>
+            <h4 class="sub">Risk history</h4>
+            <div id="chart-profile" class="chart"></div>
+          </div>
+          <div>
+            <h4 class="sub">Baseline vs observed</h4>
+            <div class="table-wrap">
+              <table class="table compact" id="baseline-table">
+                <thead><tr><th>Behaviour</th><th class="num">Baseline</th>
+                  <th class="num">Observed avg</th><th class="num">Peak</th></tr></thead>
+                <tbody></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Threat alerts ── -->
+    <section class="page" data-page="alerts">
+      <div class="card">
+        <div class="card-head row">
+          <div><h3>Incident alert queue</h3>
+               <p class="muted">User-days at or above the alerting threshold</p></div>
+          <div class="row gap">
+            <select class="input" id="alert-severity">
+              <option value="">All severities</option>
+              <option>CRITICAL</option><option>HIGH</option>
+              <option>MEDIUM</option><option>LOW</option>
+            </select>
+            <label class="inline-field">Min score
+              <input class="input input-sm" id="alert-min" type="number" min="0" max="100" step="5">
+            </label>
+          </div>
+        </div>
+        <div class="table-wrap tall">
+          <table class="table" id="alerts-table">
+            <thead><tr>
+              <th>Severity</th><th>User</th><th>Name</th><th>Date</th>
+              <th class="num">Risk</th><th class="num">UEBA</th><th class="num">ML prob</th>
+              <th>Lead indicator</th><th>Status</th><th></th>
+            </tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Investigation ── -->
+    <section class="page" data-page="investigation">
+      <div class="card">
+        <div class="card-head row">
+          <div><h3>Forensic investigation</h3>
+               <p class="muted">Deviation analysis, weighted contributions and model explainability</p></div>
+          <div class="row gap">
+            <input class="input" id="inv-user" placeholder="User ID (e.g. ABC1234)">
+            <input class="input" id="inv-day" type="date">
+            <button class="btn" id="inv-run">Investigate</button>
+          </div>
+        </div>
+        <p class="muted" id="inv-empty">Enter a user ID, or open a case from the alert queue. Leaving the
+           date blank selects that user's highest-risk day.</p>
+      </div>
+
+      <div id="inv-result" hidden>
+        <div class="tiles" id="inv-tiles"></div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h3>Weighted risk contributions</h3>
+              <p class="muted">Points each indicator added to the 0–100 behavioural score</p></div>
+            <div id="chart-contrib" class="chart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h3 id="shap-title">Model explainability</h3>
+              <p class="muted">Signed attribution per feature for this prediction</p></div>
+            <div id="chart-shap" class="chart"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head row">
+            <div><h3>Behavioural deviation analysis</h3>
+                 <p class="muted">Observed activity against this user's own historical baseline</p></div>
+            <div class="row gap">
+              <button class="btn" id="inv-pdf">⤓ Case file (PDF)</button>
+              <button class="btn btn-ghost" id="inv-xlsx">⤓ Excel</button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="dev-table">
+              <thead><tr><th>Behaviour</th><th class="num">Observed</th><th class="num">Baseline</th>
+                <th class="num th-raw">Deviation σ</th><th class="num">Change</th><th>Weight</th><th>Flag</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Risk timeline</h3>
+            <p class="muted">Composite risk across the full observation window</p></div>
+          <div id="chart-inv-timeline" class="chart"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Reports ── -->
+    <section class="page" data-page="reports">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><h3>Investigation case file</h3>
+            <p class="muted">Multi-section forensic PDF for a single subject</p></div>
+          <div class="form">
+            <label for="rep-user">Subject user ID</label>
+            <input class="input" id="rep-user" placeholder="ABC1234">
+            <label for="rep-day">Observation date <span class="muted">(optional)</span></label>
+            <input class="input" id="rep-day" type="date">
+            <button class="btn" id="rep-pdf">⤓ Generate PDF case file</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>Risk &amp; activity workbook</h3>
+            <p class="muted">Four-sheet Excel export with the current filters applied</p></div>
+          <div class="form">
+            <label for="rep-sev">Severity</label>
+            <select class="input" id="rep-sev">
+              <option value="">All severities</option>
+              <option>CRITICAL</option><option>HIGH</option>
+              <option>MEDIUM</option><option>LOW</option>
+            </select>
+            <label for="rep-min">Minimum composite score</label>
+            <input class="input" id="rep-min" type="number" min="0" max="100" step="5" placeholder="0">
+            <label for="rep-xuser">Restrict to user <span class="muted">(optional)</span></label>
+            <input class="input" id="rep-xuser" placeholder="ABC1234">
+            <button class="btn" id="rep-xlsx">⤓ Generate Excel workbook</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Highest-risk subjects</h3>
+          <p class="muted">Shortcut to generate a case file for any top-ranked user</p></div>
+        <div class="table-wrap">
+          <table class="table" id="report-top">
+            <thead><tr><th>User</th><th>Name</th><th class="num">Peak risk</th>
+              <th>Severity</th><th class="num">Flagged days</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast" hidden></div>
+<div id="tooltip" class="tooltip" hidden></div>
+
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
