@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Predictions · InsightGuard{% endblock %}
+{% block extra_style %}
+<style>
+.field-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.field label{display:block;font-size:.8rem;font-weight:600;margin-bottom:.4rem}
+.field input{width:100%;padding:.6rem .8rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.9rem}
+.result-card{border-radius:14px;padding:1.5rem;margin-top:1.5rem;border:1px solid var(--border)}
+.severity-badge{display:inline-block;padding:.4rem 1rem;border-radius:20px;font-weight:800;font-size:.85rem;margin-bottom:1rem}
+.score-big{font-family:'Syne',sans-serif;font-weight:800;font-size:3rem;margin:.5rem 0}
+.gauge-bar{width:100%;height:14px;background:var(--surface);border-radius:7px;overflow:hidden;margin:1rem 0}
+.gauge-fill{height:100%;border-radius:7px;transition:width .6s}
+.factor-row{display:flex;justify-content:space-between;align-items:center;padding:.6rem 0;border-bottom:1px solid var(--border);font-size:.85rem}
+.factor-name{flex:1}
+.factor-bar-wrap{flex:2;height:8px;background:var(--surface);border-radius:4px;margin:0 1rem;overflow:hidden;position:relative}
+.factor-bar{height:100%;border-radius:4px;position:absolute}
+.factor-val{width:70px;text-align:right;font-family:'DM Mono',monospace;font-size:.78rem}
+#status{margin-top:1rem;font-family:'DM Mono',monospace;font-size:.8rem;color:var(--muted)}
+</style>
+{% endblock %}
+{% block content %}
+<h1>Threat Prediction Engine</h1>
+<p class="subtitle">Enter employee behavioural metrics for real-time SHAP-explained risk analysis</p>
+
+<div class="card">
+  <div class="field-grid" id="fieldGrid"></div>
+  <button onclick="runAnalysis()" id="runBtn">🔍 Analyze Behavior</button>
+  <div id="status"></div>
+</div>
+<div id="resultContainer"></div>
+
+<script>
+const FIELDS = {{ fields | tojson }};
+document.getElementById('fieldGrid').innerHTML = FIELDS.map(f =>
+  `<div class="field"><label>${f.label}</label><input type="number" id="f_${f.key}" value="0" step="any"></div>`
+).join('');
+
+async function runAnalysis() {
+  const btn = document.getElementById('runBtn');
+  const status = document.getElementById('status');
+  const payload = {};
+  FIELDS.forEach(f => payload[f.key] = parseFloat(document.getElementById('f_'+f.key).value) || 0);
+  btn.disabled = true; status.textContent = 'Running model + SHAP analysis...';
+  try {
+    const res = await fetch('/predict', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)});
+    const data = await res.json();
+    if (data.error) { status.textContent = 'Error: ' + data.error; btn.disabled=false; return; }
+    status.textContent = '';
+    renderResult(data);
+  } catch(err) { status.textContent = 'Failed: ' + err.message; }
+  btn.disabled = false;
+}
+
+function renderResult(data) {
+  const factorsHtml = data.top_factors.map(f => {
+    const isPositive = f.shap_value > 0;
+    const width = Math.min(Math.abs(f.shap_value) * 200, 100);
+    const side = isPositive ? 'left:50%' : 'right:50%';
+    return `<div class="factor-row">
+      <div class="factor-name">${f.feature}</div>
+      <div class="factor-bar-wrap"><div class="factor-bar" style="width:${width}%;background:${isPositive?'#f87171':'#4ade80'};${side}"></div></div>
+      <div class="factor-val" style="color:${isPositive?'#f87171':'#4ade80'}">${f.shap_value > 0 ? '+' : ''}${f.shap_value}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('resultContainer').innerHTML = `
+    <div class="card result-card" style="border-color:${data.severity_color}">
+      <span class="severity-badge" style="background:${data.severity_color}22;color:${data.severity_color};border:1px solid ${data.severity_color}">
+        ${data.prediction === 'INSIDER' ? '🚨' : '✅'} ${data.prediction} — ${data.severity} Severity
+      </span>
+      <div class="score-big" style="color:${data.severity_color}">${data.risk_score_100}<span style="font-size:1.2rem;color:var(--muted)">/100</span></div>
+      <div class="gauge-bar"><div class="gauge-fill" style="width:${data.risk_score_100}%;background:${data.severity_color}"></div></div>
+      <h2 style="margin-top:1.5rem;font-family:'Syne',sans-serif;font-size:1rem;color:var(--accent)">SHAP Factor Contributions</h2>
+      <p style="font-size:.78rem;color:var(--muted);margin:.5rem 0 1rem">Red = increases risk · Green = decreases risk</p>
+      ${factorsHtml}
+      <button class="btn secondary" style="margin-top:1.2rem" onclick="downloadReport()">📄 Export PDF Report</button>
+    </div>`;
+  window.lastResult = data;
+}
+
+async function downloadReport() {
+  if (!window.lastResult) return;
+  const res = await fetch('/export/pdf', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(window.lastResult)});
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'investigation_report.pdf'; a.click();
+}
+</script>
+{% endblock %}
