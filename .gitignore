@@ -1,0 +1,5 @@
+dataset/
+archive (2)/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
