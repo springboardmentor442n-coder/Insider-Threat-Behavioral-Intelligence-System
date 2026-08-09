@@ -1,0 +1,28 @@
+# Node
+node_modules/
+
+# Dataset
+datasets/
+dataset/
+data/
+
+# Environment variables
+.env
+.env.*
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Build files
+dist/
+build/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
