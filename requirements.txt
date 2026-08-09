@@ -3,5 +3,7 @@ pandas
 numpy
 scikit-learn
 xgboost
+shap
+reportlab
 pyngrok
 python-dotenv
