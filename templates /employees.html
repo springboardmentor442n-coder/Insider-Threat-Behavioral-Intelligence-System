@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Employees · InsightGuard{% endblock %}
+{% block content %}
+<h1>Employee Monitoring</h1>
+<p class="subtitle">AI Insider Threat Behavioural Intelligence System</p>
+
+<div class="card">
+  <form method="GET" style="display:flex;gap:1rem;margin-bottom:1.2rem">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search employee..."
+           style="flex:1;padding:.7rem 1rem;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text)">
+    <button type="submit">Search</button>
+  </form>
+  <div style="font-size:.8rem;color:var(--muted);margin-bottom:1rem">{{ total }} Employees</div>
+  <table>
+    <thead><tr><th>Employee ID</th><th>Name</th><th>Department</th><th>Role</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for e in employees %}
+      <tr>
+        <td>{{ e.user }}</td>
+        <td>{{ e.name }}</td>
+        <td>{{ e.department }}</td>
+        <td>{{ e.role }}</td>
+        <td><span class="badge {{ 'high' if e.status=='High Risk' else 'safe' }}">{{ e.status }}</span></td>
+        <td><a href="/employees/{{ e.user }}" class="btn secondary" style="padding:.3rem .8rem;font-size:.75rem">View</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
