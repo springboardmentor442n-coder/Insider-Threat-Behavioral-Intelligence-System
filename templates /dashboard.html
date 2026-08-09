@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Dashboard · InsightGuard{% endblock %}
+{% block content %}
+<h1>AI Insider Threat Behavioural Intelligence System</h1>
+<p class="subtitle">Enterprise dashboard for behavioural analysis and insider threat detection using Machine Learning.</p>
+
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem">
+  <div class="card" style="padding:1.2rem">
+    <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">Employees</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem">{{ stats.total_employees }}</div>
+    <div style="font-size:.72rem;color:var(--success)">▲ Registered</div>
+  </div>
+  <div class="card" style="padding:1.2rem">
+    <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">Predictions</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem">{{ stats.total_predictions }}</div>
+    <div style="font-size:.72rem;color:var(--success)">▲ Generated</div>
+  </div>
+  <div class="card" style="padding:1.2rem">
+    <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">High Risk</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--danger)">{{ stats.high_risk_count }}</div>
+    <div style="font-size:.72rem;color:var(--danger)">▲ Requires Action</div>
+  </div>
+  <div class="card" style="padding:1.2rem">
+    <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">Safe Users</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.8rem;color:var(--success)">{{ stats.safe_count }}</div>
+    <div style="font-size:.72rem;color:var(--success)">▲ No Threats</div>
+  </div>
+  <div class="card" style="padding:1.2rem">
+    <div style="font-size:.7rem;color:var(--muted);text-transform:uppercase">Model</div>
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem">XGBoost</div>
+    <div style="font-size:.72rem;color:var(--muted)">▲ PR-AUC 0.40</div>
+  </div>
+</div>
+
+<div class="card">
+  <h2 style="font-family:'Syne',sans-serif;font-size:1rem;color:var(--accent);margin-bottom:1rem">🚨 Top Risk Employees</h2>
+  <table>
+    <thead><tr><th>Employee</th><th>Risk Score</th><th>Confidence</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for e in top_risk %}
+      <tr>
+        <td><a href="/employees/{{ e.user }}" style="color:var(--text);text-decoration:none">{{ e.name }}</a></td>
+        <td><span class="badge {{ 'high' if e.status=='High Risk' else 'safe' }}">{{ e.risk_score_100 }}</span></td>
+        <td>{{ e.confidence }}%</td>
+        <td><span class="badge {{ 'high' if e.status=='High Risk' else 'safe' }}">{{ e.status }}</span></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2 style="font-family:'Syne',sans-serif;font-size:1rem;color:var(--accent);margin-bottom:1rem">🔔 Recent Threat Alerts</h2>
+  <table>
+    <thead><tr><th>Employee</th><th>Alert Type</th><th>Date</th></tr></thead>
+    <tbody>
+    {% for a in alerts %}
+      <tr>
+        <td>{{ a.name }}</td>
+        <td><span class="badge high">High Risk Employee</span></td>
+        <td>{{ a.day }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
