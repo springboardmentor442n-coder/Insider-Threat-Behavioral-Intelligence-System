@@ -1,254 +1,241 @@
 # Insider Threat Behavioral Intelligence System
 
-## Overview
-
-The **Insider Threat Behavioral Intelligence System** is a Deep Learning-based cybersecurity project designed to identify and classify insider threats by analyzing employee behavioral patterns. The system utilizes the CERT Insider Threat Dataset and combines multiple organizational activity logs to detect suspicious behaviors that may indicate malicious insider actions.
-
-Instead of relying on signature-based detection, this project performs **behavioral analytics**, extracting meaningful features from employee activities such as logon events, email communication, web browsing, file operations, USB device usage, and psychometric attributes. These features are then used to train a Multi-Layer Perceptron (MLP) neural network capable of classifying different categories of insider threats.
+AI-powered platform for continuous employee activity monitoring, behavioral anomaly
+detection, insider risk scoring, and threat investigation — built with FastAPI + MySQL.
 
 ---
 
-# Project Objectives
+## Tech Stack
 
-- Detect abnormal employee behavior using machine learning.
-- Analyze multiple organizational data sources simultaneously.
-- Classify different types of insider threats.
-- Build an end-to-end behavioral analytics pipeline.
-- Generate a reusable trained model for future predictions.
-
----
-
-# Dataset
-
-The project uses the **CERT Insider Threat Dataset**, which contains simulated enterprise user activities.
-
-### Input Files
-
-- **logon.csv** – User login and logout activities
-- **email.csv** – Email communication records
-- **http.csv** – Internet browsing history
-- **file.csv** – File access and file transfer records
-- **device.csv** – USB device connection activities
-- **psychometric.csv** – Employee personality scores
+| Layer | Technology |
+|---|---|
+| Backend API | Python 3.11 + FastAPI |
+| Database | MySQL 8.0 (primary) |
+| Cache | Redis 7 |
+| ML Models | Isolation Forest, XGBoost, Z-score |
+| Auth | JWT (access + refresh tokens) + OAuth2 |
+| Deployment | Docker + Docker Compose |
 
 ---
 
-# Workflow
+## Quick Start
 
-## 1. Data Loading
+### 1. Clone & configure
 
-The program imports all activity datasets into Pandas DataFrames.
+```bash
+git clone <repo>
+cd insider-threat-system
+cp .env.example .env
+# Edit .env with your MySQL password and secret key
+```
 
-Loaded datasets include:
+### 2. Start with Docker
 
-- Logon activities
-- Email records
-- HTTP browsing logs
-- File operations
-- USB device activities
-- Psychometric information
+```bash
+docker-compose up -d
+# API: http://localhost:8000
+# Docs: http://localhost:8000/docs
+```
 
----
+### 3. Or run locally
 
-## 2. Feature Engineering
-
-The raw activity logs are transformed into meaningful behavioral features.
-
-### Logon Features
-
-Examples:
-
-- Number of unique computers used
-- Total logons
-- Total logoffs
-- Weekend logins
-- Weekday logins
-- Most frequently used PC
-- After-hours login count
-- Office-hours login count
+```bash
+# MySQL must be running and configured in .env
+pip install -r requirements.txt
+python scripts/seed.py          # create tables + demo data
+uvicorn app.main:app --reload
+```
 
 ---
 
-### Email Features
+## Default Login Credentials (after seeding)
 
-Examples:
-
-- Number of unique recipients
-- Average email size
-- External emails sent
-- Most contacted recipient
-- Total email size
-
----
-
-### HTTP Features
-
-Examples:
-
-- Unique websites visited
-- Total web activities
-- Number of upload activities
-- Average URL length
+| Role | Email | Password |
+|---|---|---|
+| Administrator | admin@company.com | Admin123! |
+| Security Manager | manager@company.com | Manager123! |
+| Security Analyst | analyst@company.com | Analyst123! |
+| SOC Engineer | soc@company.com | SOC123!pwd |
 
 ---
 
-### File Features
+## Dataset Setup (CERT Insider Threat Dataset)
 
-Examples:
+> **Recommended over LANL** — CERT r4.2 has pre-labeled insider/benign activities
+> across logon, file, device, email, and HTTP logs, matching all 13 system modules.
 
-- Unique files accessed
-- USB file transfers
-- Deleted files
-- Copied files
+**Download**: https://kilthub.cmu.edu/articles/dataset/Insider_Threat_Test_Dataset/12841247
 
----
+**Files needed**: `logon.csv`, `file.csv`, `device.csv`, `email.csv`, `http.csv`
 
-### Device Features
+**Upload via API** (after seeding employees):
 
-Examples:
+```bash
+# Get a JWT token first
+TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"analyst@company.com","password":"Analyst123!"}' \
+  | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
 
-- Total USB activities
-- After-hours USB usage
-- Device disconnections
+# Upload each CERT log file
+for log_type in logon file device email http; do
+  curl -X POST "http://localhost:8000/api/v1/activities/cert/upload/${log_type}" \
+    -H "Authorization: Bearer $TOKEN" \
+    -F "file=@./data/cert/${log_type}.csv"
+done
+```
 
----
-
-### Psychometric Features
-
-Employee personality traits are included:
-
-- Openness
-- Conscientiousness
-- Extraversion
-- Agreeableness
-- Neuroticism
+**Note**: CERT user IDs (e.g. `AAA0001`) must match `employee_id` in the `employees` table.
+Run the seed script first, then map CERT user IDs to your seeded employees.
 
 ---
 
-# Feature Merging
+## API Overview
 
-All engineered features are merged into a single behavioral profile for each employee.
+Base URL: `http://localhost:8000/api/v1`
 
-Missing values are handled using:
+### Authentication
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /auth/register | Create new analyst account |
+| POST | /auth/login | Login → access + refresh tokens |
+| POST | /auth/refresh | Refresh access token |
+| GET  | /auth/me | Current user profile |
+| PUT  | /auth/change-password | Change password |
 
-- Zero filling for activity counts
-- Median imputation for numerical features
+### Employees
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /employees | Onboard new employee |
+| GET  | /employees | List all employees (paginated) |
+| GET  | /employees/{id} | Employee detail + risk summary |
+| PUT  | /employees/{id} | Update employee |
+| DELETE | /employees/{id} | Terminate employee |
+| GET  | /employees/departments | List departments |
+| POST | /employees/{id}/devices | Register device |
 
----
+### Activity Monitoring
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /activities | Log single activity |
+| POST | /activities/bulk | Bulk JSON ingest |
+| POST | /activities/cert/upload/{type} | Upload CERT CSV file |
+| GET  | /activities | Query activity logs |
+| GET  | /activities/stats/summary | Activity statistics |
 
-# Behavioral Label Generation
+### Anomaly Detection
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /anomalies/detect/{employee_id} | Run detection for employee |
+| POST | /anomalies/train-model | Train Isolation Forest |
+| GET  | /anomalies | List anomalies (filtered) |
+| PUT  | /anomalies/{id}/review | Mark confirmed/false positive |
 
-Instead of using manually labeled data, the project creates behavioral labels using deterministic organizational rules.
+### Risk Scoring
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /risk/score/{employee_id} | Calculate risk score |
+| POST | /risk/score-all | Batch score all employees |
+| GET  | /risk/leaderboard | Top risk employees |
+| GET  | /risk/{employee_id}/history | Risk score history |
 
-The following threat categories are generated:
+### Alerts
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /alerts | Create alert |
+| GET  | /alerts | List alerts (filtered) |
+| PUT  | /alerts/{id} | Update status / assign |
 
-| Label | Description |
-|--------|-------------|
-| Normal | Regular employee behavior |
-| Intellectual Property Theft | Excessive file copying and unusual device usage |
-| IT Sabotage | High deletion activity and abnormal device behavior |
-| Unauthorized Access | Excessive after-hours logins and suspicious web activity |
-| Data Exfiltration | Large external email communication and USB transfers |
+### Incidents
+| Method | Endpoint | Description |
+|---|---|---|
+| POST | /incidents | Create investigation |
+| GET  | /incidents | List incidents |
+| GET  | /incidents/{id}/timeline | Activity timeline reconstruction |
+| PUT  | /incidents/{id} | Update investigation |
 
----
-
-# Data Preprocessing
-
-The preprocessing pipeline includes:
-
-- Label Encoding
-- Missing value handling
-- Standard Scaling
-- Train/Test Split (80% / 20%)
-
----
-
-# Deep Learning Model
-
-The project uses a **Multi-Layer Perceptron (MLP)** implemented using **PyTorch**.
-
-### Model Architecture
-
-Input Layer
-
-↓
-
-Linear Layer (128 neurons)
-
-↓
-
-Batch Normalization
-
-↓
-
-ReLU Activation
-
-↓
-
-Dropout (30%)
-
-↓
-
-Linear Layer (64 neurons)
-
-↓
-
-Batch Normalization
-
-↓
-
-ReLU Activation
-
-↓
-
-Dropout (30%)
-
-↓
-
-Output Layer (5 Classes)
+### Dashboards
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | /dashboard/security-analyst | Analyst view |
+| GET | /dashboard/soc | SOC operations view |
+| GET | /dashboard/manager | Manager/executive view |
 
 ---
 
-# Training Configuration
+## Risk Scoring Formula
 
-| Parameter | Value |
-|-----------|-------|
-| Framework | PyTorch |
-| Optimizer | Adam |
-| Learning Rate | 0.001 |
-| Loss Function | CrossEntropyLoss |
-| Epochs | 30 |
-| Batch Size | 64 |
+```
+Insider Risk Score =
+  Behavioral Anomalies       × 35%
+  Privilege Misuse           × 25%
+  Data Access Violations     × 20%
+  Access Pattern Deviations  × 10%
+  Historical Security Events × 10%
+```
 
----
-
-# Model Evaluation
-
-The trained model is evaluated using:
-
-- Classification Report
-- Precision
-- Recall
-- F1 Score
-- Validation Loss
-- Training Loss
-
-A loss convergence graph is also generated to monitor training performance.
+| Score Range | Risk Category |
+|---|---|
+| 0–24 | Low |
+| 25–49 | Medium |
+| 50–74 | High |
+| 75–100 | Critical |
 
 ---
 
-# Saved Outputs
+## ML Models
 
-After training, the following files are generated:
-
-| File | Purpose |
-|------|----------|
-| behavioral_intelligence_model.pth | Trained Deep Learning Model |
-| pipeline_scaler.pkl | Feature Standardization |
-| target_label_encoder.pkl | Threat Label Encoder |
-
-These files can be reused during deployment for real-time insider threat prediction.
+| Model | Purpose | Training |
+|---|---|---|
+| Isolation Forest | Unsupervised peer deviation detection | `POST /anomalies/train-model` |
+| Z-score analysis | Personal baseline deviation | Auto (on profile build) |
+| Rule-based | Off-hours, USB, data volume rules | Always-on |
 
 ---
-#reference notebook link
-https://www.kaggle.com/code/goseh11/major-project
+
+## Project Structure
+
+```
+insider-threat-system/
+├── app/
+│   ├── main.py                    # FastAPI app entry point
+│   ├── core/
+│   │   ├── config.py              # Settings (pydantic-settings)
+│   │   ├── database.py            # MySQL engine + session
+│   │   └── security.py            # JWT + RBAC
+│   ├── models/
+│   │   └── __init__.py            # All SQLAlchemy ORM models
+│   ├── schemas/
+│   │   └── __init__.py            # All Pydantic v2 schemas
+│   ├── api/v1/
+│   │   ├── __init__.py            # Router aggregation
+│   │   └── endpoints/
+│   │       ├── auth.py            # Module 1: Authentication
+│   │       ├── employees.py       # Module 2: Employee Management
+│   │       ├── activities.py      # Module 3: Activity Monitoring + CERT ingest
+│   │       └── security.py        # Modules 5–10: Anomaly / Risk / Alerts / Dashboard
+│   ├── services/
+│   │   └── ml_service.py          # Modules 4–6: Profiling / Detection / Scoring
+│   └── ml/models/                 # Trained model files (.pkl)
+├── scripts/
+│   ├── seed.py                    # Demo data seeder
+│   └── init.sql                   # MySQL init script
+├── data/cert/                     # Place CERT CSV files here
+├── docker-compose.yml
+├── Dockerfile
+├── requirements.txt
+└── .env.example
+```
+
+---
+
+## Environment Variables
+
+See `.env.example` for all options. Key variables:
+
+```
+DATABASE_URL=mysql+pymysql://user:pass@localhost:3306/insider_threat_db
+SECRET_KEY=your-32-char-secret
+WEIGHT_BEHAVIORAL_ANOMALIES=0.35
+RISK_THRESHOLD_CRITICAL=90
+```
