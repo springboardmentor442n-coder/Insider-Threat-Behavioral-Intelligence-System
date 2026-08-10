@@ -15,4 +15,4 @@ kaggle notebook link:
 https://www.kaggle.com/code/srinidhigolla/insider-threat-real-labels
 
 link to run my app:
-https://king-elsewhere-affluent.ngrok-free.dev
+http://192.168.43.239:5000/
