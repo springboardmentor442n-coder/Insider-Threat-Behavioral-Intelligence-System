@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}InsightGuard{% endblock %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Inter:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        :root {
+            --bg: #0a0f1e;
+            --card: #151d30;
+            --border: #232f47;
+            --surface: #111827;
+
+            --accent: #38bdf8;
+            --accent2: #818cf8;
+
+            --text: #e5e9f2;
+            --muted: #8b96ad;
+
+            --success: #4ade80;
+            --danger: #f87171;
+            --warning: #fbbf24;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+
+            font-family: 'Inter', sans-serif;
+
+            min-height: 100vh;
+
+            padding-bottom: 3rem;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        header {
+            padding: 1.2rem 2.5rem;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: .7rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 10px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent),
+                    var(--accent2)
+                );
+
+            display: grid;
+
+            place-items: center;
+
+            font-size: 20px;
+
+            color: white;
+        }
+
+        .logo-text {
+            font-family: 'Syne', sans-serif;
+
+            font-weight: 800;
+
+            font-size: 1.2rem;
+        }
+
+        .logo-sub {
+            font-family: 'DM Mono', monospace;
+
+            font-size: .65rem;
+
+            color: var(--muted);
+
+            margin-top: 2px;
+        }
+
+        /* =========================
+           NAVIGATION
+        ========================= */
+
+        nav {
+            display: flex;
+
+            gap: .5rem;
+
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--muted);
+
+            text-decoration: none;
+
+            padding: .55rem .85rem;
+
+            border-radius: 7px;
+
+            font-size: .82rem;
+
+            transition: .2s;
+        }
+
+        nav a:hover {
+            color: var(--text);
+
+            background: var(--surface);
+        }
+
+        /* =========================
+           MAIN
+        ========================= */
+
+        main {
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+            padding: 2rem 2.5rem;
+        }
+
+        h1 {
+            font-family: 'Syne', sans-serif;
+
+            font-weight: 800;
+
+            font-size: 2rem;
+
+            margin-bottom: .4rem;
+        }
+
+        .subtitle {
+            color: var(--muted);
+
+            font-size: .9rem;
+
+            margin-bottom: 1.5rem;
+        }
+
+        /* =========================
+           CARDS
+        ========================= */
+
+        .card {
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 14px;
+
+            padding: 1.5rem;
+
+            margin-bottom: 1.5rem;
+        }
+
+        /* =========================
+           TABLE
+        ========================= */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+
+            font-size: .72rem;
+
+            color: var(--muted);
+
+            text-transform: uppercase;
+
+            letter-spacing: .04em;
+
+            padding: .8rem;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        td {
+            padding: .85rem .8rem;
+
+            font-size: .85rem;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+        tr:hover {
+            background: rgba(255,255,255,.02);
+        }
+
+        /* =========================
+           BADGES
+        ========================= */
+
+        .badge {
+            display: inline-block;
+
+            padding: .3rem .65rem;
+
+            border-radius: 20px;
+
+            font-size: .7rem;
+
+            font-weight: 700;
+        }
+
+        .badge.high {
+            color: var(--danger);
+
+            background:
+                rgba(248,113,113,.12);
+
+            border:
+                1px solid rgba(248,113,113,.3);
+        }
+
+        .badge.safe {
+            color: var(--success);
+
+            background:
+                rgba(74,222,128,.12);
+
+            border:
+                1px solid rgba(74,222,128,.3);
+        }
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        button,
+        .btn {
+            border: none;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            display: inline-block;
+
+            padding: .65rem 1rem;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    var(--accent),
+                    var(--accent2)
+                );
+
+            color: white;
+
+            font-family: 'Inter',
+                         sans-serif;
+
+            font-weight: 600;
+
+            font-size: .85rem;
+        }
+
+        button:hover,
+        .btn:hover {
+            opacity: .9;
+        }
+
+        button:disabled {
+            opacity: .5;
+
+            cursor: not-allowed;
+        }
+
+        .btn.secondary {
+            background: var(--surface);
+
+            border:
+                1px solid var(--border);
+
+            color: var(--text);
+        }
+
+        /* =========================
+           INPUTS
+        ========================= */
+
+        input,
+        select {
+            outline: none;
+        }
+
+        input:focus,
+        select:focus {
+            border-color:
+                var(--accent) !important;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(56,189,248,.1);
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            color: var(--muted);
+
+            font-size: .7rem;
+
+            padding: 2rem;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media(max-width: 800px) {
+
+            header {
+                padding: 1rem;
+            }
+
+            nav {
+                display: none;
+            }
+
+            main {
+                padding: 1.2rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                display: block;
+
+                overflow-x: auto;
+            }
+        }
+
+    </style>
+
+    {% block extra_style %}{% endblock %}
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            🛡️
+        </div>
+
+        <div>
+
+            <div class="logo-text">
+                InsightGuard Pro
+            </div>
+
+            <div class="logo-sub">
+                BEHAVIOURAL INTELLIGENCE
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <a href="/">
+            Dashboard
+        </a>
+
+        <a href="/employees">
+            Employees
+        </a>
+
+        <a href="/pipeline">
+            Pipeline
+        </a>
+
+        <a href="/predictions">
+            Predictions
+        </a>
+
+    </nav>
+
+</header>
+
+
+<main>
+
+    {% block content %}{% endblock %}
+
+</main>
+
+
+<footer>
+    InsightGuard Pro · AI Insider Threat Behavioural Intelligence System
+</footer>
+
+
+</body>
+</html>
