@@ -1,0 +1,87 @@
+{
+  "component_weights": {
+    "behavioral_anomalies": 0.35,
+    "privilege_misuse": 0.25,
+    "data_access_violations": 0.2,
+    "access_pattern_deviations": 0.1,
+    "historical_security_events": 0.1
+  },
+  "component_features": {
+    "behavioral_anomalies": [
+      "off_hours_logons",
+      "off_hours_usb"
+    ],
+    "privilege_misuse": [
+      "usb_connects",
+      "files_copied_to_usb",
+      "sensitive_files_to_usb"
+    ],
+    "data_access_violations": [
+      "sensitive_files_to_usb",
+      "external_emails_sent",
+      "total_attachments",
+      "total_email_size"
+    ],
+    "access_pattern_deviations": [
+      "distinct_pcs",
+      "http_requests",
+      "cloud_job_visits"
+    ],
+    "historical_security_events_proxy_source": [
+      "off_hours_logons",
+      "off_hours_usb",
+      "sensitive_files_to_usb",
+      "external_emails_sent"
+    ]
+  },
+  "normalization": {
+    "behavioral_anomalies_raw": {
+      "min": 0.0,
+      "cap_p99": 7.0
+    },
+    "privilege_misuse_raw": {
+      "min": 0.0,
+      "cap_p99": 56.0
+    },
+    "data_access_violations_raw": {
+      "min": 0.0,
+      "cap_p99": 590190.2
+    },
+    "access_pattern_deviations_raw": {
+      "min": 0.0,
+      "cap_p99": 199.0
+    },
+    "historical_security_events_raw": {
+      "min": 0.0,
+      "cap_p99": 6090.4
+    }
+  },
+  "ml_vs_behavioral_blend": {
+    "ml_probability_weight": 0.5,
+    "behavioral_score_weight": 0.5
+  },
+  "severity_thresholds": [
+    {
+      "min": 0,
+      "max": 25,
+      "label": "Low"
+    },
+    {
+      "min": 25,
+      "max": 50,
+      "label": "Medium"
+    },
+    {
+      "min": 50,
+      "max": 75,
+      "label": "High"
+    },
+    {
+      "min": 75,
+      "max": 100.0001,
+      "label": "Critical"
+    }
+  ],
+  "isolation_forest_contamination": 0.005,
+  "selected_model": "XGBoost (tuned)"
+}
