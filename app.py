@@ -2,279 +2,576 @@ import os
 import io
 import json
 import pickle
-import logging
 
 import pandas as pd
 import shap
 
-from flask import Flask, request, jsonify, send_file, render_template
-from datetime import datetime
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    render_template,
+    send_file
 )
-logger = logging.getLogger(__name__)
+
+from dotenv import load_dotenv
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 
 
 # ============================================================
-# CONFIGURATION
+# PATHS
 # ============================================================
 
-# Get absolute path to model directory (works from any working directory)
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.join(SCRIPT_DIR, "model")
+BASE_DIR = os.path.dirname(
+    os.path.abspath(__file__)
+)
 
-app = Flask(__name__, template_folder=os.path.join(SCRIPT_DIR, "templates"))
+MODEL_DIR = os.path.join(
+    BASE_DIR,
+    "model"
+)
 
-
-# ============================================================
-# LOAD MODEL FILES
-# ============================================================
-
-model = None
-scaler = None
-FEATURE_COLS = []
-
-try:
-    model_path = os.path.join(MODEL_DIR, "model.pkl")
-    scaler_path = os.path.join(MODEL_DIR, "scaler.pkl")
-    features_path = os.path.join(MODEL_DIR, "feature_columns.pkl")
-    
-    if not os.path.exists(model_path):
-        raise FileNotFoundError(f"Model file not found: {model_path}")
-    if not os.path.exists(scaler_path):
-        raise FileNotFoundError(f"Scaler file not found: {scaler_path}")
-    if not os.path.exists(features_path):
-        raise FileNotFoundError(f"Features file not found: {features_path}")
-    
-    with open(model_path, "rb") as f:
-        model = pickle.load(f)
-    
-    with open(scaler_path, "rb") as f:
-        scaler = pickle.load(f)
-    
-    with open(features_path, "rb") as f:
-        FEATURE_COLS = pickle.load(f)
-    
-    logger.info("Model loaded successfully.")
-    logger.info(f"Features expected by model: {FEATURE_COLS}")
-    
-except FileNotFoundError as e:
-    logger.error(f"Model file error: {e}")
-except Exception as e:
-    logger.error(f"Failed to load model files: {e}")
+TEMPLATE_DIR = os.path.join(
+    BASE_DIR,
+    "templates"
+)
 
 
 # ============================================================
-# LOAD EMPLOYEE DATA
+# ENV
 # ============================================================
 
-EMPLOYEE_FILE = os.path.join(MODEL_DIR, "employees.json")
+load_dotenv(
+    os.path.join(
+        BASE_DIR,
+        ".env"
+    )
+)
 
-employees_data = []
+PORT = int(
+    os.getenv(
+        "FLASK_PORT",
+        "5000"
+    )
+)
 
-if os.path.exists(EMPLOYEE_FILE):
-    try:
-        with open(EMPLOYEE_FILE, "r", encoding="utf-8") as f:
-            employees_json = json.load(f)
 
-        if isinstance(employees_json, dict):
-            employees_data = employees_json.get("employees", [])
-        elif isinstance(employees_json, list):
-            employees_data = employees_json
+# ============================================================
+# FLASK
+# ============================================================
 
-        logger.info(f"Loaded {len(employees_data)} employees.")
+app = Flask(
+    __name__,
+    template_folder=TEMPLATE_DIR
+)
 
-    except json.JSONDecodeError as e:
-        logger.error(f"JSON parsing error in employees.json: {e}")
-    except Exception as e:
-        logger.error(f"Could not load employees.json: {e}")
+
+# ============================================================
+# MODEL FILES
+# ============================================================
+
+MODEL_PATH = os.path.join(
+    MODEL_DIR,
+    "model.pkl"
+)
+
+SCALER_PATH = os.path.join(
+    MODEL_DIR,
+    "scaler.pkl"
+)
+
+FEATURE_PATH = os.path.join(
+    MODEL_DIR,
+    "feature_columns.pkl"
+)
+
+LE_PATH = os.path.join(
+    MODEL_DIR,
+    "le_dict.pkl"
+)
+
+ISO_PATH = os.path.join(
+    MODEL_DIR,
+    "isolation_forest.pkl"
+)
+
+EMPLOYEE_PATH = os.path.join(
+    MODEL_DIR,
+    "employees.json"
+)
+
+
+# ============================================================
+# LOAD MODEL
+# ============================================================
+
+print("=" * 60)
+print("INSIGHTGUARD PRO")
+print("=" * 60)
+
+print("Base directory:")
+print(BASE_DIR)
+
+print("\nLoading model files...")
+
+
+with open(
+    MODEL_PATH,
+    "rb"
+) as f:
+
+    model = pickle.load(f)
+
+
+with open(
+    SCALER_PATH,
+    "rb"
+) as f:
+
+    scaler = pickle.load(f)
+
+
+with open(
+    FEATURE_PATH,
+    "rb"
+) as f:
+
+    feature_columns = pickle.load(f)
+
+
+# Label encoders
+
+if os.path.exists(LE_PATH):
+
+    with open(
+        LE_PATH,
+        "rb"
+    ) as f:
+
+        le_dict = pickle.load(f)
+
 else:
-    logger.warning(f"Employee file not found at: {EMPLOYEE_FILE}")
+
+    le_dict = {}
+
+
+# Isolation Forest
+
+if os.path.exists(ISO_PATH):
+
+    with open(
+        ISO_PATH,
+        "rb"
+    ) as f:
+
+        isolation_forest = pickle.load(f)
+
+else:
+
+    isolation_forest = None
+
+
+print("Model loaded")
+print(
+    "Features:",
+    len(feature_columns)
+)
+
+
+# ============================================================
+# LOAD EMPLOYEES
+# ============================================================
+
+employees = []
+
+
+if os.path.exists(
+    EMPLOYEE_PATH
+):
+
+    try:
+
+        with open(
+            EMPLOYEE_PATH,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            data = json.load(f)
+
+
+        if isinstance(
+            data,
+            list
+        ):
+
+            employees = data
+
+        elif isinstance(
+            data,
+            dict
+        ):
+
+            employees = data.get(
+                "employees",
+                []
+            )
+
+
+    except Exception as e:
+
+        print(
+            "employees.json error:",
+            e
+        )
+
+
+print(
+    "Employees:",
+    len(employees)
+)
 
 
 # ============================================================
 # SHAP
 # ============================================================
 
-explainer = None
 try:
-    if model is not None:
-        explainer = shap.TreeExplainer(model)
-        logger.info("SHAP explainer initialized successfully.")
-    else:
-        logger.warning("Model not loaded; SHAP explainer cannot be initialized.")
+
+    explainer = shap.TreeExplainer(
+        model
+    )
+
+    print("SHAP loaded")
+
 except Exception as e:
-    logger.warning(f"SHAP explainer could not be initialized: {e}")
+
+    explainer = None
+
+    print(
+        "SHAP unavailable:",
+        e
+    )
 
 
 # ============================================================
-# FRONTEND INPUT FIELDS
+# FEATURE LABELS
 # ============================================================
 
-FIELD_LABELS = {
-    "logon_count": "Logon Count",
-    "off_hours_logons": "Off-Hours Logons",
-    "distinct_pcs": "Unique PCs",
-    "usb_connects": "USB Connects",
-    "off_hours_usb": "Off-Hours USB",
-    "files_copied_to_usb": "Files Copied to USB",
-    "sensitive_files_to_usb": "Sensitive Files to USB",
-    "total_emails_sent": "Emails Sent",
-    "external_emails_sent": "External Emails",
-    "total_attachments": "Attachments",
-    "total_email_size": "Total Email Size",
-    "role_encoded": "Role",
-    "department_encoded": "Department",
-    "team_encoded": "Team",
-    "supervisor_encoded": "Supervisor",
+FEATURE_LABELS = {
+
+    "logon_count":
+        "Logon Count",
+
+    "off_hours_logons":
+        "Off-Hours Logons",
+
+    "distinct_pcs":
+        "Unique PCs",
+
+    "usb_connects":
+        "USB Connections",
+
+    "off_hours_usb":
+        "Off-Hours USB",
+
+    "files_copied_to_usb":
+        "Files Copied to USB",
+
+    "sensitive_files_to_usb":
+        "Sensitive Files to USB",
+
+    "total_emails_sent":
+        "Total Emails Sent",
+
+    "external_emails_sent":
+        "External Emails Sent",
+
+    "total_attachments":
+        "Total Attachments",
+
+    "total_email_size":
+        "Total Email Size",
+
+    "http_count":
+        "HTTP Requests",
+
+    "unique_urls":
+        "Unique URLs",
+
+    "off_hours_http":
+        "Off-Hours HTTP",
+
+    "role_encoded":
+        "Role",
+
+    "department_encoded":
+        "Department",
+
+    "team_encoded":
+        "Team",
+
+    "supervisor_encoded":
+        "Supervisor"
 }
 
 
-MANUAL_FIELDS = [
-    {
-        "key": feature,
-        "label": FIELD_LABELS.get(
+# ============================================================
+# CREATE FIELD LIST
+# ============================================================
+
+fields = []
+
+
+for feature in feature_columns:
+
+    fields.append({
+
+        "key":
             feature,
-            feature.replace("_", " ").title()
-        )
-    }
-    for feature in FEATURE_COLS
-]
+
+        "label":
+            FEATURE_LABELS.get(
+                feature,
+                feature.replace(
+                    "_",
+                    " "
+                ).title()
+            )
+    })
 
 
 # ============================================================
 # SEVERITY
 # ============================================================
 
-def severity_tier(score_100):
+def get_severity(
+    risk_score
+):
 
-    if score_100 >= 80:
-        return "Critical", "#f87171"
+    if risk_score >= 75:
 
-    if score_100 >= 60:
-        return "High", "#fb923c"
+        return (
+            "Critical",
+            "#f87171"
+        )
 
-    if score_100 >= 40:
-        return "Medium", "#facc15"
+    elif risk_score >= 50:
 
-    return "Low", "#4ade80"
+        return (
+            "High",
+            "#fb7185"
+        )
+
+    elif risk_score >= 25:
+
+        return (
+            "Medium",
+            "#fbbf24"
+        )
+
+    else:
+
+        return (
+            "Low",
+            "#4ade80"
+        )
 
 
 # ============================================================
-# SHAP FACTORS
+# SHAP
 # ============================================================
 
-def get_shap_factors(input_df, top_n=5):
+def calculate_shap(
+    dataframe
+):
 
     if explainer is None:
+
         return []
+
 
     try:
 
-        shap_values = explainer.shap_values(input_df)
+        values = explainer.shap_values(
+            dataframe
+        )
 
-        if isinstance(shap_values, list):
-            vals = shap_values[-1][0]
-        else:
-            vals = shap_values[0]
 
-        factor_pairs = list(zip(FEATURE_COLS, vals))
+        if isinstance(
+            values,
+            list
+        ):
 
-        factor_pairs.sort(
-            key=lambda x: abs(float(x[1])),
+            values = values[-1]
+
+
+        values = values[0]
+
+
+        factors = []
+
+
+        for feature, value in zip(
+            feature_columns,
+            values
+        ):
+
+            factors.append({
+
+                "feature":
+                    FEATURE_LABELS.get(
+                        feature,
+                        feature
+                    ),
+
+                "shap_value":
+                    round(
+                        float(value),
+                        4
+                    )
+            })
+
+
+        factors.sort(
+            key=lambda x:
+                abs(
+                    x["shap_value"]
+                ),
             reverse=True
         )
 
-        return [
-            {
-                "feature": feature,
-                "shap_value": round(float(value), 4)
-            }
-            for feature, value in factor_pairs[:top_n]
-        ]
+
+        return factors[:8]
+
 
     except Exception as e:
-        logger.error(f"SHAP error: {e}")
+
+        print(
+            "SHAP error:",
+            e
+        )
+
         return []
 
 
 # ============================================================
-# RUN PREDICTION
+# PREDICTION
 # ============================================================
 
-def run_prediction(row_vals):
-    """Run prediction on input data with validation."""
-    
-    # Validate model is loaded
-    if model is None or scaler is None:
-        logger.error("Model or scaler not loaded")
-        raise ValueError("Model or scaler not available for predictions")
-    
-    if not row_vals or not isinstance(row_vals, dict):
-        logger.error("Invalid input data")
-        raise ValueError("Input data must be a non-empty dictionary")
-    
-    try:
-        # Create dataframe using EXACT model features
-        input_data = {}
-        
-        for feature in FEATURE_COLS:
-            value = row_vals.get(feature, 0)
-            
-            try:
-                value = float(value)
-                # Validate reasonable ranges (avoid NaN/inf)
-                if pd.isna(value) or pd.isinf(value):
-                    logger.warning(f"Invalid value for {feature}: {value}, using 0")
-                    value = 0.0
-            except (ValueError, TypeError):
-                logger.debug(f"Could not convert {feature}={value} to float, using 0")
-                value = 0.0
-            
-            input_data[feature] = value
-        
-        input_df = pd.DataFrame([input_data])
-        
-        # Ensure correct feature order
-        input_df = input_df[FEATURE_COLS]
-        
-        # Scale
-        scaled = scaler.transform(input_df)
-        
-        # Prediction
-        pred = model.predict(scaled)[0]
-        
-        # Probability
-        probability = float(model.predict_proba(scaled)[0][1])
-        
-        # Score 0-100
-        score_100 = round(probability * 100, 1)
-        
-        # Severity
-        severity, color = severity_tier(score_100)
-        
-        # SHAP
-        factors = get_shap_factors(input_df)
-        
-        return {
-            "prediction": "INSIDER" if int(pred) == 1 else "Normal",
-            "risk_score": round(probability, 4),
-            "risk_score_100": score_100,
-            "severity": severity,
-            "severity_color": color,
-            "top_factors": factors,
-            "raw_input": row_vals
-        }
-    
-    except Exception as e:
-        logger.error(f"Prediction error: {e}", exc_info=True)
-        raise
+def predict_behavior(
+    payload
+):
+
+    values = {}
+
+
+    for feature in feature_columns:
+
+        value = payload.get(
+            feature,
+            0
+        )
+
+
+        try:
+
+            value = float(
+                value
+            )
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            value = 0.0
+
+
+        values[feature] = value
+
+
+    dataframe = pd.DataFrame(
+        [values],
+        columns=feature_columns
+    )
+
+
+    # Scale exactly as training
+
+    scaled = scaler.transform(
+        dataframe
+    )
+
+
+    # Prediction
+
+    prediction = int(
+        model.predict(
+            scaled
+        )[0]
+    )
+
+
+    # Probability
+
+    probability = float(
+        model.predict_proba(
+            scaled
+        )[0][1]
+    )
+
+
+    risk_score = round(
+        probability * 100,
+        2
+    )
+
+
+    prediction_name = (
+        "INSIDER"
+        if prediction == 1
+        else "NORMAL"
+    )
+
+
+    severity, severity_color = (
+        get_severity(
+            risk_score
+        )
+    )
+
+
+    top_factors = calculate_shap(
+        dataframe
+    )
+
+
+    return {
+
+        "prediction":
+            prediction_name,
+
+        "severity":
+            severity,
+
+        "severity_color":
+            severity_color,
+
+        "risk_score_100":
+            risk_score,
+
+        "confidence":
+            round(
+                probability * 100,
+                2
+            ),
+
+        "top_factors":
+            top_factors
+    }
 
 
 # ============================================================
@@ -282,20 +579,33 @@ def run_prediction(row_vals):
 # ============================================================
 
 @app.route("/")
-def index():
+def dashboard():
 
-    total_employees = len(employees_data)
+    total_employees = len(
+        employees
+    )
 
-    # These values can later be connected to stored predictions.
+
     stats = {
-        "total_employees": total_employees,
-        "total_predictions": 0,
-        "high_risk_count": 0,
-        "safe_count": 0
+
+        "total_employees":
+            total_employees,
+
+        "total_predictions":
+            0,
+
+        "high_risk_count":
+            0,
+
+        "safe_count":
+            total_employees
     }
 
+
     top_risk = []
+
     alerts = []
+
 
     return render_template(
         "dashboard.html",
@@ -306,104 +616,218 @@ def index():
 
 
 # ============================================================
-# EMPLOYEE LIST
+# EMPLOYEES
 # ============================================================
 
-@app.route("/employees")
-def employees_page():
+@app.route(
+    "/employees"
+)
+def employee_list():
 
-    query = request.args.get("q", "").strip().lower()
+    query = request.args.get(
+        "q",
+        ""
+    ).strip()
 
-    employee_list = employees_data
+
+    filtered = employees
+
 
     if query:
 
-        employee_list = [
-            employee
-            for employee in employees_data
-            if query in str(employee.get("user", "")).lower()
-            or query in str(employee.get("name", "")).lower()
-            or query in str(employee.get("department", "")).lower()
-            or query in str(employee.get("role", "")).lower()
-        ]
+        q = query.lower()
 
-    processed_employees = []
 
-    for employee in employee_list:
+        filtered = []
 
-        processed = {
-            "user": employee.get("user", ""),
-            "name": employee.get("name", employee.get("user", "")),
-            "department": employee.get("department", "N/A"),
-            "role": employee.get("role", "N/A"),
-            "status": employee.get("status", "Safe")
-        }
 
-        processed_employees.append(processed)
+        for employee in employees:
+
+            text = " ".join([
+
+                str(
+                    employee.get(
+                        "user",
+                        ""
+                    )
+                ),
+
+                str(
+                    employee.get(
+                        "name",
+                        ""
+                    )
+                ),
+
+                str(
+                    employee.get(
+                        "department",
+                        ""
+                    )
+                ),
+
+                str(
+                    employee.get(
+                        "role",
+                        ""
+                    )
+                )
+
+            ]).lower()
+
+
+            if q in text:
+
+                filtered.append(
+                    employee
+                )
+
+
+    result = []
+
+
+    for employee in filtered:
+
+        result.append({
+
+            "user":
+                employee.get(
+                    "user",
+                    ""
+                ),
+
+            "name":
+                employee.get(
+                    "name",
+                    employee.get(
+                        "user",
+                        ""
+                    )
+                ),
+
+            "department":
+                employee.get(
+                    "department",
+                    "Unknown"
+                ),
+
+            "role":
+                employee.get(
+                    "role",
+                    "Unknown"
+                ),
+
+            "status":
+                employee.get(
+                    "status",
+                    "Safe"
+                )
+        })
+
 
     return render_template(
+
         "employees.html",
-        employees=processed_employees,
-        total=len(processed_employees),
+
+        employees=result,
+
+        total=len(result),
+
         query=query
     )
 
 
 # ============================================================
-# EMPLOYEE PROFILE
+# PROFILE
 # ============================================================
 
-@app.route("/employees/<user>")
-def employee_profile(user):
+@app.route(
+    "/employees/<user>"
+)
+def profile(user):
 
     employee = None
 
-    for e in employees_data:
 
-        if str(e.get("user", "")) == str(user):
+    for e in employees:
+
+        if str(
+            e.get(
+                "user",
+                ""
+            )
+        ) == str(user):
+
             employee = e
+
             break
 
-    if employee is None:
-        return "Employee not found", 404
 
-    # Provide defaults expected by profile.html
+    if employee is None:
+
+        return (
+            "Employee not found",
+            404
+        )
+
 
     emp = {
-        "user": employee.get("user", user),
-        "name": employee.get(
-            "name",
-            employee.get("user", user)
-        ),
-        "department": employee.get(
-            "department",
-            "N/A"
-        ),
-        "role": employee.get(
-            "role",
-            "N/A"
-        ),
-        "email": employee.get(
-            "email",
-            "N/A"
-        ),
-        "total_predictions": employee.get(
-            "total_predictions",
-            0
-        ),
-        "high_risk_days": employee.get(
-            "high_risk_days",
-            0
-        ),
-        "risk_score_100": employee.get(
-            "risk_score_100",
-            0
-        ),
-        "status": employee.get(
-            "status",
-            "Safe"
-        )
+
+        "user":
+            employee.get(
+                "user",
+                user
+            ),
+
+        "name":
+            employee.get(
+                "name",
+                user
+            ),
+
+        "department":
+            employee.get(
+                "department",
+                "Unknown"
+            ),
+
+        "role":
+            employee.get(
+                "role",
+                "Unknown"
+            ),
+
+        "email":
+            employee.get(
+                "email",
+                "N/A"
+            ),
+
+        "total_predictions":
+            employee.get(
+                "total_predictions",
+                0
+            ),
+
+        "high_risk_days":
+            employee.get(
+                "high_risk_days",
+                0
+            ),
+
+        "risk_score_100":
+            employee.get(
+                "risk_score_100",
+                0
+            ),
+
+        "status":
+            employee.get(
+                "status",
+                "Safe"
+            )
     }
+
 
     return render_template(
         "profile.html",
@@ -415,7 +839,9 @@ def employee_profile(user):
 # PIPELINE
 # ============================================================
 
-@app.route("/pipeline")
+@app.route(
+    "/pipeline"
+)
 def pipeline():
 
     return render_template(
@@ -424,231 +850,390 @@ def pipeline():
 
 
 # ============================================================
-# PREDICTIONS PAGE
+# PREDICTIONS
 # ============================================================
 
-@app.route("/predictions")
+@app.route(
+    "/predictions"
+)
 def predictions():
 
     return render_template(
         "predictions.html",
-        fields=MANUAL_FIELDS
+        fields=fields
     )
 
 
 # ============================================================
-# PREDICTION API
+# PREDICT API
 # ============================================================
 
-@app.route("/predict", methods=["POST"])
-def predict():
+@app.route(
+    "/predict",
+    methods=["POST"]
+)
+def predict_api():
 
     try:
 
-        data = request.get_json(force=True) or {}
+        payload = request.get_json(
+            silent=True
+        )
 
-        result = run_prediction(data)
 
-        return jsonify(result)
+        if payload is None:
 
-    except ValueError as ve:
-        logger.warning(f"Prediction validation error: {ve}")
-        return jsonify({"error": str(ve)}), 400
-    except Exception as ex:
-        logger.error(f"Prediction error: {ex}", exc_info=True)
-        return jsonify({"error": str(ex)}), 500
+            payload = {}
+
+
+        result = predict_behavior(
+            payload
+        )
+
+
+        return jsonify(
+            result
+        )
+
+
+    except Exception as e:
+
+        print(
+            "Prediction error:",
+            e
+        )
+
+
+        return jsonify({
+
+            "error":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
-# PDF EXPORT
+# PDF REPORT
 # ============================================================
 
-@app.route("/export/pdf", methods=["POST"])
+@app.route(
+    "/export/pdf",
+    methods=["POST"]
+)
 def export_pdf():
 
     try:
 
-        data = request.get_json(force=True) or {}
+        data = request.get_json(
+            silent=True
+        ) or {}
 
-        buf = io.BytesIO()
 
-        c = canvas.Canvas(
-            buf,
+        buffer = io.BytesIO()
+
+
+        pdf = canvas.Canvas(
+            buffer,
             pagesize=letter
         )
 
+
         width, height = letter
 
+
         # Header
-        c.setFillColorRGB(
-            0.04,
-            0.06,
-            0.12
-        )
 
-        c.rect(
-            0,
-            height - 80,
-            width,
-            80,
-            fill=1
-        )
-
-        c.setFillColorRGB(
-            1,
-            1,
-            1
-        )
-
-        c.setFont(
+        pdf.setFont(
             "Helvetica-Bold",
-            18
+            20
         )
 
-        c.drawString(
+
+        pdf.drawString(
             50,
-            height - 45,
-            "InsightGuard — Investigation Report"
+            height - 50,
+            "InsightGuard Pro"
         )
 
-        c.setFont(
+
+        pdf.setFont(
             "Helvetica",
-            10
+            11
         )
 
-        c.drawString(
+
+        pdf.drawString(
             50,
-            height - 65,
-            f"Generated: "
-            f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+            height - 70,
+            "AI Insider Threat Behavioural Intelligence Report"
         )
 
-        # Prediction
+
         y = height - 120
 
-        c.setFillColorRGB(
-            0,
-            0,
-            0
-        )
 
-        c.setFont(
+        # Prediction
+
+        pdf.setFont(
             "Helvetica-Bold",
-            14
+            12
         )
 
-        c.drawString(
+
+        pdf.drawString(
             50,
             y,
-            f"Prediction: "
-            f"{data.get('prediction', 'N/A')}"
+            "Prediction:"
         )
+
+
+        pdf.setFont(
+            "Helvetica",
+            12
+        )
+
+
+        pdf.drawString(
+            150,
+            y,
+            str(
+                data.get(
+                    "prediction",
+                    "N/A"
+                )
+            )
+        )
+
 
         y -= 25
 
-        c.drawString(
-            50,
-            y,
-            f"Risk Score: "
-            f"{data.get('risk_score_100', 'N/A')}/100 "
-            f"({data.get('severity', 'N/A')} Severity)"
-        )
 
-        y -= 35
+        # Severity
 
-        # SHAP
-        c.setFont(
+        pdf.setFont(
             "Helvetica-Bold",
             12
         )
 
-        c.drawString(
+
+        pdf.drawString(
             50,
             y,
-            "Top Contributing Factors (SHAP):"
+            "Severity:"
         )
 
-        y -= 20
 
-        c.setFont(
+        pdf.setFont(
+            "Helvetica",
+            12
+        )
+
+
+        pdf.drawString(
+            150,
+            y,
+            str(
+                data.get(
+                    "severity",
+                    "N/A"
+                )
+            )
+        )
+
+
+        y -= 25
+
+
+        # Score
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            12
+        )
+
+
+        pdf.drawString(
+            50,
+            y,
+            "Risk Score:"
+        )
+
+
+        pdf.setFont(
+            "Helvetica",
+            12
+        )
+
+
+        pdf.drawString(
+            150,
+            y,
+            str(
+                data.get(
+                    "risk_score_100",
+                    "N/A"
+                )
+            )
+            + "/100"
+        )
+
+
+        y -= 40
+
+
+        # Factors
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            12
+        )
+
+
+        pdf.drawString(
+            50,
+            y,
+            "Top SHAP Factors"
+        )
+
+
+        y -= 25
+
+
+        pdf.setFont(
             "Helvetica",
             10
         )
 
-        for factor in data.get("top_factors", []):
 
-            c.drawString(
-                60,
-                y,
-                f"- {factor.get('feature', 'N/A')}: "
-                f"{factor.get('shap_value', 'N/A')}"
-            )
-
-            y -= 16
-
-        # Raw input
-        y -= 20
-
-        c.setFont(
-            "Helvetica-Bold",
-            12
+        factors = data.get(
+            "top_factors",
+            []
         )
 
-        c.drawString(
+
+        for factor in factors:
+
+            feature = factor.get(
+                "feature",
+                "Unknown"
+            )
+
+
+            value = factor.get(
+                "shap_value",
+                0
+            )
+
+
+            pdf.drawString(
+                60,
+                y,
+                f"{feature}: {value}"
+            )
+
+
+            y -= 18
+
+
+        y -= 20
+
+
+        pdf.drawString(
             50,
             y,
-            "Raw Input Values:"
+            "Generated by InsightGuard Pro"
         )
 
-        y -= 20
 
-        c.setFont(
-            "Helvetica",
-            9
-        )
+        pdf.save()
 
-        for key, value in data.get(
-            "raw_input",
-            {}
-        ).items():
 
-            c.drawString(
-                60,
-                y,
-                f"{key}: {value}"
-            )
+        buffer.seek(0)
 
-            y -= 14
-
-            if y < 60:
-
-                c.showPage()
-
-                y = height - 60
-
-        c.save()
-
-        buf.seek(0)
 
         return send_file(
-            buf,
-            mimetype="application/pdf",
+
+            buffer,
+
+            mimetype=
+                "application/pdf",
+
             as_attachment=True,
-            download_name="investigation_report.pdf",
-            cache_timeout=0
+
+            download_name=
+                "investigation_report.pdf"
         )
 
-    except Exception as ex:
-        logger.error(f"PDF generation error: {ex}", exc_info=True)
-        return jsonify({"error": str(ex)}), 500
+
+    except Exception as e:
+
+        return jsonify({
+
+            "error":
+                str(e)
+
+        }), 500
 
 
 # ============================================================
-# RUN APPLICATION
+# HEALTH CHECK
+# ============================================================
+
+@app.route(
+    "/health"
+)
+def health():
+
+    return jsonify({
+
+        "status":
+            "running",
+
+        "model":
+            "XGBoost",
+
+        "features":
+            len(feature_columns),
+
+        "employees":
+            len(employees)
+
+    })
+
+
+# ============================================================
+# START
 # ============================================================
 
 if __name__ == "__main__":
-    logger.info("Starting Insider Threat Detection application...")
-    logger.info(f"Model DIR: {MODEL_DIR}")
-    logger.info(f"Flask app running on http://127.0.0.1:5000")
-    app.run(host="0.0.0.0", port=5000, debug=False)
+
+    print()
+    print("=" * 60)
+    print(
+        "InsightGuard Pro starting..."
+    )
+    print("=" * 60)
+
+    print(
+        f"Local URL: http://127.0.0.1:{PORT}"
+    )
+
+    print(
+        f"Template folder: {TEMPLATE_DIR}"
+    )
+
+    print(
+        f"Templates exist: {os.path.exists(TEMPLATE_DIR)}"
+    )
+
+    print("=" * 60)
+
+
+    app.run(
+
+        host="0.0.0.0",
+
+        port=PORT,
+
+        debug=False
+    )
