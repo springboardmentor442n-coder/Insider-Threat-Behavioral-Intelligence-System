@@ -2,12 +2,20 @@ import os
 import io
 import json
 import pickle
+import logging
 
 import pandas as pd
 import shap
 
 from flask import Flask, request, jsonify, send_file, render_template
 from datetime import datetime
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -17,27 +25,49 @@ from reportlab.pdfgen import canvas
 # CONFIGURATION
 # ============================================================
 
-MODEL_DIR = "model"
+# Get absolute path to model directory (works from any working directory)
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_DIR = os.path.join(SCRIPT_DIR, "model")
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder=os.path.join(SCRIPT_DIR, "templates"))
 
 
 # ============================================================
 # LOAD MODEL FILES
 # ============================================================
 
-with open(os.path.join(MODEL_DIR, "model.pkl"), "rb") as f:
-    model = pickle.load(f)
+model = None
+scaler = None
+FEATURE_COLS = []
 
-with open(os.path.join(MODEL_DIR, "scaler.pkl"), "rb") as f:
-    scaler = pickle.load(f)
-
-with open(os.path.join(MODEL_DIR, "feature_columns.pkl"), "rb") as f:
-    FEATURE_COLS = pickle.load(f)
-
-print("Model loaded.")
-print("Features expected by model:")
-print(FEATURE_COLS)
+try:
+    model_path = os.path.join(MODEL_DIR, "model.pkl")
+    scaler_path = os.path.join(MODEL_DIR, "scaler.pkl")
+    features_path = os.path.join(MODEL_DIR, "feature_columns.pkl")
+    
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+    if not os.path.exists(scaler_path):
+        raise FileNotFoundError(f"Scaler file not found: {scaler_path}")
+    if not os.path.exists(features_path):
+        raise FileNotFoundError(f"Features file not found: {features_path}")
+    
+    with open(model_path, "rb") as f:
+        model = pickle.load(f)
+    
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
+    
+    with open(features_path, "rb") as f:
+        FEATURE_COLS = pickle.load(f)
+    
+    logger.info("Model loaded successfully.")
+    logger.info(f"Features expected by model: {FEATURE_COLS}")
+    
+except FileNotFoundError as e:
+    logger.error(f"Model file error: {e}")
+except Exception as e:
+    logger.error(f"Failed to load model files: {e}")
 
 
 # ============================================================
@@ -58,22 +88,29 @@ if os.path.exists(EMPLOYEE_FILE):
         elif isinstance(employees_json, list):
             employees_data = employees_json
 
-        print(f"Loaded {len(employees_data)} employees.")
+        logger.info(f"Loaded {len(employees_data)} employees.")
 
+    except json.JSONDecodeError as e:
+        logger.error(f"JSON parsing error in employees.json: {e}")
     except Exception as e:
-        print("Could not load employees.json:", e)
+        logger.error(f"Could not load employees.json: {e}")
+else:
+    logger.warning(f"Employee file not found at: {EMPLOYEE_FILE}")
 
 
 # ============================================================
 # SHAP
 # ============================================================
 
+explainer = None
 try:
-    explainer = shap.TreeExplainer(model)
-    print("SHAP explainer ready.")
+    if model is not None:
+        explainer = shap.TreeExplainer(model)
+        logger.info("SHAP explainer initialized successfully.")
+    else:
+        logger.warning("Model not loaded; SHAP explainer cannot be initialized.")
 except Exception as e:
-    explainer = None
-    print("SHAP could not be initialized:", e)
+    logger.warning(f"SHAP explainer could not be initialized: {e}")
 
 
 # ============================================================
@@ -163,9 +200,7 @@ def get_shap_factors(input_df, top_n=5):
         ]
 
     except Exception as e:
-
-        print("SHAP error:", e)
-
+        logger.error(f"SHAP error: {e}")
         return []
 
 
@@ -174,55 +209,72 @@ def get_shap_factors(input_df, top_n=5):
 # ============================================================
 
 def run_prediction(row_vals):
-
-    # Create dataframe using EXACT model features
-    input_data = {}
-
-    for feature in FEATURE_COLS:
-
-        value = row_vals.get(feature, 0)
-
-        try:
-            value = float(value)
-        except (ValueError, TypeError):
-            value = 0.0
-
-        input_data[feature] = value
-
-    input_df = pd.DataFrame([input_data])
-
-    # Ensure correct feature order
-    input_df = input_df[FEATURE_COLS]
-
-    # Scale
-    scaled = scaler.transform(input_df)
-
-    # Prediction
-    pred = model.predict(scaled)[0]
-
-    # Probability
-    probability = float(
-        model.predict_proba(scaled)[0][1]
-    )
-
-    # Score 0-100
-    score_100 = round(probability * 100, 1)
-
-    # Severity
-    severity, color = severity_tier(score_100)
-
-    # SHAP
-    factors = get_shap_factors(input_df)
-
-    return {
-        "prediction": "INSIDER" if int(pred) == 1 else "Normal",
-        "risk_score": round(probability, 4),
-        "risk_score_100": score_100,
-        "severity": severity,
-        "severity_color": color,
-        "top_factors": factors,
-        "raw_input": row_vals
-    }
+    """Run prediction on input data with validation."""
+    
+    # Validate model is loaded
+    if model is None or scaler is None:
+        logger.error("Model or scaler not loaded")
+        raise ValueError("Model or scaler not available for predictions")
+    
+    if not row_vals or not isinstance(row_vals, dict):
+        logger.error("Invalid input data")
+        raise ValueError("Input data must be a non-empty dictionary")
+    
+    try:
+        # Create dataframe using EXACT model features
+        input_data = {}
+        
+        for feature in FEATURE_COLS:
+            value = row_vals.get(feature, 0)
+            
+            try:
+                value = float(value)
+                # Validate reasonable ranges (avoid NaN/inf)
+                if pd.isna(value) or pd.isinf(value):
+                    logger.warning(f"Invalid value for {feature}: {value}, using 0")
+                    value = 0.0
+            except (ValueError, TypeError):
+                logger.debug(f"Could not convert {feature}={value} to float, using 0")
+                value = 0.0
+            
+            input_data[feature] = value
+        
+        input_df = pd.DataFrame([input_data])
+        
+        # Ensure correct feature order
+        input_df = input_df[FEATURE_COLS]
+        
+        # Scale
+        scaled = scaler.transform(input_df)
+        
+        # Prediction
+        pred = model.predict(scaled)[0]
+        
+        # Probability
+        probability = float(model.predict_proba(scaled)[0][1])
+        
+        # Score 0-100
+        score_100 = round(probability * 100, 1)
+        
+        # Severity
+        severity, color = severity_tier(score_100)
+        
+        # SHAP
+        factors = get_shap_factors(input_df)
+        
+        return {
+            "prediction": "INSIDER" if int(pred) == 1 else "Normal",
+            "risk_score": round(probability, 4),
+            "risk_score_100": score_100,
+            "severity": severity,
+            "severity_color": color,
+            "top_factors": factors,
+            "raw_input": row_vals
+        }
+    
+    except Exception as e:
+        logger.error(f"Prediction error: {e}", exc_info=True)
+        raise
 
 
 # ============================================================
@@ -399,13 +451,12 @@ def predict():
 
         return jsonify(result)
 
+    except ValueError as ve:
+        logger.warning(f"Prediction validation error: {ve}")
+        return jsonify({"error": str(ve)}), 400
     except Exception as ex:
-
-        print("Prediction error:", ex)
-
-        return jsonify({
-            "error": str(ex)
-        }), 400
+        logger.error(f"Prediction error: {ex}", exc_info=True)
+        return jsonify({"error": str(ex)}), 500
 
 
 # ============================================================
@@ -583,16 +634,13 @@ def export_pdf():
             buf,
             mimetype="application/pdf",
             as_attachment=True,
-            download_name="investigation_report.pdf"
+            download_name="investigation_report.pdf",
+            cache_timeout=0
         )
 
     except Exception as ex:
-
-        print("PDF error:", ex)
-
-        return jsonify({
-            "error": str(ex)
-        }), 400
+        logger.error(f"PDF generation error: {ex}", exc_info=True)
+        return jsonify({"error": str(ex)}), 500
 
 
 # ============================================================
@@ -600,16 +648,7 @@ def export_pdf():
 # ============================================================
 
 if __name__ == "__main__":
-
-    port = int(
-        os.getenv(
-            "FLASK_PORT",
-            5000
-        )
-    )
-
-    app.run(
-        host="0.0.0.0",
-        port=port,
-        debug=False
-    )
+    logger.info("Starting Insider Threat Detection application...")
+    logger.info(f"Model DIR: {MODEL_DIR}")
+    logger.info(f"Flask app running on http://127.0.0.1:5000")
+    app.run(host="0.0.0.0", port=5000, debug=False)
