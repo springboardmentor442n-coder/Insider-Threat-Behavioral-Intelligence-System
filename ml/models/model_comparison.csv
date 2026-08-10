@@ -1,4 +1,0 @@
-Model,Accuracy,Precision,Recall,F1 Score,ROC AUC
-RandomForestClassifier,0.995,0.9333,1.0,0.9655,1.0
-XGBClassifier,0.995,0.9333,1.0,0.9655,1.0
-Isolation Forest,0.895,0.2308,0.2143,0.2222,N/A
