@@ -1,0 +1,2179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Dashboard | AI Insider Threat Detection
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+
+        /* ==========================================================
+           SIDEBAR
+           ========================================================== */
+
+        .sidebar {
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+
+            width: 270px;
+            height: 100vh;
+
+            background: #0d172d;
+
+            color: white;
+
+            padding: 30px 17px;
+
+            overflow-y: auto;
+        }
+
+
+        .brand {
+
+            padding: 5px 13px 25px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.12);
+        }
+
+
+        .brand-icon {
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 12px;
+
+            background: #2864e8;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .brand h1 {
+
+            margin: 0;
+
+            font-size: 21px;
+        }
+
+
+        .brand p {
+
+            margin-top: 8px;
+
+            margin-bottom: 0;
+
+            color: #91a2c0;
+
+            font-size: 13px;
+        }
+
+
+        .menu-title {
+
+            margin:
+                28px
+                13px
+                12px;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            letter-spacing: 1.5px;
+
+            color: #7384a5;
+        }
+
+
+        .nav-link {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+
+            width: 100%;
+
+            padding: 14px 15px;
+
+            margin-bottom: 7px;
+
+            border-radius: 9px;
+
+            color: #dbe3f3;
+
+            text-decoration: none;
+
+            font-size: 15px;
+
+            transition:
+                background 0.2s,
+                color 0.2s;
+        }
+
+
+        .nav-link:hover {
+
+            background: #172541;
+
+            color: white;
+        }
+
+
+        .nav-link.active {
+
+            background: #2864e8;
+
+            color: white;
+        }
+
+
+        .nav-icon {
+
+            width: 25px;
+
+            text-align: center;
+
+            font-size: 18px;
+        }
+
+
+        .logout {
+
+            position: absolute;
+
+            bottom: 25px;
+
+            left: 17px;
+
+            right: 17px;
+        }
+
+
+        /* ==========================================================
+           MAIN
+           ========================================================== */
+
+        .main {
+
+            margin-left: 270px;
+
+            min-height: 100vh;
+        }
+
+
+        /* ==========================================================
+           TOP HEADER
+           ========================================================== */
+
+        .topbar {
+
+            height: 105px;
+
+            background: white;
+
+            border-bottom:
+                1px solid
+                #e5eaf1;
+
+            padding:
+                22px
+                30px;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+        }
+
+
+        .topbar h2 {
+
+            margin: 0;
+
+            font-size: 21px;
+        }
+
+
+        .topbar p {
+
+            margin:
+                5px
+                0
+                0;
+
+            color: #71809a;
+
+            font-size: 13px;
+        }
+
+
+        .user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .avatar {
+
+            width: 43px;
+            height: 43px;
+
+            border-radius: 50%;
+
+            background: #2864e8;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+
+            font-size: 18px;
+        }
+
+
+        .user-name {
+
+            font-weight: bold;
+
+            font-size: 14px;
+        }
+
+
+        .user-role {
+
+            color: #71809a;
+
+            font-size: 12px;
+
+            margin-top: 4px;
+        }
+
+
+        /* ==========================================================
+           CONTENT
+           ========================================================== */
+
+        .content {
+
+            padding: 30px;
+        }
+
+
+        .welcome h1 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 30px;
+        }
+
+
+        .welcome p {
+
+            margin:
+                0
+                0
+                30px;
+
+            color: #58708f;
+
+            font-size: 15px;
+        }
+
+
+        /* ==========================================================
+           STAT CARDS
+           ========================================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 25px;
+
+            margin-bottom: 28px;
+        }
+
+
+        .stat-card {
+
+            background: white;
+
+            border:
+                1px solid
+                #e0e7f0;
+
+            border-radius: 12px;
+
+            padding: 25px;
+
+            min-height: 190px;
+        }
+
+
+        .stat-icon {
+
+            width: 49px;
+            height: 49px;
+
+            border-radius: 11px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 22px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .icon-blue {
+
+            background: #e1ebff;
+        }
+
+
+        .icon-purple {
+
+            background: #eee6ff;
+        }
+
+
+        .icon-red {
+
+            background: #ffe0e0;
+        }
+
+
+        .icon-green {
+
+            background: #dff8e8;
+        }
+
+
+        .stat-title {
+
+            color: #647898;
+
+            font-size: 14px;
+
+            margin-bottom: 7px;
+        }
+
+
+        .stat-number {
+
+            font-size: 31px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-description {
+
+            color: #94a3bc;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        /* ==========================================================
+           QUICK ACTIONS
+           ========================================================== */
+
+        .quick-section {
+
+            background: white;
+
+            border:
+                1px solid
+                #e0e7f0;
+
+            border-radius: 12px;
+
+            padding: 27px;
+        }
+
+
+        .quick-header h2 {
+
+            margin: 0;
+
+            font-size: 19px;
+        }
+
+
+        .quick-header p {
+
+            margin:
+                6px
+                0
+                25px;
+
+            color: #71809a;
+
+            font-size: 13px;
+        }
+
+
+        .actions {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 18px;
+        }
+
+
+        .action-card {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: inherit;
+
+            border:
+                1px solid
+                #dfe6ef;
+
+            border-radius: 11px;
+
+            padding: 22px;
+
+            min-height: 160px;
+
+            transition:
+                transform 0.2s,
+                box-shadow 0.2s,
+                border-color 0.2s;
+        }
+
+
+        .action-card:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 8px 20px
+                rgba(20,40,80,0.08);
+
+            border-color:
+                #2864e8;
+        }
+
+
+        .action-icon {
+
+            font-size: 24px;
+
+            margin-bottom: 17px;
+        }
+
+
+        .action-card h3 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 15px;
+        }
+
+
+        .action-card p {
+
+            margin: 0;
+
+            color: #657b9a;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* ==========================================================
+           SECURITY OVERVIEW
+           ========================================================== */
+
+        .security-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 25px;
+
+            margin-top: 28px;
+        }
+
+
+        .security-card {
+
+            background: white;
+
+            border:
+                1px solid
+                #e0e7f0;
+
+            border-radius: 12px;
+
+            padding: 27px;
+        }
+
+
+        .security-card h2 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 19px;
+        }
+
+
+        .security-card-subtitle {
+
+            color: #71809a;
+
+            font-size: 13px;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* ==========================================================
+           RISK DISTRIBUTION
+           ========================================================== */
+
+        .risk-row {
+
+            display: grid;
+
+            grid-template-columns:
+                90px
+                1fr
+                45px;
+
+            align-items: center;
+
+            gap: 12px;
+
+            margin-bottom: 17px;
+        }
+
+
+        .risk-label {
+
+            font-size: 13px;
+
+            font-weight: bold;
+        }
+
+
+        .risk-bar {
+
+            height: 10px;
+
+            background: #e9edf3;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+
+        .risk-fill {
+
+            height: 100%;
+
+            border-radius: 20px;
+        }
+
+
+        .risk-low {
+
+            background: #22c55e;
+        }
+
+
+        .risk-medium {
+
+            background: #f59e0b;
+        }
+
+
+        .risk-high {
+
+            background: #f97316;
+        }
+
+
+        .risk-critical {
+
+            background: #ef4444;
+        }
+
+
+        .risk-count {
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            text-align: right;
+        }
+
+
+        /* ==========================================================
+           THREAT SUMMARY
+           ========================================================== */
+
+        .threat-summary {
+
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 15px;
+        }
+
+
+        .threat-box {
+
+            padding: 20px;
+
+            border-radius: 10px;
+
+            background: #f7f9fc;
+        }
+
+
+        .threat-box-title {
+
+            color: #71809a;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .threat-box-number {
+
+            font-size: 28px;
+
+            font-weight: bold;
+        }
+
+
+        /* ==========================================================
+           RECENT ANALYSES
+           ========================================================== */
+
+        .recent-section {
+
+            background: white;
+
+            border:
+                1px solid
+                #e0e7f0;
+
+            border-radius: 12px;
+
+            padding: 27px;
+
+            margin-top: 28px;
+        }
+
+
+        .recent-section h2 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 19px;
+        }
+
+
+        .recent-table-wrapper {
+
+            overflow-x: auto;
+        }
+
+
+        .recent-table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 20px;
+        }
+
+
+        .recent-table th {
+
+            text-align: left;
+
+            padding: 13px;
+
+            font-size: 11px;
+
+            color: #71809a;
+
+            border-bottom:
+                1px solid
+                #e5eaf1;
+
+            text-transform: uppercase;
+        }
+
+
+        .recent-table td {
+
+            padding: 14px 13px;
+
+            border-bottom:
+                1px solid
+                #edf1f6;
+
+            font-size: 13px;
+        }
+
+
+        /* ==========================================================
+           BADGES
+           ========================================================== */
+
+        .badge {
+
+            display: inline-block;
+
+            padding: 6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+        }
+
+
+        .badge-normal,
+        .badge-low {
+
+            background: #dcfce7;
+
+            color: #15803d;
+        }
+
+
+        .badge-threat,
+        .badge-critical {
+
+            background: #fee2e2;
+
+            color: #dc2626;
+        }
+
+
+        .badge-medium {
+
+            background: #fef3c7;
+
+            color: #b45309;
+        }
+
+
+        .badge-high {
+
+            background: #ffedd5;
+
+            color: #c2410c;
+        }
+
+
+        /* ==========================================================
+           HIGH RISK EMPLOYEES
+           ========================================================== */
+
+        .alert-section {
+
+            background: white;
+
+            border:
+                1px solid
+                #e0e7f0;
+
+            border-radius: 12px;
+
+            padding: 27px;
+
+            margin-top: 28px;
+        }
+
+
+        .alert-section h2 {
+
+            margin:
+                0
+                0
+                8px;
+
+            font-size: 19px;
+        }
+
+
+        .alert-item {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding: 18px;
+
+            margin-top: 14px;
+
+            border:
+                1px solid
+                #f0d5d5;
+
+            border-radius: 10px;
+
+            background: #fffafa;
+        }
+
+
+        .alert-employee {
+
+            font-weight: bold;
+        }
+
+
+        .alert-details {
+
+            color: #71809a;
+
+            font-size: 12px;
+
+            margin-top: 5px;
+        }
+
+
+        .alert-score {
+
+            font-weight: bold;
+
+            color: #dc2626;
+        }
+
+
+        /* ==========================================================
+           EMPTY STATE
+           ========================================================== */
+
+        .empty-state {
+
+            padding: 25px;
+
+            text-align: center;
+
+            color: #71809a;
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+        }
+
+
+        /* ==========================================================
+           RESPONSIVE
+           ========================================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+
+            .actions {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .security-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 750px) {
+
+            .sidebar {
+
+                position: relative;
+
+                width: 100%;
+
+                height: auto;
+            }
+
+
+            .logout {
+
+                position: static;
+
+                margin-top: 25px;
+            }
+
+
+            .main {
+
+                margin-left: 0;
+            }
+
+
+            .topbar {
+
+                height: auto;
+
+                gap: 20px;
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .security-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .threat-summary {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .alert-item {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+            }
+
+
+            .content {
+
+                padding: 20px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- ==========================================================
+     SIDEBAR
+     ========================================================== -->
+
+<aside class="sidebar">
+
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <h1>
+            AI Security
+        </h1>
+
+        <p>
+            Insider Threat Detection
+        </p>
+
+    </div>
+
+
+    <div class="menu-title">
+        MAIN
+    </div>
+
+
+    <!-- DASHBOARD -->
+
+    <a
+        href="{{ url_for('dashboard.home') }}"
+        class="nav-link active"
+    >
+
+        <span class="nav-icon">
+            📊
+        </span>
+
+        <span>
+            Dashboard
+        </span>
+
+    </a>
+
+
+    <!-- EMPLOYEES -->
+
+    <a
+        href="{{ url_for('employee.employees') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            👥
+        </span>
+
+        <span>
+            Employees
+        </span>
+
+    </a>
+
+
+    <!-- THREAT ANALYSIS -->
+
+    <a
+        href="{{ url_for('prediction.prediction_page') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            🤖
+        </span>
+
+        <span>
+            Threat Analysis
+        </span>
+
+    </a>
+
+
+    <!-- REPORTS -->
+
+    <a
+        href="{{ url_for('reports.reports_page') }}"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            📋
+        </span>
+
+        <span>
+            Reports
+        </span>
+
+    </a>
+
+
+    <div class="menu-title">
+        SYSTEM
+    </div>
+
+
+    <!-- SETTINGS -->
+
+    <a
+        href="#"
+        class="nav-link"
+    >
+
+        <span class="nav-icon">
+            ⚙️
+        </span>
+
+        <span>
+            Settings
+        </span>
+
+    </a>
+
+
+    <!-- LOGOUT -->
+
+    <div class="logout">
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="nav-link"
+        >
+
+            <span class="nav-icon">
+                🚪
+            </span>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+    </div>
+
+
+</aside>
+
+
+<!-- ==========================================================
+     MAIN CONTENT
+     ========================================================== -->
+
+<main class="main">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div>
+
+            <h2>
+                Security Operations Dashboard
+            </h2>
+
+            <p>
+                AI-powered insider threat monitoring
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            <div class="avatar">
+
+                {% if current_user.is_authenticated %}
+
+                    {{ current_user.username[0]|upper }}
+
+                {% else %}
+
+                    A
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                <div class="user-name">
+
+                    {% if current_user.is_authenticated %}
+
+                        {{ current_user.username }}
+
+                    {% else %}
+
+                        Admin
+
+                    {% endif %}
+
+                </div>
+
+
+                <div class="user-role">
+
+                    Security Analyst
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- ==========================================================
+         CONTENT
+         ========================================================== -->
+
+    <section class="content">
+
+
+        <!-- WELCOME -->
+
+        <div class="welcome">
+
+            <h1>
+
+                Welcome back,
+
+                {% if current_user.is_authenticated %}
+
+                    {{ current_user.username|capitalize }}
+
+                {% else %}
+
+                    Admin
+
+                {% endif %}
+
+                👋
+
+            </h1>
+
+
+            <p>
+
+                Monitor employee behavior and identify
+                potential insider threats using machine learning.
+
+            </p>
+
+        </div>
+
+
+        <!-- ======================================================
+             STATISTICS
+             ====================================================== -->
+
+        <div class="stats">
+
+
+            <!-- TOTAL EMPLOYEES -->
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-icon icon-blue"
+                >
+                    👥
+                </div>
+
+
+                <div class="stat-title">
+
+                    Total Employees
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ total_employees|default(0) }}
+
+                </div>
+
+
+                <div class="stat-description">
+
+                    Employees monitored by the system
+
+                </div>
+
+            </div>
+
+
+            <!-- EMPLOYEES ANALYZED -->
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-icon icon-purple"
+                >
+                    🔍
+                </div>
+
+
+                <div class="stat-title">
+
+                    Employees Analyzed
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ employees_analyzed|default(0) }}
+
+                </div>
+
+
+                <div class="stat-description">
+
+                    AI threat predictions performed
+
+                </div>
+
+            </div>
+
+
+            <!-- HIGH RISK -->
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-icon icon-red"
+                >
+                    ⚠️
+                </div>
+
+
+                <div class="stat-title">
+
+                    High Risk Alerts
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ high_risk_alerts|default(0) }}
+
+                </div>
+
+
+                <div class="stat-description">
+
+                    Potential insider threats detected
+
+                </div>
+
+            </div>
+
+
+            <!-- SAFE -->
+
+            <div class="stat-card">
+
+                <div
+                    class="stat-icon icon-green"
+                >
+                    🛡️
+                </div>
+
+
+                <div class="stat-title">
+
+                    Safe Employees
+
+                </div>
+
+
+                <div class="stat-number">
+
+                    {{ safe_employees|default(0) }}
+
+                </div>
+
+
+                <div class="stat-description">
+
+                    No immediate threat detected
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- ======================================================
+             QUICK ACTIONS
+             ====================================================== -->
+
+        <section class="quick-section">
+
+
+            <div class="quick-header">
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+                <p>
+                    Access the main security analysis functions.
+                </p>
+
+            </div>
+
+
+            <div class="actions">
+
+
+                <!-- EMPLOYEE MONITORING -->
+
+                <a
+                    href="{{ url_for('employee.employees') }}"
+                    class="action-card"
+                >
+
+                    <div class="action-icon">
+                        👥
+                    </div>
+
+                    <h3>
+                        Employee Monitoring
+                    </h3>
+
+                    <p>
+
+                        View and manage employee activity
+                        and behavioral information.
+
+                    </p>
+
+                </a>
+
+
+                <!--  -->
+
+                <a
+                    href="{{ url_for('prediction.prediction_page') }}"
+                    class="action-card"
+                >
+
+                    <div class="action-icon">
+                        🤖
+                    </div>
+
+                    <h3>
+                        
+                    </h3>
+
+                    <p>
+
+                        Analyze employee behavior using
+                        the machine learning threat
+                        detection system.
+
+                    </p>
+
+                </a>
+
+
+                <!-- SECURITY REPORTS -->
+
+                <a
+                    href="{{ url_for('reports.reports_page') }}"
+                    class="action-card"
+                >
+
+                    <div class="action-icon">
+                        📋
+                    </div>
+
+                    <h3>
+                        Security Reports
+                    </h3>
+
+                    <p>
+
+                        Review prediction history,
+                        risk levels and security reports.
+
+                    </p>
+
+                </a>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================================
+             SECURITY OVERVIEW
+             ====================================================== -->
+
+        <div class="security-grid">
+
+
+            <!-- RISK DISTRIBUTION -->
+
+            <section class="security-card">
+
+                <h2>
+                    Risk Distribution
+                </h2>
+
+                <div class="security-card-subtitle">
+
+                    Current employee risk levels based on latest
+                    ML predictions.
+
+                </div>
+
+
+                <!-- LOW -->
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        LOW
+                    </div>
+
+
+                    <div class="risk-bar">
+
+                        {% set low_width =
+                            (risk_distribution["LOW"]
+                            / employees_analyzed * 100)
+                            if employees_analyzed > 0
+                            else 0
+                        %}
+
+
+                        <div
+                            class="risk-fill risk-low"
+                            style="width: {{ low_width }}%;"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="risk-count">
+
+                        {{ risk_distribution["LOW"] }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- MEDIUM -->
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        MEDIUM
+                    </div>
+
+
+                    <div class="risk-bar">
+
+                        {% set medium_width =
+                            (risk_distribution["MEDIUM"]
+                            / employees_analyzed * 100)
+                            if employees_analyzed > 0
+                            else 0
+                        %}
+
+
+                        <div
+                            class="risk-fill risk-medium"
+                            style="width: {{ medium_width }}%;"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="risk-count">
+
+                        {{ risk_distribution["MEDIUM"] }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- HIGH -->
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        HIGH
+                    </div>
+
+
+                    <div class="risk-bar">
+
+                        {% set high_width =
+                            (risk_distribution["HIGH"]
+                            / employees_analyzed * 100)
+                            if employees_analyzed > 0
+                            else 0
+                        %}
+
+
+                        <div
+                            class="risk-fill risk-high"
+                            style="width: {{ high_width }}%;"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="risk-count">
+
+                        {{ risk_distribution["HIGH"] }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- CRITICAL -->
+
+                <div class="risk-row">
+
+                    <div class="risk-label">
+                        CRITICAL
+                    </div>
+
+
+                    <div class="risk-bar">
+
+                        {% set critical_width =
+                            (risk_distribution["CRITICAL"]
+                            / employees_analyzed * 100)
+                            if employees_analyzed > 0
+                            else 0
+                        %}
+
+
+                        <div
+                            class="risk-fill risk-critical"
+                            style="width: {{ critical_width }}%;"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="risk-count">
+
+                        {{ risk_distribution["CRITICAL"] }}
+
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- THREAT SUMMARY -->
+
+            <section class="security-card">
+
+                <h2>
+                    Threat Summary
+                </h2>
+
+                <div class="security-card-subtitle">
+
+                    Overview of the latest machine learning
+                    predictions.
+
+                </div>
+
+
+                <div class="threat-summary">
+
+
+                    <div class="threat-box">
+
+                        <div class="threat-box-title">
+
+                            Threat Predictions
+
+                        </div>
+
+                        <div class="threat-box-number">
+
+                            {{ threat_count|default(0) }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="threat-box">
+
+                        <div class="threat-box-title">
+
+                            Normal Predictions
+
+                        </div>
+
+                        <div class="threat-box-number">
+
+                            {{ normal_count|default(0) }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="threat-box">
+
+                        <div class="threat-box-title">
+
+                            Avg Threat Probability
+
+                        </div>
+
+                        <div class="threat-box-number">
+
+                            {{
+                                "%.2f"|format(
+                                    average_threat_probability|default(0)
+                                )
+                            }}%
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="threat-box">
+
+                        <div class="threat-box-title">
+
+                            High Risk Alerts
+
+                        </div>
+
+                        <div class="threat-box-number">
+
+                            {{ high_risk_alerts|default(0) }}
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- ======================================================
+             RECENT THREAT ANALYSES
+             ====================================================== -->
+
+        <section class="recent-section">
+
+            <h2>
+                Recent Threat Analyses
+            </h2>
+
+            <div class="security-card-subtitle">
+
+                Latest insider threat predictions generated by
+                the ML system.
+
+            </div>
+
+
+            {% if recent_predictions %}
+
+
+            <div class="recent-table-wrapper">
+
+                <table class="recent-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Employee
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Prediction
+                            </th>
+
+                            <th>
+                                Threat Probability
+                            </th>
+
+                            <th>
+                                Risk Score
+                            </th>
+
+                            <th>
+                                Overall Risk
+                            </th>
+
+                            <th>
+                                Model
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        {% for prediction in recent_predictions %}
+
+
+                        <tr>
+
+
+                            <td>
+
+                                <strong>
+
+                                    {{ prediction.employee.employee_id }}
+
+                                </strong>
+
+                            </td>
+
+
+                            <td>
+
+                                {{ prediction.employee.department }}
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% if prediction.prediction|trim|upper == "THREAT" %}
+
+                                    <span class="badge badge-threat">
+
+                                        THREAT
+
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge badge-normal">
+
+                                        NORMAL
+
+                                    </span>
+
+                                {% endif %}
+
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    "%.2f"|format(
+                                        prediction.threat_probability
+                                        or 0
+                                    )
+                                }}%
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    "%.0f"|format(
+                                        prediction.behavioral_risk_score
+                                        or 0
+                                    )
+                                }}/100
+
+                            </td>
+
+
+                            <td>
+
+
+                                {% set risk =
+                                    (
+                                        prediction.overall_risk_level
+                                        or "LOW"
+                                    )|trim|lower
+                                %}
+
+
+                                <span
+                                    class="badge badge-{{ risk }}"
+                                >
+
+                                    {{
+                                        prediction.overall_risk_level
+                                        or "LOW"
+                                    }}
+
+                                </span>
+
+
+                            </td>
+
+
+                            <td>
+
+                                {{
+                                    prediction.model_name
+                                    or "Random Forest"
+                                }}
+
+                            </td>
+
+
+                        </tr>
+
+
+                        {% endfor %}
+
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            {% else %}
+
+
+            <div class="empty-state">
+
+                No threat analyses have been performed yet.
+
+            </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+        <!-- ======================================================
+             HIGH RISK EMPLOYEES
+             ====================================================== -->
+
+        <section class="alert-section">
+
+            <h2>
+                ⚠️ High Risk Employees
+            </h2>
+
+
+            <div class="security-card-subtitle">
+
+                Employees requiring security analyst attention
+                based on their latest prediction.
+
+            </div>
+
+
+            {% if high_risk_predictions %}
+
+
+                {% for prediction in high_risk_predictions %}
+
+
+                <div class="alert-item">
+
+
+                    <div>
+
+                        <div class="alert-employee">
+
+                            {{ prediction.employee.employee_id }}
+
+                        </div>
+
+
+                        <div class="alert-details">
+
+                            {{ prediction.employee.department }}
+
+                            •
+
+                            {{ prediction.employee.role }}
+
+                            •
+
+                            {{ prediction.prediction }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="alert-score">
+
+                            {{
+                                "%.0f"|format(
+                                    prediction.behavioral_risk_score
+                                    or 0
+                                )
+                            }}/100
+
+                        </div>
+
+
+                        <div class="alert-details">
+
+                            {{
+                                prediction.overall_risk_level
+                                or "HIGH"
+                            }}
+
+                            •
+
+                            {{
+                                "%.2f"|format(
+                                    prediction.threat_probability
+                                    or 0
+                                )
+                            }}% threat probability
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <div class="empty-state">
+
+                    ✓ No high-risk employees detected.
+
+                </div>
+
+
+            {% endif %}
+
+
+        </section>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

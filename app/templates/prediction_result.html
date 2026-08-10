@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        Prediction Result | AI Insider Threat Detection
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #0f172a;
+        }
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: 0 auto;
+
+            padding: 40px 25px;
+        }
+
+        .header {
+
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+        .header p {
+
+            color: #58708f;
+
+            font-size: 16px;
+        }
+
+        .card {
+
+            background: white;
+
+            border:
+                1px solid #dce4ef;
+
+            border-radius: 14px;
+
+            padding: 28px;
+
+            margin-bottom: 25px;
+        }
+
+        .card h2 {
+
+            font-size: 21px;
+
+            margin-bottom: 20px;
+        }
+
+        .employee-info {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 20px;
+        }
+
+        .info-item {
+
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            padding: 16px;
+        }
+
+        .info-label {
+
+            color: #7183a3;
+
+            font-size: 13px;
+
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+
+            font-weight: 600;
+
+            font-size: 16px;
+        }
+
+        .risk-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 18px;
+        }
+
+        .risk-card {
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e2e8f0;
+        }
+
+        .risk-label {
+
+            color: #64748b;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .risk-value {
+
+            font-size: 25px;
+
+            font-weight: 700;
+        }
+
+        .status {
+
+            display: inline-block;
+
+            padding: 7px 14px;
+
+            border-radius: 20px;
+
+            font-weight: 700;
+
+            font-size: 13px;
+        }
+
+        .status-normal {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .status-threat {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .risk-low {
+
+            color: #15803d;
+        }
+
+        .risk-medium {
+
+            color: #ca8a04;
+        }
+
+        .risk-high {
+
+            color: #ea580c;
+        }
+
+        .risk-critical {
+
+            color: #dc2626;
+        }
+
+        .recommendation {
+
+            background: #eef5ff;
+
+            border:
+                1px solid #c9dcff;
+
+            border-radius: 10px;
+
+            padding: 20px;
+
+            line-height: 1.6;
+
+            color: #365579;
+        }
+
+        .indicator {
+
+            border:
+                1px solid #e2e8f0;
+
+            border-radius: 10px;
+
+            padding: 18px;
+
+            margin-bottom: 12px;
+
+            background: #fafcff;
+        }
+
+        .indicator-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            margin-bottom: 10px;
+        }
+
+        .indicator-feature {
+
+            font-weight: 700;
+
+            font-size: 16px;
+        }
+
+        .severity {
+
+            padding: 5px 10px;
+
+            border-radius: 15px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .severity-HIGH {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+        .severity-MEDIUM {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+        .severity-LOW {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+        .indicator-details {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+
+            font-size: 14px;
+        }
+
+        .indicator-details span {
+
+            color: #64748b;
+        }
+
+        .actions {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 25px;
+        }
+
+        .btn {
+
+            text-decoration: none;
+
+            border: none;
+
+            border-radius: 8px;
+
+            padding: 13px 22px;
+
+            font-size: 15px;
+
+            font-weight: 600;
+        }
+
+        .btn-primary {
+
+            background: #2864e8;
+
+            color: white;
+        }
+
+        .btn-secondary {
+
+            background: #e9eef6;
+
+            color: #263b59;
+        }
+
+        @media (max-width: 900px) {
+
+            .risk-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .employee-info {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .risk-grid,
+            .employee-info,
+            .indicator-details {
+
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+
+                flex-direction: column;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            Insider Threat Analysis Result
+        </h1>
+
+        <p>
+            AI-powered employee behavioral risk assessment
+        </p>
+
+    </div>
+
+
+    <!-- EMPLOYEE -->
+
+    <div class="card">
+
+        <h2>
+            Employee Information
+        </h2>
+
+        <div class="employee-info">
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Employee ID
+                </div>
+
+                <div class="info-value">
+                    {{ employee.employee_id }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Department
+                </div>
+
+                <div class="info-value">
+                    {{ employee.department }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Role
+                </div>
+
+                <div class="info-value">
+                    {{ employee.role }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Business Unit
+                </div>
+
+                <div class="info-value">
+                    {{ employee.business_unit }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Model
+                </div>
+
+                <div class="info-value">
+                    {{ result.model }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="info-label">
+                    Prediction ID
+                </div>
+
+                <div class="info-value">
+                    #{{ prediction.id }}
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN RESULT -->
+
+    <div class="card">
+
+        <h2>
+            Threat Assessment
+        </h2>
+
+
+        <div class="risk-grid">
+
+
+            <!-- STATUS -->
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    ML Classification
+                </div>
+
+                {% if result.status == "THREAT" %}
+
+                    <span class="status status-threat">
+                        THREAT
+                    </span>
+
+                {% else %}
+
+                    <span class="status status-normal">
+                        NORMAL
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- THREAT PROBABILITY -->
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Threat Probability
+                </div>
+
+                <div class="risk-value">
+
+                    {{ result.threat_probability }}%
+
+                </div>
+
+            </div>
+
+
+            <!-- BEHAVIORAL SCORE -->
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Behavioral Risk Score
+                </div>
+
+                <div class="risk-value">
+
+                    {{ result.behavioral_risk_score }}/100
+
+                </div>
+
+            </div>
+
+
+            <!-- OVERALL RISK -->
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Overall Risk
+                </div>
+
+                <div class="risk-value
+                    risk-{{ result.overall_risk_level|lower }}">
+
+                    {{ result.overall_risk_level }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PROBABILITY -->
+
+    <div class="card">
+
+        <h2>
+            Model Probability
+        </h2>
+
+        <div class="risk-grid">
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Threat Probability
+                </div>
+
+                <div class="risk-value">
+
+                    {{ result.threat_probability }}%
+
+                </div>
+
+            </div>
+
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Normal Probability
+                </div>
+
+                <div class="risk-value">
+
+                    {{ result.normal_probability }}%
+
+                </div>
+
+            </div>
+
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    ML Risk Level
+                </div>
+
+                <div class="risk-value
+                    risk-{{ result.ml_risk_level|lower }}">
+
+                    {{ result.ml_risk_level }}
+
+                </div>
+
+            </div>
+
+
+            <div class="risk-card">
+
+                <div class="risk-label">
+                    Model
+                </div>
+
+                <div class="risk-value">
+
+                    {{ result.model }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- RISK INDICATORS -->
+
+    <div class="card">
+
+        <h2>
+            Risk Indicators
+        </h2>
+
+
+        {% if result.risk_indicators %}
+
+            {% for indicator in result.risk_indicators %}
+
+                <div class="indicator">
+
+                    <div class="indicator-header">
+
+                        <div class="indicator-feature">
+
+                            {{ indicator.feature }}
+
+                        </div>
+
+                        <div class="severity
+                            severity-{{ indicator.severity }}">
+
+                            {{ indicator.severity }}
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="indicator-details">
+
+                        <div>
+
+                            <span>
+                                Value:
+                            </span>
+
+                            {{ indicator.value }}
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Risk Points:
+                            </span>
+
+                            +{{ indicator.points }}
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Reason:
+                            </span>
+
+                            {{ indicator.reason }}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No major behavioral risk indicators detected.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- RECOMMENDATION -->
+
+    <div class="card">
+
+        <h2>
+            SOC Recommendation
+        </h2>
+
+        <div class="recommendation">
+
+            {{ result.recommendation }}
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <a
+            href="{{ url_for('prediction.prediction_page') }}"
+            class="btn btn-primary"
+        >
+            🔍 Analyze Another Employee
+        </a>
+
+
+        <a
+            href="{{ url_for('dashboard.home') }}"
+            class="btn btn-secondary"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

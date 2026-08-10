@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Bulk Threat Analysis | AI Security
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .header {
+            background: #0d172d;
+            color: white;
+            padding: 25px 35px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .header p {
+            color: #9eacce;
+            margin-bottom: 0;
+        }
+
+        .container {
+            padding: 35px;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e1e7f0;
+            border-radius: 14px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .upload-box {
+            border: 2px dashed #2864e8;
+            border-radius: 12px;
+            padding: 45px;
+            text-align: center;
+            background: #f8faff;
+        }
+
+        .upload-box h2 {
+            margin-top: 0;
+        }
+
+        input[type="file"] {
+            margin: 25px 0;
+            padding: 12px;
+        }
+
+        button {
+            background: #2864e8;
+            border: none;
+            color: white;
+            padding: 13px 25px;
+            border-radius: 7px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1f54ca;
+        }
+
+        .template {
+            display: inline-block;
+            margin-top: 15px;
+            color: #2864e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .info {
+            background: #eef5ff;
+            border-left: 4px solid #2864e8;
+            padding: 18px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+
+        .flash {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 7px;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        AI Security
+    </h1>
+
+    <p>
+        Bulk Insider Threat Analysis
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+        <h2>
+            Bulk Employee Analysis
+        </h2>
+
+        <p>
+            Upload a CSV containing multiple employee
+            behavioural records and analyze them using
+            the Random Forest insider threat detection model.
+        </p>
+
+
+        {% with messages = get_flashed_messages(
+            with_categories=true
+        ) %}
+
+            {% if messages %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <form
+            method="POST"
+            enctype="multipart/form-data"
+        >
+
+            <div class="upload-box">
+
+                <h2>
+                    📁 Upload Employee CSV
+                </h2>
+
+                <p>
+                    Select a CSV file containing
+                    employee behavioural information.
+                </p>
+
+
+                <input
+                    type="file"
+                    name="csv_file"
+                    accept=".csv"
+                    required
+                >
+
+
+                <br>
+
+
+                <button type="submit">
+
+                    🚀 Analyze CSV
+
+                </button>
+
+
+                <br>
+
+
+                <a
+                    href="{{ url_for(
+                        'bulk_prediction.download_template'
+                    ) }}"
+                    class="template"
+                >
+
+                    Download CSV Template
+
+                </a>
+
+            </div>
+
+        </form>
+
+
+        <div class="info">
+
+            <strong>
+                Important:
+            </strong>
+
+            The CSV should contain the same employee
+            behavioural features used by the machine
+            learning model.
+
+            Do not include the prediction result
+            in the CSV.
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h3>
+            Processing Flow
+        </h3>
+
+        <p>
+            CSV Upload → Validation → Random Forest
+            Prediction → Behavioural Risk Analysis →
+            Database Storage → Results
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Insider Threat Detection</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #0b1220;
+            color: #e5e7eb;
+        }
+
+        .header {
+            padding: 25px 40px;
+            background: #111827;
+            border-bottom: 1px solid #263244;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+        }
+
+        .header p {
+            margin: 8px 0 0;
+            color: #94a3b8;
+        }
+
+        .container {
+            width: 94%;
+            max-width: 1400px;
+            margin: 30px auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: #111827;
+            border: 1px solid #263244;
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 7px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+        }
+
+        .button {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 25px;
+            border-radius: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+        }
+
+        .status {
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .metric {
+            padding: 16px;
+            border-radius: 8px;
+            background: #111827;
+        }
+
+        .metric-title {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .metric-value {
+            margin-top: 6px;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        .indicator {
+            margin-top: 12px;
+            padding: 14px;
+            background: #111827;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .indicator strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .recommendation {
+            margin-top: 15px;
+            padding: 15px;
+            background: #172033;
+            border-radius: 8px;
+        }
+
+        @media(max-width: 900px) {
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .fields {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="header">
+
+    <h1>
+        AI Insider Threat Detection System
+    </h1>
+
+    <p>
+        SOC Analyst Employee Behaviour Assessment
+    </p>
+
+</div>
+
+
+<div class="container">
+
+<form method="POST">
+
+<div class="grid">
+
+<!-- ================================================= -->
+<!-- EMPLOYEE INFORMATION -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>Employee Information</h2>
+
+<div class="fields">
+
+<div>
+
+<label>Department</label>
+
+<input
+    type="text"
+    name="department"
+    value="{{ employee.get('department', '') }}"
+    placeholder="Finance"
+    required
+>
+
+</div>
+
+
+<div>
+
+<label>Role</label>
+
+<input
+    type="text"
+    name="role"
+    value="{{ employee.get('role', '') }}"
+    placeholder="Financial Analyst"
+    required
+>
+
+</div>
+
+
+<div>
+
+<label>Business Unit</label>
+
+<input
+    type="number"
+    name="business_unit"
+    value="{{ employee.get('business_unit', 1) }}"
+>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- LOGIN ACTIVITY -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>Login Activity</h2>
+
+<div class="fields">
+
+<div>
+<label>Login Count</label>
+<input type="number"
+       step="any"
+       name="login_count"
+       value="{{ employee.get('login_count', 0) }}">
+</div>
+
+<div>
+<label>Logoff Count</label>
+<input type="number"
+       step="any"
+       name="logoff_count"
+       value="{{ employee.get('logoff_count', 0) }}">
+</div>
+
+<div>
+<label>Night Login Count</label>
+<input type="number"
+       step="any"
+       name="night_login_count"
+       value="{{ employee.get('night_login_count', 0) }}">
+</div>
+
+<div>
+<label>Weekend Login Count</label>
+<input type="number"
+       step="any"
+       name="weekend_login_count"
+       value="{{ employee.get('weekend_login_count', 0) }}">
+</div>
+
+<div>
+<label>Unique PC Count</label>
+<input type="number"
+       step="any"
+       name="unique_pc_count"
+       value="{{ employee.get('unique_pc_count', 0) }}">
+</div>
+
+<div>
+<label>Night Login Ratio</label>
+<input type="number"
+       step="any"
+       name="night_login_ratio"
+       value="{{ employee.get('night_login_ratio', 0) }}">
+</div>
+
+<div>
+<label>Weekend Login Ratio</label>
+<input type="number"
+       step="any"
+       name="weekend_login_ratio"
+       value="{{ employee.get('weekend_login_ratio', 0) }}">
+</div>
+
+<div>
+<label>PC Switching Frequency</label>
+<input type="number"
+       step="any"
+       name="pc_switching_frequency"
+       value="{{ employee.get('pc_switching_frequency', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- USB ACTIVITY -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>USB / Device Activity</h2>
+
+<div class="fields">
+
+<div>
+<label>USB Connect Count</label>
+<input type="number"
+       step="any"
+       name="usb_connect_count"
+       value="{{ employee.get('usb_connect_count', 0) }}">
+</div>
+
+<div>
+<label>USB Disconnect Count</label>
+<input type="number"
+       step="any"
+       name="usb_disconnect_count"
+       value="{{ employee.get('usb_disconnect_count', 0) }}">
+</div>
+
+<div>
+<label>USB Total Activity</label>
+<input type="number"
+       step="any"
+       name="usb_total_activity"
+       value="{{ employee.get('usb_total_activity', 0) }}">
+</div>
+
+<div>
+<label>USB Connect Ratio</label>
+<input type="number"
+       step="any"
+       name="usb_connect_ratio"
+       value="{{ employee.get('usb_connect_ratio', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- FILE ACTIVITY -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>File Activity</h2>
+
+<div class="fields">
+
+<div>
+<label>File Copy Count</label>
+<input type="number"
+       step="any"
+       name="file_copy_count"
+       value="{{ employee.get('file_copy_count', 0) }}">
+</div>
+
+<div>
+<label>Average Daily File Copy</label>
+<input type="number"
+       step="any"
+       name="avg_daily_file_copy"
+       value="{{ employee.get('avg_daily_file_copy', 0) }}">
+</div>
+
+<div>
+<label>Maximum Daily File Copy</label>
+<input type="number"
+       step="any"
+       name="max_daily_file_copy"
+       value="{{ employee.get('max_daily_file_copy', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- EMAIL ACTIVITY -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>Email Activity</h2>
+
+<div class="fields">
+
+<div>
+<label>Email Sent Count</label>
+<input type="number"
+       step="any"
+       name="email_sent_count"
+       value="{{ employee.get('email_sent_count', 0) }}">
+</div>
+
+<div>
+<label>External Email Count</label>
+<input type="number"
+       step="any"
+       name="external_email_count"
+       value="{{ employee.get('external_email_count', 0) }}">
+</div>
+
+<div>
+<label>Average Attachment Count</label>
+<input type="number"
+       step="any"
+       name="avg_attachment_count"
+       value="{{ employee.get('avg_attachment_count', 0) }}">
+</div>
+
+<div>
+<label>Average Email Size</label>
+<input type="number"
+       step="any"
+       name="avg_email_size"
+       value="{{ employee.get('avg_email_size', 0) }}">
+</div>
+
+<div>
+<label>External Email Ratio</label>
+<input type="number"
+       step="any"
+       name="external_email_ratio"
+       value="{{ employee.get('external_email_ratio', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- WEB ACTIVITY -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>Web Activity</h2>
+
+<div class="fields">
+
+<div>
+<label>Website Visit Count</label>
+<input type="number"
+       step="any"
+       name="website_visit_count"
+       value="{{ employee.get('website_visit_count', 0) }}">
+</div>
+
+<div>
+<label>Unique Domain Count</label>
+<input type="number"
+       step="any"
+       name="unique_domain_count"
+       value="{{ employee.get('unique_domain_count', 0) }}">
+</div>
+
+<div>
+<label>Average Daily Web Activity</label>
+<input type="number"
+       step="any"
+       name="avg_daily_web_activity"
+       value="{{ employee.get('avg_daily_web_activity', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- PSYCHOMETRIC -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<h2>Psychometric Profile</h2>
+
+<div class="fields">
+
+<div>
+<label>Openness (O)</label>
+<input type="number"
+       step="any"
+       name="O"
+       value="{{ employee.get('O', 0) }}">
+</div>
+
+<div>
+<label>Conscientiousness (C)</label>
+<input type="number"
+       step="any"
+       name="C"
+       value="{{ employee.get('C', 0) }}">
+</div>
+
+<div>
+<label>Extraversion (E)</label>
+<input type="number"
+       step="any"
+       name="E"
+       value="{{ employee.get('E', 0) }}">
+</div>
+
+<div>
+<label>Agreeableness (A)</label>
+<input type="number"
+       step="any"
+       name="A"
+       value="{{ employee.get('A', 0) }}">
+</div>
+
+<div>
+<label>Neuroticism (N)</label>
+<input type="number"
+       step="any"
+       name="N"
+       value="{{ employee.get('N', 0) }}">
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ================================================= -->
+<!-- ANALYZE -->
+<!-- ================================================= -->
+
+<div class="card">
+
+<button
+    class="button"
+    type="submit"
+>
+    ANALYZE EMPLOYEE
+</button>
+
+</div>
+
+
+</form>
+
+
+<!-- ================================================= -->
+<!-- RESULT -->
+<!-- ================================================= -->
+
+{% if result %}
+
+<div class="result">
+
+<div class="status">
+
+    {{ result.status }}
+
+</div>
+
+
+<div class="metric-grid">
+
+<div class="metric">
+
+<div class="metric-title">
+ML THREAT PROBABILITY
+</div>
+
+<div class="metric-value">
+{{ result.threat_probability }}%
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metric-title">
+ML RISK LEVEL
+</div>
+
+<div class="metric-value">
+{{ result.ml_risk_level }}
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metric-title">
+BEHAVIOURAL RISK SCORE
+</div>
+
+<div class="metric-value">
+{{ result.behavioral_risk_score }}/100
+</div>
+
+</div>
+
+
+<div class="metric">
+
+<div class="metric-title">
+OVERALL RISK
+</div>
+
+<div class="metric-value">
+{{ result.overall_risk_level }}
+</div>
+
+</div>
+
+</div>
+
+
+<h2>
+Risk Indicators
+</h2>
+
+
+{% if result.risk_indicators %}
+
+{% for indicator in result.risk_indicators %}
+
+<div class="indicator">
+
+<strong>
+{{ indicator.severity }}
+—
+{{ indicator.feature }}
+</strong>
+
+<div>
+Value: {{ indicator.value }}
+</div>
+
+<div>
+Risk Points: +{{ indicator.points }}
+</div>
+
+<div>
+{{ indicator.reason }}
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p>
+No major behavioural risk indicators detected.
+</p>
+
+{% endif %}
+
+
+<h2>
+SOC Recommendation
+</h2>
+
+<div class="recommendation">
+
+{{ result.recommendation }}
+
+</div>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</body>
+
+</html>

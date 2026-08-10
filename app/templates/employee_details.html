@@ -1,0 +1,1365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Employee Details | AI Security
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        /* =====================================================
+           LAYOUT
+           ===================================================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        .sidebar {
+            width: 290px;
+            background: #0d1830;
+            color: white;
+            padding: 38px 20px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .brand {
+            padding: 0 12px 35px;
+            border-bottom: 1px solid #27334d;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #2864e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 18px;
+        }
+
+        .brand h2 {
+            margin: 0 0 7px;
+            font-size: 25px;
+        }
+
+        .brand p {
+            margin: 0;
+            color: #9eacd0;
+            font-size: 15px;
+        }
+
+        .menu-title {
+            margin: 35px 12px 14px;
+            color: #7282aa;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 16px 18px;
+            margin: 5px 0;
+            border-radius: 9px;
+            color: #edf2ff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .menu a:hover {
+            background: #1b2b4d;
+        }
+
+        .menu a.active {
+            background: #2864e8;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+        }
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .main {
+            margin-left: 290px;
+            width: calc(100% - 290px);
+        }
+
+        .topbar {
+            background: white;
+            padding: 30px 35px;
+            border-bottom: 1px solid #e1e7f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar h1 {
+            margin: 0 0 6px;
+            font-size: 25px;
+        }
+
+        .topbar p {
+            margin: 0;
+            color: #71809a;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: #2864e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .user strong {
+            display: block;
+        }
+
+        .user span {
+            color: #71809a;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           CONTENT
+           ===================================================== */
+
+        .content {
+            padding: 38px 35px 70px;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 22px;
+            color: #2864e8;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 28px;
+        }
+
+        .page-header h2 {
+            margin: 0 0 7px;
+            font-size: 32px;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #71809a;
+            font-size: 16px;
+        }
+
+        /* =====================================================
+           BUTTONS
+           ===================================================== */
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: #2864e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d54cc;
+        }
+
+        .btn-secondary {
+            background: #e9eef6;
+            color: #243754;
+        }
+
+        .btn-secondary:hover {
+            background: #dce4ef;
+        }
+
+        .btn-danger {
+            background: #ffe1e1;
+            color: #c62828;
+        }
+
+        .btn-danger:hover {
+            background: #ffd0d0;
+        }
+
+        /* =====================================================
+           CARD
+           ===================================================== */
+
+        .card {
+            background: white;
+            border: 1px solid #e1e7f0;
+            border-radius: 13px;
+            padding: 28px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            margin: 0 0 20px;
+            font-size: 21px;
+        }
+
+        /* =====================================================
+           INFORMATION GRID
+           ===================================================== */
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .field {
+            background: #f8fafc;
+            padding: 18px;
+            border-radius: 9px;
+        }
+
+        .label {
+            color: #71809a;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .value {
+            font-size: 17px;
+            font-weight: bold;
+            color: #172033;
+        }
+
+        /* =====================================================
+           THREAT ANALYSIS
+           ===================================================== */
+
+        .threat-card {
+            border: 1px solid #d9e3f2;
+        }
+
+        .threat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .threat-header h3 {
+            margin: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .badge-low {
+            background: #dff7e8;
+            color: #08743c;
+        }
+
+        .badge-medium {
+            background: #fff0c9;
+            color: #916600;
+        }
+
+        .badge-high {
+            background: #ffe0e0;
+            color: #b42323;
+        }
+
+        .badge-normal {
+            background: #dff7e8;
+            color: #08743c;
+        }
+
+        .prediction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .prediction-box {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 9px;
+        }
+
+        .prediction-label {
+            color: #71809a;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .prediction-value {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .recommendation {
+            margin-top: 20px;
+            padding: 20px;
+            background: #edf5ff;
+            border-left: 4px solid #2864e8;
+            border-radius: 7px;
+        }
+
+        .recommendation h4 {
+            margin: 0 0 8px;
+            color: #21498d;
+            font-size: 17px;
+        }
+
+        .recommendation p {
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .no-prediction {
+            padding: 22px;
+            background: #f8fafc;
+            border-radius: 9px;
+            color: #71809a;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .grid,
+            .prediction-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .topbar {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 25px 18px 50px;
+            }
+
+            .user {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <h2>
+                AI Security
+            </h2>
+
+            <p>
+                Insider Threat Detection
+            </p>
+
+        </div>
+
+
+        <div class="menu-title">
+            MAIN
+        </div>
+
+        <div class="menu">
+
+            <a href="{{ url_for('dashboard.home') }}">
+                📊 Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('employee.employees') }}"
+                class="active"
+            >
+                👥 Employees
+            </a>
+
+            <a href="{{ url_for('prediction.prediction_page') }}">
+                🤖 Threat Analysis
+            </a>
+
+            <a href="{{ url_for('reports.reports_page') }}">
+                📋 Reports
+            </a>
+
+        </div>
+
+
+        <div class="menu-title">
+            SYSTEM
+        </div>
+
+        <div class="menu">
+
+            <a href="#">
+                ⚙️ Settings
+            </a>
+
+        </div>
+
+
+        <div class="logout">
+
+            <div class="menu">
+
+                <a href="{{ url_for('auth.logout') }}">
+                    🚪 Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Employee Management
+                </h1>
+
+                <p>
+                    Monitor employee information and insider threat risk
+                </p>
+
+            </div>
+
+
+            <div class="user">
+
+                <div class="avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong>
+                        Admin
+                    </strong>
+
+                    <span>
+                        Security Analyst
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <div class="content">
+
+
+            <!-- BACK -->
+
+            <a
+                href="{{ url_for('employee.employees') }}"
+                class="back"
+            >
+                ← Back to Employees
+            </a>
+
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <div class="page-header">
+
+                <div>
+
+                    <h2>
+                        Employee {{ employee.employee_id }}
+                    </h2>
+
+                    <p>
+                        Employee profile and behavioral information
+                    </p>
+
+                </div>
+
+
+                <div class="actions">
+
+                    <!-- IMPORTANT:
+                         This passes the database employee.id
+                         to the prediction route.
+                    -->
+
+                    <a
+                        href="{{ url_for(
+                            'prediction.prediction_page',
+                            employee_id=employee.id
+                        ) }}"
+                        class="btn btn-primary"
+                    >
+                        🔍 Analyze Threat
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BASIC INFORMATION
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Employee Information
+                </h3>
+
+
+                <div class="grid">
+
+
+                    <div class="field">
+
+                        <div class="label">
+                            Employee ID
+                        </div>
+
+                        <div class="value">
+                            {{ employee.employee_id }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <div class="label">
+                            Department
+                        </div>
+
+                        <div class="value">
+                            {{ employee.department or "Not specified" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <div class="label">
+                            Role
+                        </div>
+
+                        <div class="value">
+                            {{ employee.role or "Not specified" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="field">
+
+                        <div class="label">
+                            Business Unit
+                        </div>
+
+                        <div class="value">
+                            {{ employee.business_unit or "Not specified" }}
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 LATEST THREAT ANALYSIS
+                 ================================================= -->
+
+            <div class="card threat-card">
+
+                <div class="threat-header">
+
+                    <h3>
+                        Latest Threat Analysis
+                    </h3>
+
+
+                    {% if latest_prediction %}
+
+                        {% set risk = latest_prediction.overall_risk_level or "LOW" %}
+
+                        {% if risk|upper == "HIGH" %}
+
+                            <span class="badge badge-high">
+                                HIGH
+                            </span>
+
+                        {% elif risk|upper == "MEDIUM" %}
+
+                            <span class="badge badge-medium">
+                                MEDIUM
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge badge-low">
+                                LOW
+                            </span>
+
+                        {% endif %}
+
+                    {% else %}
+
+                        <span class="badge badge-normal">
+                            NOT ANALYZED
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                {% if latest_prediction %}
+
+                    <div class="prediction-grid">
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                Prediction Status
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {% if latest_prediction.status %}
+
+                                    {{ latest_prediction.status|upper }}
+
+                                {% else %}
+
+                                    NORMAL
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                ML Risk Level
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {{ latest_prediction.ml_risk_level or "LOW" }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                Threat Probability
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {{ "%.2f"|format(
+                                    (latest_prediction.threat_probability or 0) * 100
+                                ) }}%
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                Normal Probability
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {{ "%.2f"|format(
+                                    (latest_prediction.normal_probability or 0) * 100
+                                ) }}%
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                Behavioral Risk Score
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {{ "%.2f"|format(
+                                    latest_prediction.behavioral_risk_score or 0
+                                ) }}
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="prediction-box">
+
+                            <div class="prediction-label">
+                                Overall Risk
+                            </div>
+
+                            <div class="prediction-value">
+
+                                {{ latest_prediction.overall_risk_level or "LOW" }}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+
+                    {% if latest_prediction.recommendation %}
+
+                        <div class="recommendation">
+
+                            <h4>
+                                Recommended Action
+                            </h4>
+
+                            <p>
+                                {{ latest_prediction.recommendation }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+
+                {% else %}
+
+                    <div class="no-prediction">
+
+                        <strong>
+                            No threat analysis available.
+                        </strong>
+
+                        <br><br>
+
+                        This employee has not been analyzed yet.
+
+                        Use the
+                        <strong>
+                            Analyze Threat
+                        </strong>
+                        button above to run the machine learning model.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 LOGIN ACTIVITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Login Activity
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            Login Count
+                        </div>
+                        <div class="value">
+                            {{ employee.login_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Logoff Count
+                        </div>
+                        <div class="value">
+                            {{ employee.logoff_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Night Login Count
+                        </div>
+                        <div class="value">
+                            {{ employee.night_login_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Weekend Login Count
+                        </div>
+                        <div class="value">
+                            {{ employee.weekend_login_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Night Login Ratio
+                        </div>
+                        <div class="value">
+                            {{ employee.night_login_ratio }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Weekend Login Ratio
+                        </div>
+                        <div class="value">
+                            {{ employee.weekend_login_ratio }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 DEVICE & USB ACTIVITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Device & USB Activity
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            Unique PCs
+                        </div>
+                        <div class="value">
+                            {{ employee.unique_pc_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            PC Switching Frequency
+                        </div>
+                        <div class="value">
+                            {{ employee.pc_switching_frequency }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            USB Connections
+                        </div>
+                        <div class="value">
+                            {{ employee.usb_connect_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            USB Disconnections
+                        </div>
+                        <div class="value">
+                            {{ employee.usb_disconnect_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Total USB Activity
+                        </div>
+                        <div class="value">
+                            {{ employee.usb_total_activity }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            USB Connection Ratio
+                        </div>
+                        <div class="value">
+                            {{ employee.usb_connect_ratio }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 FILE ACTIVITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    File Activity
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            File Copy Count
+                        </div>
+                        <div class="value">
+                            {{ employee.file_copy_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Average Daily File Copy
+                        </div>
+                        <div class="value">
+                            {{ employee.avg_daily_file_copy }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Maximum Daily File Copy
+                        </div>
+                        <div class="value">
+                            {{ employee.max_daily_file_copy }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 EMAIL ACTIVITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Email Activity
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            Emails Sent
+                        </div>
+                        <div class="value">
+                            {{ employee.email_sent_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            External Emails
+                        </div>
+                        <div class="value">
+                            {{ employee.external_email_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Average Attachments
+                        </div>
+                        <div class="value">
+                            {{ employee.avg_attachment_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Average Email Size
+                        </div>
+                        <div class="value">
+                            {{ employee.avg_email_size }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            External Email Ratio
+                        </div>
+                        <div class="value">
+                            {{ employee.external_email_ratio }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 WEB ACTIVITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Web Activity
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            Website Visits
+                        </div>
+                        <div class="value">
+                            {{ employee.website_visit_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Unique Domains
+                        </div>
+                        <div class="value">
+                            {{ employee.unique_domain_count }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Average Daily Web Activity
+                        </div>
+                        <div class="value">
+                            {{ employee.avg_daily_web_activity }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 PERSONALITY
+                 ================================================= -->
+
+            <div class="card">
+
+                <h3>
+                    Personality Features
+                </h3>
+
+
+                <div class="grid">
+
+                    <div class="field">
+                        <div class="label">
+                            Openness (O)
+                        </div>
+                        <div class="value">
+                            {{ employee.O }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Conscientiousness (C)
+                        </div>
+                        <div class="value">
+                            {{ employee.C }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Extraversion (E)
+                        </div>
+                        <div class="value">
+                            {{ employee.E }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Agreeableness (A)
+                        </div>
+                        <div class="value">
+                            {{ employee.A }}
+                        </div>
+                    </div>
+
+
+                    <div class="field">
+                        <div class="label">
+                            Neuroticism (N)
+                        </div>
+                        <div class="value">
+                            {{ employee.N }}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BOTTOM ACTIONS
+                 ================================================= -->
+
+            <div class="actions">
+
+                <a
+                    href="{{ url_for('employee.employees') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Back to Employees
+                </a>
+
+
+                <a
+                    href="{{ url_for(
+                        'prediction.prediction_page',
+                        employee_id=employee.id
+                    ) }}"
+                    class="btn btn-primary"
+                >
+                    🔍 Analyze Threat Again
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{{ url_for(
+                        'employee.delete_employee',
+                        employee_id=employee.id
+                    ) }}"
+                    style="display:inline;"
+                    onsubmit="return confirm(
+                        'Are you sure you want to delete this employee?'
+                    );"
+                >
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger"
+                    >
+                        🗑 Delete Employee
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

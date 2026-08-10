@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Security Reports | AI Insider Threat Detection
+    </title>
+
+    <style>
+        .bulk-analysis-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    background: #2864e8;
+    color: white;
+
+    padding: 12px 20px;
+
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    font-weight: 600;
+
+    transition: 0.2s;
+}
+
+.bulk-analysis-btn:hover {
+    background: #1d4ed8;
+}
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 290px;
+
+            background: #0d172d;
+            color: white;
+
+            padding: 38px 20px;
+
+            overflow-y: auto;
+        }
+
+        .brand {
+            padding: 0 12px 28px;
+            border-bottom: 1px solid #26334d;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            background: #2864e8;
+            border-radius: 14px;
+
+            font-size: 26px;
+
+            margin-bottom: 20px;
+        }
+
+        .brand h1 {
+            margin: 0;
+
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .brand p {
+            margin: 7px 0 0;
+
+            color: #91a4c5;
+            font-size: 14px;
+        }
+
+        .menu-title {
+            margin: 35px 12px 15px;
+
+            color: #7185a8;
+
+            font-size: 13px;
+            font-weight: bold;
+
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 15px 17px;
+
+            margin-bottom: 7px;
+
+            color: #dce5f5;
+
+            text-decoration: none;
+
+            border-radius: 10px;
+
+            font-size: 16px;
+        }
+
+        .menu a:hover {
+            background: #182643;
+        }
+
+        .menu a.active {
+            background: #2864e8;
+            color: white;
+        }
+
+        .menu-icon {
+            width: 22px;
+            text-align: center;
+        }
+
+        .logout {
+            position: absolute;
+            left: 20px;
+            right: 20px;
+            bottom: 30px;
+        }
+
+
+        /* =====================================================
+           MAIN CONTENT
+        ===================================================== */
+
+        .main {
+            margin-left: 290px;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            height: 112px;
+
+            background: white;
+
+            border-bottom: 1px solid #e1e7f0;
+
+            padding: 30px 32px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h2 {
+            margin: 0;
+
+            font-size: 25px;
+        }
+
+        .header p {
+            margin: 7px 0 0;
+
+            color: #71809a;
+
+            font-size: 14px;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+
+            gap: 13px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #2864e8;
+
+            color: white;
+
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .user-info strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .user-info span {
+            display: block;
+
+            margin-top: 4px;
+
+            color: #71809a;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+            padding: 38px 32px 60px;
+        }
+
+        .page-title {
+            margin-bottom: 30px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+
+            font-size: 30px;
+        }
+
+        .page-title p {
+            margin: 8px 0 0;
+
+            color: #71809a;
+
+            font-size: 16px;
+        }
+
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stats {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, minmax(0, 1fr));
+
+            gap: 24px;
+
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+
+            border: 1px solid #e1e7f0;
+
+            border-radius: 13px;
+
+            padding: 24px;
+        }
+
+        .stat-label {
+            color: #71809a;
+
+            font-size: 14px;
+
+            margin-bottom: 12px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+
+            font-weight: 700;
+        }
+
+        .stat-danger {
+            color: #dc2626;
+        }
+
+        .stat-success {
+            color: #16a34a;
+        }
+
+        .stat-warning {
+            color: #d97706;
+        }
+
+
+        /* =====================================================
+           REPORT CARD
+        ===================================================== */
+
+        .card {
+            background: white;
+
+            border: 1px solid #e1e7f0;
+
+            border-radius: 13px;
+
+            padding: 28px;
+
+            overflow-x: auto;
+        }
+
+        .card-header {
+            display: flex;
+
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+
+            font-size: 21px;
+        }
+
+        .card-header p {
+            margin: 6px 0 0;
+
+            color: #71809a;
+
+            font-size: 14px;
+        }
+
+        .report-count {
+            color: #71809a;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            min-width: 950px;
+        }
+
+        th {
+            background: #f4f7fb;
+
+            color: #62718b;
+
+            text-align: left;
+
+            padding: 15px 14px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 17px 14px;
+
+            border-top: 1px solid #edf0f5;
+
+            font-size: 14px;
+        }
+
+        tr:hover td {
+            background: #fafbfd;
+        }
+
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
+
+        .badge {
+            display: inline-block;
+
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            font-weight: 700;
+        }
+
+        .badge-threat {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-normal {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .badge-critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-high {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .badge-low {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+
+        /* =====================================================
+           EMPLOYEE
+        ===================================================== */
+
+        .employee-id {
+            font-weight: 700;
+
+            color: #172033;
+        }
+
+        .department {
+            color: #4f607b;
+        }
+
+        .probability {
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty {
+            text-align: center;
+
+            padding: 70px 30px;
+
+            color: #71809a;
+        }
+
+        .empty-icon {
+            font-size: 45px;
+
+            margin-bottom: 15px;
+        }
+
+        .empty h3 {
+            margin: 0 0 8px;
+
+            color: #172033;
+        }
+
+        .empty p {
+            margin: 0;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+        }
+
+        @media (max-width: 800px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<aside class="sidebar">
+
+    <div class="brand">
+
+        <div class="brand-icon">
+            🛡️
+        </div>
+
+        <h1>
+            AI Security
+        </h1>
+
+        <p>
+            Insider Threat Detection
+        </p>
+
+    </div>
+
+
+    <div class="menu-title">
+        MAIN
+    </div>
+
+
+    <nav class="menu">
+
+        <a href="{{ url_for('dashboard.home') }}">
+
+            <span class="menu-icon">
+                📊
+            </span>
+
+            Dashboard
+
+        </a>
+
+
+        <a href="{{ url_for('employee.employees') }}">
+
+            <span class="menu-icon">
+                👥
+            </span>
+
+            Employees
+
+        </a>
+
+
+        <a href="{{ url_for('prediction.prediction_page') }}">
+
+            <span class="menu-icon">
+                🤖
+            </span>
+
+            Threat Analysis
+
+        </a>
+
+
+        <div style="margin: 20px 0;">
+
+        <a
+        href="{{ url_for('bulk_prediction.bulk_analysis') }}"
+        class="bulk-analysis-btn"
+    >
+        📂 Bulk CSV Analysis
+        </a>
+
+</div>
+        <a
+            href="{{ url_for('reports.reports_page') }}"
+            class="active"
+        >
+
+            <span class="menu-icon">
+                📄
+            </span>
+
+            Reports
+
+        </a>
+
+    </nav>
+
+
+    <div class="menu-title">
+        SYSTEM
+    </div>
+
+
+    <nav class="menu">
+
+        <a href="#">
+
+            <span class="menu-icon">
+                ⚙️
+            </span>
+
+            Settings
+
+        </a>
+
+    </nav>
+
+
+    <div class="logout">
+
+        <nav class="menu">
+
+            <a href="#">
+
+                <span class="menu-icon">
+                    🚪
+                </span>
+
+                Logout
+
+            </a>
+
+        </nav>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div>
+
+            <h2>
+                Security Reports
+            </h2>
+
+            <p>
+                AI-powered insider threat prediction history
+            </p>
+
+        </div>
+
+
+        <div class="user">
+
+            <div class="avatar">
+                A
+            </div>
+
+            <div class="user-info">
+
+                <strong>
+                    admin
+                </strong>
+
+                <span>
+                    Security Analyst
+                </span>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- CONTENT -->
+
+    <section class="content">
+
+
+        <!-- PAGE TITLE -->
+
+        <div class="page-title">
+
+            <h1>
+                Security Reports
+            </h1>
+
+            <p>
+                Review prediction history, threat levels and
+                machine learning risk assessments.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
+        <div class="stats">
+
+
+            <!-- TOTAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Total Predictions
+                </div>
+
+                <div class="stat-value">
+                    {{ total_predictions }}
+                </div>
+
+            </div>
+
+
+            <!-- THREATS -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Threat Predictions
+                </div>
+
+                <div class="stat-value stat-danger">
+                    {{ threat_predictions }}
+                </div>
+
+            </div>
+
+
+            <!-- NORMAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Normal Predictions
+                </div>
+
+                <div class="stat-value stat-success">
+                    {{ normal_predictions }}
+                </div>
+
+            </div>
+
+
+            <!-- CRITICAL -->
+
+            <div class="stat-card">
+
+                <div class="stat-label">
+                    Critical Risk
+                </div>
+
+                <div class="stat-value stat-danger">
+                    {{ critical_predictions }}
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             REPORT TABLE
+        ================================================== -->
+
+        <div class="card">
+
+
+            <div class="card-header">
+
+                <div>
+
+                    <h2>
+                        Prediction History
+                    </h2>
+
+                    <p>
+                        Complete history of insider threat
+                        predictions generated by the ML system.
+                    </p>
+
+                </div>
+
+
+                <div class="report-count">
+
+                    {{ total_predictions }}
+                    reports
+
+                </div>
+
+            </div>
+
+
+
+            {% if predictions %}
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Employee
+                        </th>
+
+                        <th>
+                            Department
+                        </th>
+
+                        <th>
+                            Prediction
+                        </th>
+
+                        <th>
+                            Threat Probability
+                        </th>
+
+                        <th>
+                            ML Risk
+                        </th>
+
+                        <th>
+                            Risk Score
+                        </th>
+
+                        <th>
+                            Overall Risk
+                        </th>
+
+                        <th>
+                            Model
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+
+                    {% for prediction in predictions %}
+
+
+                    <tr>
+
+
+                        <!-- EMPLOYEE -->
+
+                        <td>
+
+                            {% if prediction.employee %}
+
+                                <span class="employee-id">
+                                    {{ prediction.employee.employee_id }}
+                                </span>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- DEPARTMENT -->
+
+                        <td>
+
+                            {% if prediction.employee %}
+
+                                <span class="department">
+                                    {{ prediction.employee.department or "-" }}
+                                </span>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- PREDICTION -->
+
+                        <td>
+                            {% if prediction.prediction == "THREAT"
+                            or prediction.prediction|string == "1" %}
+
+                                <span class="badge badge-threat">
+                                    THREAT
+                                </span>
+
+                            {% elif prediction.prediction == "NORMAL"
+                                or prediction.prediction|string == "0" %}
+
+                                <span class="badge badge-normal">
+                                    NORMAL
+                                </span>
+
+                            {% else %}
+
+                                {{ prediction.prediction or "-" }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- THREAT PROBABILITY -->
+
+                        <td>
+
+                            {% if prediction.threat_probability is not none %}
+
+                                <span class="probability">
+
+                                    {{ "%.2f"|format(
+                                        prediction.threat_probability
+                                    ) }}%
+
+                                </span>
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- ML RISK -->
+
+                        <td>
+
+                            {% if prediction.ml_risk_level == "HIGH" %}
+
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+
+                            {% elif prediction.ml_risk_level == "MEDIUM" %}
+
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+
+                            {% elif prediction.ml_risk_level == "LOW" %}
+
+                                <span class="badge badge-low">
+                                    LOW
+                                </span>
+
+                            {% else %}
+
+                                {{ prediction.ml_risk_level or "-" }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- RISK SCORE -->
+
+                        <td>
+
+                            {% if prediction.behavioral_risk_score is not none %}
+
+                                {{ "%.0f"|format(
+                                    prediction.behavioral_risk_score
+                                ) }}/100
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- OVERALL RISK -->
+
+                        <td>
+
+                            {% if prediction.overall_risk_level == "CRITICAL" %}
+
+                                <span class="badge badge-critical">
+                                    CRITICAL
+                                </span>
+
+                            {% elif prediction.overall_risk_level == "HIGH" %}
+
+                                <span class="badge badge-high">
+                                    HIGH
+                                </span>
+
+                            {% elif prediction.overall_risk_level == "MEDIUM" %}
+
+                                <span class="badge badge-medium">
+                                    MEDIUM
+                                </span>
+
+                            {% elif prediction.overall_risk_level == "LOW" %}
+
+                                <span class="badge badge-low">
+                                    LOW
+                                </span>
+
+                            {% else %}
+
+                                {{ prediction.overall_risk_level or "-" }}
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <!-- MODEL -->
+
+                        <td>
+
+                            {{ prediction.model_name or "-" }}
+
+                        </td>
+
+
+                        <!-- DATE -->
+
+                        <td>
+
+                            {% if prediction.created_at %}
+
+                                {{ prediction.created_at.strftime(
+                                    "%d-%m-%Y %H:%M"
+                                ) }}
+
+                            {% else %}
+
+                                -
+
+                            {% endif %}
+
+                        </td>
+
+
+                    </tr>
+
+
+                    {% endfor %}
+
+
+                </tbody>
+
+            </table>
+
+
+            {% else %}
+
+
+            <!-- EMPTY -->
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📄
+                </div>
+
+                <h3>
+                    No Security Reports Yet
+                </h3>
+
+                <p>
+                    Prediction results will appear here after
+                    employee threat analysis is performed.
+                </p>
+
+            </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+</main>
+
+
+</body>
+
+</html>

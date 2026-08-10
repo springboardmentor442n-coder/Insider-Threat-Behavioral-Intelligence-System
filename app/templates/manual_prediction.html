@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Threat Analysis | AI Security</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        .sidebar {
+            width: 290px;
+            background: #0d1830;
+            color: white;
+            padding: 38px 20px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .brand {
+            padding: 0 12px 35px;
+            border-bottom: 1px solid #27334d;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: #2864e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 18px;
+        }
+
+        .brand h2 {
+            margin: 0 0 7px;
+            font-size: 25px;
+        }
+
+        .brand p {
+            margin: 0;
+            color: #9eacd0;
+            font-size: 15px;
+        }
+
+        .menu-title {
+            margin: 35px 12px 14px;
+            color: #7282aa;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1.5px;
+        }
+
+        .menu a {
+            display: block;
+            padding: 16px 18px;
+            margin: 5px 0;
+            border-radius: 9px;
+            color: #edf2ff;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .menu a:hover {
+            background: #1b2b4d;
+        }
+
+        .menu a.active {
+            background: #2864e8;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+        }
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .main {
+            margin-left: 290px;
+            width: calc(100% - 290px);
+        }
+
+        .topbar {
+            background: white;
+            padding: 30px 35px;
+            border-bottom: 1px solid #e1e7f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .topbar h1 {
+            margin: 0 0 6px;
+            font-size: 25px;
+        }
+
+        .topbar p {
+            margin: 0;
+            color: #71809a;
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            background: #2864e8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .user strong {
+            display: block;
+        }
+
+        .user span {
+            color: #71809a;
+            font-size: 13px;
+        }
+
+        .content {
+            padding: 38px 35px 60px;
+        }
+
+        .page-title {
+            margin-bottom: 28px;
+        }
+
+        .page-title h2 {
+            margin: 0 0 7px;
+            font-size: 32px;
+        }
+
+        .page-title p {
+            margin: 0;
+            color: #71809a;
+            font-size: 17px;
+        }
+
+        /* =====================================================
+           INFORMATION BOX
+           ===================================================== */
+
+        .info-box {
+            background: #edf5ff;
+            border: 1px solid #c9ddff;
+            border-radius: 12px;
+            padding: 23px;
+            margin-bottom: 25px;
+        }
+
+        .info-box h3 {
+            margin: 0 0 8px;
+            color: #244d91;
+        }
+
+        .info-box p {
+            margin: 0;
+            line-height: 1.6;
+            color: #3e5d86;
+        }
+
+        .employee-loaded {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #dff7e8;
+            border-radius: 7px;
+            color: #08743c;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* =====================================================
+           CARD
+           ===================================================== */
+
+        .card {
+            background: white;
+            border: 1px solid #e1e7f0;
+            border-radius: 13px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .card h3 {
+            margin: 0 0 6px;
+            font-size: 21px;
+        }
+
+        .card-description {
+            color: #71809a;
+            margin: 0 0 25px;
+        }
+
+        /* =====================================================
+           FORM
+           ===================================================== */
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #263653;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ccd5e3;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        input:focus {
+            border-color: #2864e8;
+            box-shadow: 0 0 0 3px rgba(40, 100, 232, 0.10);
+        }
+
+        input[readonly] {
+            background: #f1f4f8;
+            color: #52627d;
+        }
+
+        .section-title {
+            margin: 35px 0 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5eaf1;
+            color: #17345f;
+            font-size: 19px;
+        }
+
+        /* =====================================================
+           BUTTONS
+           ===================================================== */
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 13px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .btn-primary {
+            background: #2864e8;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d54cc;
+        }
+
+        .btn-secondary {
+            background: #e9eef6;
+            color: #243754;
+        }
+
+        .btn-secondary:hover {
+            background: #dce4ef;
+        }
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 220px;
+            }
+
+            .main {
+                margin-left: 220px;
+                width: calc(100% - 220px);
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .layout {
+                display: block;
+            }
+
+            .logout {
+                position: static;
+                margin-top: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .field.full {
+                grid-column: auto;
+            }
+
+            .topbar {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 25px 18px;
+            }
+
+            .user {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="layout">
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+            <h2>
+                AI Security
+            </h2>
+
+            <p>
+                Insider Threat Detection
+            </p>
+
+        </div>
+
+
+        <div class="menu-title">
+            MAIN
+        </div>
+
+        <div class="menu">
+
+            <a href="{{ url_for('dashboard.home') }}">
+                📊 Dashboard
+            </a>
+
+            <a href="{{ url_for('employee.employees') }}">
+                👥 Employees
+            </a>
+
+            <a
+                href="{{ url_for('prediction.prediction_page') }}"
+                class="active"
+            >
+                🤖 Threat Analysis
+            </a>
+
+            <a href="{{ url_for('reports.reports_page') }}">
+                📋 Reports
+            </a>
+
+        </div>
+
+
+        <div class="menu-title">
+            SYSTEM
+        </div>
+
+        <div class="menu">
+
+            <a href="#">
+                ⚙️ Settings
+            </a>
+
+        </div>
+
+
+        <div class="logout">
+
+            <div class="menu">
+
+                <a href="{{ url_for('auth.logout') }}">
+                    🚪 Logout
+                </a>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Threat Analysis
+                </h1>
+
+                <p>
+                    AI-powered insider threat detection
+                </p>
+
+            </div>
+
+
+            <div class="user">
+
+                <div class="avatar">
+                    A
+                </div>
+
+                <div>
+
+                    <strong>
+                        Admin
+                    </strong>
+
+                    <span>
+                        Security Analyst
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+
+        <div class="content">
+
+
+            <div class="page-title">
+
+                <h2>
+                    Employee Threat Analysis
+                </h2>
+
+                <p>
+                    Enter employee behavioral information to analyze
+                    potential insider threat risk using the machine
+                    learning model.
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 INFORMATION
+                 ================================================= -->
+
+            <div class="info-box">
+
+                <h3>
+                    🤖 AI Threat Detection
+                </h3>
+
+                <p>
+                    The system analyzes employee behavioral indicators
+                    such as login activity, USB usage, file copying,
+                    email behavior, web activity and personality
+                    features to estimate insider threat risk.
+                </p>
+
+
+                {% if employee %}
+
+                    <div class="employee-loaded">
+
+                        ✓ Employee {{ employee.employee_id }}
+                        loaded from Employee Management
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- =================================================
+                 FORM
+                 ================================================= -->
+
+            <form
+                method="POST"
+                action="{{ url_for('prediction.prediction_page') }}"
+            >
+
+
+                <!-- =================================================
+                     EMPLOYEE INFORMATION
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        Employee Information
+                    </h3>
+
+                    <p class="card-description">
+                        Enter the employee information required
+                        for threat analysis.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <!-- EMPLOYEE ID -->
+
+                        <div class="field">
+
+                            <label for="employee_id">
+                                Employee ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="employee_id"
+                                name="employee_id"
+                                value="{{ employee.employee_id if employee else '' }}"
+                                placeholder="e.g. EMP001"
+                                {% if employee %}readonly{% endif %}
+                                required
+                            >
+
+                        </div>
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="field">
+
+                            <label for="department">
+                                Department
+                            </label>
+
+                            <input
+                                type="text"
+                                id="department"
+                                name="department"
+                                value="{{ employee.department if employee else '' }}"
+                                placeholder="e.g. IT"
+                            >
+
+                        </div>
+
+
+                        <!-- ROLE -->
+
+                        <div class="field">
+
+                            <label for="role">
+                                Employee Role
+                            </label>
+
+                            <input
+                                type="text"
+                                id="role"
+                                name="role"
+                                value="{{ employee.role if employee else '' }}"
+                                placeholder="e.g. Software Engineer"
+                            >
+
+                        </div>
+
+
+                        <!-- BUSINESS UNIT -->
+
+                        <div class="field">
+
+                            <label for="business_unit">
+                                Business Unit
+                            </label>
+
+                            <input
+                                type="text"
+                                id="business_unit"
+                                name="business_unit"
+                                value="{{ employee.business_unit if employee else '' }}"
+                                placeholder="e.g. Technology"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     LOGIN ACTIVITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        Login & Computer Activity
+                    </h3>
+
+                    <p class="card-description">
+                        Login behavior and computer usage indicators.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="login_count">
+                                Login Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="login_count"
+                                name="login_count"
+                                value="{{ employee.login_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="logoff_count">
+                                Logoff Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="logoff_count"
+                                name="logoff_count"
+                                value="{{ employee.logoff_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="night_login_count">
+                                Night Login Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="night_login_count"
+                                name="night_login_count"
+                                value="{{ employee.night_login_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="weekend_login_count">
+                                Weekend Login Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="weekend_login_count"
+                                name="weekend_login_count"
+                                value="{{ employee.weekend_login_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="unique_pc_count">
+                                Unique PC Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="unique_pc_count"
+                                name="unique_pc_count"
+                                value="{{ employee.unique_pc_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="night_login_ratio">
+                                Night Login Ratio
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="night_login_ratio"
+                                name="night_login_ratio"
+                                value="{{ employee.night_login_ratio if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="weekend_login_ratio">
+                                Weekend Login Ratio
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="weekend_login_ratio"
+                                name="weekend_login_ratio"
+                                value="{{ employee.weekend_login_ratio if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="pc_switching_frequency">
+                                PC Switching Frequency
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="pc_switching_frequency"
+                                name="pc_switching_frequency"
+                                value="{{ employee.pc_switching_frequency if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     USB ACTIVITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        USB & Device Activity
+                    </h3>
+
+                    <p class="card-description">
+                        USB device connection and usage behavior.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="usb_connect_count">
+                                USB Connect Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="usb_connect_count"
+                                name="usb_connect_count"
+                                value="{{ employee.usb_connect_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="usb_disconnect_count">
+                                USB Disconnect Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="usb_disconnect_count"
+                                name="usb_disconnect_count"
+                                value="{{ employee.usb_disconnect_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="usb_total_activity">
+                                Total USB Activity
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="usb_total_activity"
+                                name="usb_total_activity"
+                                value="{{ employee.usb_total_activity if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="usb_connect_ratio">
+                                USB Connection Ratio
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="usb_connect_ratio"
+                                name="usb_connect_ratio"
+                                value="{{ employee.usb_connect_ratio if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     FILE ACTIVITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        File Activity
+                    </h3>
+
+                    <p class="card-description">
+                        File copying and file transfer behavior.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="file_copy_count">
+                                File Copy Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="file_copy_count"
+                                name="file_copy_count"
+                                value="{{ employee.file_copy_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="avg_daily_file_copy">
+                                Average Daily File Copy
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="avg_daily_file_copy"
+                                name="avg_daily_file_copy"
+                                value="{{ employee.avg_daily_file_copy if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="max_daily_file_copy">
+                                Maximum Daily File Copy
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="max_daily_file_copy"
+                                name="max_daily_file_copy"
+                                value="{{ employee.max_daily_file_copy if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     EMAIL ACTIVITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        Email Activity
+                    </h3>
+
+                    <p class="card-description">
+                        Email communication and external email behavior.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="email_sent_count">
+                                Email Sent Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="email_sent_count"
+                                name="email_sent_count"
+                                value="{{ employee.email_sent_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="external_email_count">
+                                External Email Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="external_email_count"
+                                name="external_email_count"
+                                value="{{ employee.external_email_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="avg_attachment_count">
+                                Average Attachment Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="avg_attachment_count"
+                                name="avg_attachment_count"
+                                value="{{ employee.avg_attachment_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="avg_email_size">
+                                Average Email Size
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="avg_email_size"
+                                name="avg_email_size"
+                                value="{{ employee.avg_email_size if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="external_email_ratio">
+                                External Email Ratio
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="external_email_ratio"
+                                name="external_email_ratio"
+                                value="{{ employee.external_email_ratio if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     WEB ACTIVITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        Web Activity
+                    </h3>
+
+                    <p class="card-description">
+                        Website visits and browsing behavior.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="website_visit_count">
+                                Website Visit Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="website_visit_count"
+                                name="website_visit_count"
+                                value="{{ employee.website_visit_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="unique_domain_count">
+                                Unique Domain Count
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="unique_domain_count"
+                                name="unique_domain_count"
+                                value="{{ employee.unique_domain_count if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="avg_daily_web_activity">
+                                Average Daily Web Activity
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="avg_daily_web_activity"
+                                name="avg_daily_web_activity"
+                                value="{{ employee.avg_daily_web_activity if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     PERSONALITY
+                     ================================================= -->
+
+                <div class="card">
+
+                    <h3>
+                        Personality Features
+                    </h3>
+
+                    <p class="card-description">
+                        Big Five personality indicators used by the
+                        trained model.
+                    </p>
+
+
+                    <div class="grid">
+
+
+                        <div class="field">
+
+                            <label for="O">
+                                Openness (O)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="O"
+                                name="O"
+                                value="{{ employee.O if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="C">
+                                Conscientiousness (C)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="C"
+                                name="C"
+                                value="{{ employee.C if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="E">
+                                Extraversion (E)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="E"
+                                name="E"
+                                value="{{ employee.E if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="A">
+                                Agreeableness (A)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="A"
+                                name="A"
+                                value="{{ employee.A if employee else 0 }}"
+                            >
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="N">
+                                Neuroticism (N)
+                            </label>
+
+                            <input
+                                type="number"
+                                step="any"
+                                id="N"
+                                name="N"
+                                value="{{ employee.N if employee else 0 }}"
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =================================================
+                     ACTIONS
+                     ================================================= -->
+
+                <div class="actions">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        🔍 Analyze Threat
+                    </button>
+
+
+                    <a
+                        href="{{ url_for('dashboard.home') }}"
+                        class="btn btn-secondary"
+                    >
+                        ← Back to Dashboard
+                    </a>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </main>
+
+</div>
+
+</body>
+
+</html>

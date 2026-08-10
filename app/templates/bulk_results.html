@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Bulk Analysis Results | AI Security
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        .header {
+            background: #0d172d;
+            color: white;
+            padding: 22px 35px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header p {
+            color: #9eacce;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .actions {
+            margin-bottom: 25px;
+        }
+
+        .button {
+            display: inline-block;
+            background: #2864e8;
+            color: white;
+            padding: 11px 18px;
+            border-radius: 7px;
+            text-decoration: none;
+            margin-right: 10px;
+        }
+
+        .button.secondary {
+            background: #64748b;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid #e1e7f0;
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .stat-title {
+            color: #71809a;
+            font-size: 14px;
+        }
+
+        .stat-value {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .threat {
+            color: #dc2626;
+        }
+
+        .normal {
+            color: #16a34a;
+        }
+
+        .critical {
+            color: #dc2626;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e1e7f0;
+            border-radius: 12px;
+            padding: 25px;
+            overflow-x: auto;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f4f7fb;
+            text-align: left;
+            padding: 13px;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 13px;
+            border-top: 1px solid #edf0f5;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        /* ============================= */
+        /* PREDICTION BADGES              */
+        /* ============================= */
+
+        .badge-normal {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-threat {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* ============================= */
+        /* RISK BADGES                    */
+        /* ============================= */
+
+        .badge-low {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-medium {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-high {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .badge-critical {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* ============================= */
+        /* FINAL STATUS                   */
+        /* ============================= */
+
+        .badge-action {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-monitor {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-safe {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .error {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        @media(max-width: 1000px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        Bulk Analysis Results
+    </h1>
+
+    <p>
+        AI-powered insider threat analysis
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- ================================================= -->
+    <!-- ACTION BUTTONS -->
+    <!-- ================================================= -->
+
+    <div class="actions">
+
+        <a
+            href="{{ url_for(
+                'bulk_prediction.bulk_analysis'
+            ) }}"
+            class="button"
+        >
+            ← Upload Another CSV
+        </a>
+
+
+        <a
+            href="{{ url_for(
+                'dashboard.home'
+            ) }}"
+            class="button secondary"
+        >
+            Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- STATISTICS -->
+    <!-- ================================================= -->
+
+    <div class="stats">
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Total Employees
+            </div>
+
+            <div class="stat-value">
+                {{ total_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Successful
+            </div>
+
+            <div class="stat-value normal">
+                {{ success_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Failed
+            </div>
+
+            <div class="stat-value">
+                {{ failed_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Threat Predictions
+            </div>
+
+            <div class="stat-value threat">
+                {{ threat_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat">
+
+            <div class="stat-title">
+                Critical Risk
+            </div>
+
+            <div class="stat-value critical">
+                {{ critical_count }}
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- RESULTS TABLE -->
+    <!-- ================================================= -->
+
+    <div class="card">
+
+        <h2>
+            Employee Prediction Results
+        </h2>
+
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        CSV Row
+                    </th>
+
+                    <th>
+                        Employee
+                    </th>
+
+                    <th>
+                        Department
+                    </th>
+
+                    <th>
+                        ML Prediction
+                    </th>
+
+                    <th>
+                        Threat Probability
+                    </th>
+
+                    <th>
+                        ML Risk
+                    </th>
+
+                    <th>
+                        Behavioral Score
+                    </th>
+
+                    <th>
+                        Overall Risk
+                    </th>
+
+                    <th>
+                        Final Status
+                    </th>
+
+                    <th>
+                        Model
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+            {% for result in results %}
+
+                <tr>
+
+                    <!-- CSV ROW -->
+
+                    <td>
+                        {{ result.row }}
+                    </td>
+
+
+                    <!-- EMPLOYEE -->
+
+                    <td>
+
+                        <strong>
+                            {{ result.employee_id }}
+                        </strong>
+
+                    </td>
+
+
+                    <!-- DEPARTMENT -->
+
+                    <td>
+                        {{ result.department }}
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- ML PREDICTION                     -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {% if result.prediction == "THREAT" %}
+
+                                <span class="badge badge-threat">
+                                    THREAT
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-normal">
+                                    NORMAL
+                                </span>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- THREAT PROBABILITY                -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {{ result.threat_probability }}%
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- ML RISK                           -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {% set risk =
+                                result.ml_risk_level|lower
+                            %}
+
+                            <span
+                                class="
+                                    badge
+                                    badge-{{ risk }}
+                                "
+                            >
+
+                                {{ result.ml_risk_level }}
+
+                            </span>
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- BEHAVIORAL SCORE                  -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {{ result.behavioral_risk_score }}/100
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- OVERALL RISK                      -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {% set overall =
+                                result.overall_risk_level|lower
+                            %}
+
+                            <span
+                                class="
+                                    badge
+                                    badge-{{ overall }}
+                                "
+                            >
+
+                                {{ result.overall_risk_level }}
+
+                            </span>
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- FINAL STATUS                      -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            {% if result.overall_risk_level == "CRITICAL" %}
+
+                                <span class="badge badge-action">
+                                    ACTION REQUIRED
+                                </span>
+
+                            {% elif result.overall_risk_level == "HIGH" %}
+
+                                <span class="badge badge-action">
+                                    INVESTIGATE
+                                </span>
+
+                            {% elif result.overall_risk_level == "MEDIUM" %}
+
+                                <span class="badge badge-monitor">
+                                    MONITOR
+                                </span>
+
+                            {% else %}
+
+                                <span class="badge badge-safe">
+                                    SAFE
+                                </span>
+
+                            {% endif %}
+
+                        {% else %}
+
+                            -
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- MODEL                             -->
+                    <!-- ================================= -->
+
+                    <td>
+                        {{ result.model }}
+                    </td>
+
+
+                    <!-- ================================= -->
+                    <!-- PROCESSING STATUS                 -->
+                    <!-- ================================= -->
+
+                    <td>
+
+                        {% if result.success %}
+
+                            <span class="badge badge-normal">
+                                SUCCESS
+                            </span>
+
+                        {% else %}
+
+                            <span class="error">
+
+                                ERROR:
+                                {{ result.recommendation }}
+
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

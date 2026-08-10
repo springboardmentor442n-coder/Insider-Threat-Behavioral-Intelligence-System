@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Employees | AI Insider Threat Detection
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f7fb;
+
+            color: #172033;
+        }
+
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+
+        .layout {
+
+            display: flex;
+
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+
+            width: 270px;
+
+            background: #0d172d;
+
+            color: white;
+
+            padding: 28px 18px;
+
+            position: fixed;
+
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+
+        .brand {
+
+            padding: 10px 12px 30px;
+
+            border-bottom:
+                1px solid #26324a;
+        }
+
+
+        .brand-icon {
+
+            width: 48px;
+            height: 48px;
+
+            background: #2864e8;
+
+            border-radius: 12px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-size: 25px;
+
+            margin-bottom: 18px;
+        }
+
+
+        .brand h1 {
+
+            margin: 0;
+
+            font-size: 22px;
+        }
+
+
+        .brand p {
+
+            margin-top: 8px;
+
+            color: #8ea0c2;
+
+            font-size: 13px;
+        }
+
+
+        .menu-title {
+
+            color: #7182a5;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin:
+                30px 12px 10px;
+        }
+
+
+        .nav-link {
+
+            display: block;
+
+            text-decoration: none;
+
+            color: #cbd5e8;
+
+            padding: 14px 14px;
+
+            margin: 5px 0;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+
+            transition: 0.2s;
+        }
+
+
+        .nav-link:hover {
+
+            background: #182544;
+
+            color: white;
+        }
+
+
+        .nav-link.active {
+
+            background: #2864e8;
+
+            color: white;
+        }
+
+
+        .logout {
+
+            position: absolute;
+
+            bottom: 25px;
+
+            left: 18px;
+            right: 18px;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+
+            margin-left: 270px;
+
+            width:
+                calc(100% - 270px);
+        }
+
+
+        /* =====================================================
+           TOPBAR
+        ===================================================== */
+
+        .topbar {
+
+            height: 90px;
+
+            background: white;
+
+            border-bottom:
+                1px solid #e2e7f0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 32px;
+        }
+
+
+        .topbar h2 {
+
+            margin: 0;
+
+            font-size: 21px;
+        }
+
+
+        .topbar p {
+
+            margin:
+                6px 0 0;
+
+            color: #72809a;
+
+            font-size: 13px;
+        }
+
+
+        .user {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .avatar {
+
+            width: 44px;
+            height: 44px;
+
+            border-radius: 50%;
+
+            background: #2864e8;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            font-weight: bold;
+        }
+
+
+        .user-name {
+
+            font-weight: bold;
+        }
+
+
+        .user-role {
+
+            color: #72809a;
+
+            font-size: 12px;
+
+            margin-top: 3px;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+
+            padding: 32px;
+        }
+
+
+        .page-header {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h1 {
+
+            margin: 0;
+
+            font-size: 28px;
+        }
+
+
+        .page-header p {
+
+            margin-top: 8px;
+
+            color: #71809a;
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .btn {
+
+            display: inline-block;
+
+            padding:
+                12px 18px;
+
+            border-radius: 8px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+            border: none;
+
+            cursor: pointer;
+        }
+
+
+        .btn-primary {
+
+            background: #2864e8;
+
+            color: white;
+        }
+
+
+        .btn-primary:hover {
+
+            background: #1f55c9;
+        }
+
+
+        /* =====================================================
+           FLASH
+        ===================================================== */
+
+        .alert {
+
+            padding:
+                14px 18px;
+
+            border-radius: 8px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .alert-success {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        .alert-danger {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        .alert-warning {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+
+            background: white;
+
+            border:
+                1px solid #e1e7f0;
+
+            border-radius: 12px;
+
+            overflow: hidden;
+        }
+
+
+        .card-header {
+
+            padding:
+                20px 24px;
+
+            border-bottom:
+                1px solid #e5eaf2;
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items: center;
+        }
+
+
+        .card-header h2 {
+
+            margin: 0;
+
+            font-size: 18px;
+        }
+
+
+        .employee-count {
+
+            color: #71809a;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-container {
+
+            overflow-x: auto;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse:
+                collapse;
+
+            min-width: 1000px;
+        }
+
+
+        th {
+
+            text-align: left;
+
+            background: #f8fafc;
+
+            color: #68758c;
+
+            font-size: 12px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.5px;
+
+            padding:
+                15px 20px;
+
+            border-bottom:
+                1px solid #e5eaf2;
+        }
+
+
+        td {
+
+            padding:
+                17px 20px;
+
+            border-bottom:
+                1px solid #edf1f6;
+
+            font-size: 14px;
+
+            vertical-align: middle;
+        }
+
+
+        tr:hover td {
+
+            background: #fafcff;
+        }
+
+
+        .employee-id {
+
+            font-weight: bold;
+
+            color: #2864e8;
+        }
+
+
+        .badge {
+
+            display: inline-block;
+
+            padding:
+                6px 10px;
+
+            border-radius: 20px;
+
+            background: #eef4ff;
+
+            color: #2864e8;
+
+            font-size: 12px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           RISK BADGES
+        ===================================================== */
+
+        .risk {
+
+            display: inline-block;
+
+            padding:
+                6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        .risk.critical {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+        }
+
+
+        .risk.high {
+
+            background: #ffedd5;
+
+            color: #c2410c;
+        }
+
+
+        .risk.medium {
+
+            background: #fef3c7;
+
+            color: #92400e;
+        }
+
+
+        .risk.low {
+
+            background: #dcfce7;
+
+            color: #166534;
+        }
+
+
+        .risk.none {
+
+            background: #f1f5f9;
+
+            color: #64748b;
+        }
+
+
+        /* =====================================================
+           STATUS BADGES
+        ===================================================== */
+
+        .status {
+
+            display: inline-block;
+
+            padding:
+                6px 10px;
+
+            border-radius: 20px;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+        }
+
+
+        .status.threat {
+
+            background: #fee2e2;
+
+            color: #dc2626;
+        }
+
+
+        .status.normal {
+
+            background: #dcfce7;
+
+            color: #16a34a;
+        }
+
+
+        .status.none {
+
+            background: #f1f5f9;
+
+            color: #64748b;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+
+            display: flex;
+
+            gap: 8px;
+
+            align-items: center;
+        }
+
+
+        .action-btn {
+
+            padding:
+                7px 11px;
+
+            border-radius: 6px;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            font-weight: bold;
+
+            border: none;
+
+            cursor: pointer;
+        }
+
+
+        .view-btn {
+
+            background: #eef4ff;
+
+            color: #2864e8;
+        }
+
+
+        .view-btn:hover {
+
+            background: #dce8ff;
+        }
+
+
+        .delete-btn {
+
+            background: #fee2e2;
+
+            color: #dc2626;
+        }
+
+
+        .delete-btn:hover {
+
+            background: #fecaca;
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty {
+
+            text-align: center;
+
+            padding:
+                60px 20px;
+
+            color: #71809a;
+        }
+
+
+        .empty-icon {
+
+            font-size: 45px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .empty h3 {
+
+            color: #27344c;
+
+            margin-bottom: 8px;
+        }
+
+
+        .empty p {
+
+            max-width: 500px;
+
+            margin:
+                0 auto;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+
+                width: 220px;
+            }
+
+
+            .main {
+
+                margin-left: 220px;
+
+                width:
+                    calc(100% - 220px);
+            }
+
+
+            .content {
+
+                padding: 20px;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                display: none;
+            }
+
+
+            .main {
+
+                margin-left: 0;
+
+                width: 100%;
+            }
+
+
+            .topbar {
+
+                padding:
+                    0 20px;
+            }
+
+
+            .user {
+
+                display: none;
+            }
+
+
+            .page-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+
+                gap: 15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛡️
+            </div>
+
+
+            <h1>
+                AI Security
+            </h1>
+
+
+            <p>
+                Insider Threat Detection
+            </p>
+
+        </div>
+
+
+        <div class="menu-title">
+            MAIN
+        </div>
+
+
+        <a
+            href="{{ url_for('dashboard.home') }}"
+            class="nav-link"
+        >
+            📊 Dashboard
+        </a>
+
+
+        <a
+            href="{{ url_for('employee.employees') }}"
+            class="nav-link active"
+        >
+            👥 Employees
+        </a>
+
+
+        <a
+            href="{{ url_for('prediction.prediction_page') }}"
+            class="nav-link"
+        >
+            🤖 Threat Analysis
+        </a>
+
+
+        <a
+            href="{{ url_for('reports.reports_page') }}"
+            class="nav-link"
+        >
+            📄 Reports
+        </a>
+
+
+        <div class="menu-title">
+            SYSTEM
+        </div>
+
+
+        <a
+            href="#"
+            class="nav-link"
+        >
+            ⚙️ Settings
+        </a>
+
+
+        <a
+            href="{{ url_for('auth.logout') }}"
+            class="nav-link logout"
+        >
+            🚪 Logout
+        </a>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h2>
+                    Employee Management
+                </h2>
+
+                <p>
+                    Monitor and manage employee information
+                </p>
+
+            </div>
+
+
+            <div class="user">
+
+                <div class="avatar">
+
+                    {{ current_user.username[0]|upper }}
+
+                </div>
+
+
+                <div>
+
+                    <div class="user-name">
+
+                        {{ current_user.username }}
+
+                    </div>
+
+
+                    <div class="user-role">
+
+                        Security Analyst
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
+
+        <section class="content">
+
+
+            <div class="page-header">
+
+
+                <div>
+
+                    <h1>
+                        Employees
+                    </h1>
+
+
+                    <p>
+                        View employees monitored by the
+                        insider threat detection system.
+                    </p>
+
+                </div>
+
+
+                <a
+                    href="{{ url_for('employee.add_employee') }}"
+                    class="btn btn-primary"
+                >
+                    + Add Employee
+                </a>
+
+            </div>
+
+
+            <!-- FLASH MESSAGES -->
+
+            {% with messages =
+                get_flashed_messages(
+                    with_categories=true
+                )
+            %}
+
+                {% if messages %}
+
+                    {% for category, message in messages %}
+
+                        <div
+                            class="alert alert-{{ category }}"
+                        >
+
+                            {{ message }}
+
+                        </div>
+
+                    {% endfor %}
+
+                {% endif %}
+
+            {% endwith %}
+
+
+            <!-- =================================================
+                 EMPLOYEE DIRECTORY
+            ================================================== -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+                    <h2>
+                        Employee Directory
+                    </h2>
+
+
+                    <span class="employee-count">
+
+                        {{ employee_rows|length }}
+
+                        employee{% if employee_rows|length != 1 %}s{% endif %}
+
+                    </span>
+
+                </div>
+
+
+                {% if employee_rows %}
+
+
+                    <div class="table-container">
+
+
+                        <table>
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        Employee ID
+                                    </th>
+
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th>
+                                        Role
+                                    </th>
+
+                                    <th>
+                                        Business Unit
+                                    </th>
+
+                                    <th>
+                                        Risk
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Added
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody>
+
+
+                                {% for row in employee_rows %}
+
+                                    {% set employee = row.employee %}
+
+                                    {% set prediction = row.prediction %}
+
+
+                                    <tr>
+
+
+                                        <!-- EMPLOYEE ID -->
+
+                                        <td>
+
+                                            <span
+                                                class="employee-id"
+                                            >
+
+                                                {{
+                                                    employee.employee_id
+                                                }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- DEPARTMENT -->
+
+                                        <td>
+
+                                            {{
+                                                employee.department
+                                                or "—"
+                                            }}
+
+                                        </td>
+
+
+                                        <!-- ROLE -->
+
+                                        <td>
+
+                                            {{
+                                                employee.role
+                                                or "—"
+                                            }}
+
+                                        </td>
+
+
+                                        <!-- BUSINESS UNIT -->
+
+                                        <td>
+
+                                            <span class="badge">
+
+                                                {{
+                                                    employee.business_unit
+                                                    or "—"
+                                                }}
+
+                                            </span>
+
+                                        </td>
+
+
+                                        <!-- RISK -->
+
+                                        <td>
+
+
+                                            {% if prediction %}
+
+
+                                                {% if
+                                                    prediction.overall_risk_level
+                                                    == "CRITICAL"
+                                                %}
+
+                                                    <span
+                                                        class="risk critical"
+                                                    >
+                                                        CRITICAL
+                                                    </span>
+
+
+                                                {% elif
+                                                    prediction.overall_risk_level
+                                                    == "HIGH"
+                                                %}
+
+                                                    <span
+                                                        class="risk high"
+                                                    >
+                                                        HIGH
+                                                    </span>
+
+
+                                                {% elif
+                                                    prediction.overall_risk_level
+                                                    == "MEDIUM"
+                                                %}
+
+                                                    <span
+                                                        class="risk medium"
+                                                    >
+                                                        MEDIUM
+                                                    </span>
+
+
+                                                {% else %}
+
+                                                    <span
+                                                        class="risk low"
+                                                    >
+                                                        LOW
+                                                    </span>
+
+                                                {% endif %}
+
+
+                                            {% else %}
+
+                                                <span
+                                                    class="risk none"
+                                                >
+                                                    NOT ANALYZED
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+                                        <!-- STATUS -->
+
+                                        <td>
+
+
+                                            {% if prediction %}
+
+
+                                                {% if
+                                                    prediction.status
+                                                    == "THREAT"
+                                                %}
+
+                                                    <span
+                                                        class="status threat"
+                                                    >
+                                                        THREAT
+                                                    </span>
+
+
+                                                {% else %}
+
+                                                    <span
+                                                        class="status normal"
+                                                    >
+                                                        NORMAL
+                                                    </span>
+
+                                                {% endif %}
+
+
+                                            {% else %}
+
+                                                <span
+                                                    class="status none"
+                                                >
+                                                    —
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+                                        <!-- DATE -->
+
+                                        <td>
+
+                                            {% if employee.created_at %}
+
+                                                {{
+                                                    employee.created_at.strftime(
+                                                        "%d %b %Y"
+                                                    )
+                                                }}
+
+                                            {% else %}
+
+                                                —
+
+                                            {% endif %}
+
+                                        </td>
+
+
+                                        <!-- ACTIONS -->
+
+                                        <td>
+
+
+                                            <div class="actions">
+
+
+                                                <a
+                                                    href="{{
+                                                        url_for(
+                                                            'employee.employee_details',
+                                                            employee_id=employee.id
+                                                        )
+                                                    }}"
+                                                    class="action-btn view-btn"
+                                                >
+                                                    View
+                                                </a>
+
+
+                                                <form
+                                                    method="POST"
+                                                    action="{{
+                                                        url_for(
+                                                            'employee.delete_employee',
+                                                            employee_id=employee.id
+                                                        )
+                                                    }}"
+                                                    onsubmit="return confirm(
+                                                        'Are you sure you want to delete this employee?'
+                                                    );"
+                                                >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="action-btn delete-btn"
+                                                    >
+                                                        Delete
+                                                    </button>
+
+                                                </form>
+
+
+                                            </div>
+
+                                        </td>
+
+
+                                    </tr>
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <!-- EMPTY STATE -->
+
+                    <div class="empty">
+
+
+                        <div class="empty-icon">
+                            👥
+                        </div>
+
+
+                        <h3>
+                            No employees yet
+                        </h3>
+
+
+                        <p>
+                            Add your first employee to begin
+                            monitoring insider threat activity.
+                        </p>
+
+
+                        <br>
+
+
+                        <a
+                            href="{{
+                                url_for(
+                                    'employee.add_employee'
+                                )
+                            }}"
+                            class="btn btn-primary"
+                        >
+                            + Add First Employee
+                        </a>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>
