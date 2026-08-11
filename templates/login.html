@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Login · InsightGuard{% endblock %}
+
+{% block content %}
+
+<div style="max-width:420px;margin:5rem auto">
+
+    <div class="card">
+
+        <h1 style="font-family:'Syne',sans-serif;margin-bottom:.5rem">
+            InsightGuard
+        </h1>
+
+        <p class="subtitle">
+            AI Insider Threat Behavioural Intelligence System
+        </p>
+
+        {% if error %}
+        <div style="
+            background:#3f1d1d;
+            color:#f87171;
+            padding:.8rem 1rem;
+            border-radius:8px;
+            margin-bottom:1rem;
+        ">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+
+            <div style="margin-bottom:1rem">
+                <label style="display:block;margin-bottom:.4rem">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    name="email"
+                    required
+                    placeholder="Enter your email"
+                    style="
+                        width:100%;
+                        padding:.75rem;
+                        background:var(--surface);
+                        border:1px solid var(--border);
+                        border-radius:8px;
+                        color:var(--text);
+                    "
+                >
+            </div>
+
+            <div style="margin-bottom:1.2rem">
+                <label style="display:block;margin-bottom:.4rem">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    name="password"
+                    required
+                    placeholder="Enter your password"
+                    style="
+                        width:100%;
+                        padding:.75rem;
+                        background:var(--surface);
+                        border:1px solid var(--border);
+                        border-radius:8px;
+                        color:var(--text);
+                    "
+                >
+            </div>
+
+            <button type="submit" style="width:100%">
+                🔐 Login
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
