@@ -2,6 +2,8 @@ import os
 import io
 import json
 import pickle
+from datetime import datetime
+from functools import wraps
 
 import pandas as pd
 import shap
@@ -11,7 +13,10 @@ from flask import (
     request,
     jsonify,
     render_template,
-    send_file
+    send_file,
+    session,
+    redirect,
+    url_for
 )
 
 from dotenv import load_dotenv
@@ -38,9 +43,19 @@ TEMPLATE_DIR = os.path.join(
     "templates"
 )
 
+EMPLOYEE_PATH = os.path.join(
+    MODEL_DIR,
+    "employees.json"
+)
+
+PREDICTIONS_PATH = os.path.join(
+    BASE_DIR,
+    "predictions.json"
+)
+
 
 # ============================================================
-# ENV
+# ENVIRONMENT
 # ============================================================
 
 load_dotenv(
@@ -57,6 +72,21 @@ PORT = int(
     )
 )
 
+ADMIN_EMAIL = os.getenv(
+    "ADMIN_EMAIL",
+    "admin@example.com"
+)
+
+ADMIN_PASSWORD = os.getenv(
+    "ADMIN_PASSWORD",
+    "admin123"
+)
+
+SECRET_KEY = os.getenv(
+    "FLASK_SECRET_KEY",
+    "insightguard-secret-key-change-this"
+)
+
 
 # ============================================================
 # FLASK
@@ -66,6 +96,8 @@ app = Flask(
     __name__,
     template_folder=TEMPLATE_DIR
 )
+
+app.secret_key = SECRET_KEY
 
 
 # ============================================================
@@ -97,11 +129,6 @@ ISO_PATH = os.path.join(
     "isolation_forest.pkl"
 )
 
-EMPLOYEE_PATH = os.path.join(
-    MODEL_DIR,
-    "employees.json"
-)
-
 
 # ============================================================
 # LOAD MODEL
@@ -121,7 +148,6 @@ with open(
     MODEL_PATH,
     "rb"
 ) as f:
-
     model = pickle.load(f)
 
 
@@ -129,7 +155,6 @@ with open(
     SCALER_PATH,
     "rb"
 ) as f:
-
     scaler = pickle.load(f)
 
 
@@ -137,11 +162,8 @@ with open(
     FEATURE_PATH,
     "rb"
 ) as f:
-
     feature_columns = pickle.load(f)
 
-
-# Label encoders
 
 if os.path.exists(LE_PATH):
 
@@ -149,7 +171,6 @@ if os.path.exists(LE_PATH):
         LE_PATH,
         "rb"
     ) as f:
-
         le_dict = pickle.load(f)
 
 else:
@@ -157,15 +178,12 @@ else:
     le_dict = {}
 
 
-# Isolation Forest
-
 if os.path.exists(ISO_PATH):
 
     with open(
         ISO_PATH,
         "rb"
     ) as f:
-
         isolation_forest = pickle.load(f)
 
 else:
@@ -174,6 +192,7 @@ else:
 
 
 print("Model loaded")
+
 print(
     "Features:",
     len(feature_columns)
@@ -219,7 +238,6 @@ if os.path.exists(
                 []
             )
 
-
     except Exception as e:
 
         print(
@@ -232,6 +250,91 @@ print(
     "Employees:",
     len(employees)
 )
+
+
+# ============================================================
+# PREDICTION STORAGE
+# ============================================================
+
+def load_predictions():
+
+    if not os.path.exists(
+        PREDICTIONS_PATH
+    ):
+        return []
+
+    try:
+
+        with open(
+            PREDICTIONS_PATH,
+            "r",
+            encoding="utf-8"
+        ) as f:
+
+            data = json.load(f)
+
+        if isinstance(
+            data,
+            list
+        ):
+            return data
+
+        return []
+
+    except Exception as e:
+
+        print(
+            "Prediction history error:",
+            e
+        )
+
+        return []
+
+
+def save_prediction(record):
+
+    predictions = load_predictions()
+
+    predictions.append(
+        record
+    )
+
+    with open(
+        PREDICTIONS_PATH,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            predictions,
+            f,
+            indent=2
+        )
+
+
+# ============================================================
+# LOGIN PROTECTION
+# ============================================================
+
+def login_required(function):
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+
+        if not session.get(
+            "logged_in"
+        ):
+
+            return redirect(
+                url_for("login")
+            )
+
+        return function(
+            *args,
+            **kwargs
+        )
+
+    return wrapper
 
 
 # ============================================================
@@ -324,7 +427,6 @@ FEATURE_LABELS = {
 
 fields = []
 
-
 for feature in feature_columns:
 
     fields.append({
@@ -381,7 +483,7 @@ def get_severity(
 
 
 # ============================================================
-# SHAP
+# SHAP CALCULATION
 # ============================================================
 
 def calculate_shap(
@@ -392,13 +494,11 @@ def calculate_shap(
 
         return []
 
-
     try:
 
         values = explainer.shap_values(
             dataframe
         )
-
 
         if isinstance(
             values,
@@ -407,17 +507,24 @@ def calculate_shap(
 
             values = values[-1]
 
-
         values = values[0]
 
-
         factors = []
-
 
         for feature, value in zip(
             feature_columns,
             values
         ):
+
+            try:
+
+                numeric_value = float(
+                    value
+                )
+
+            except Exception:
+
+                continue
 
             factors.append({
 
@@ -429,7 +536,7 @@ def calculate_shap(
 
                 "shap_value":
                     round(
-                        float(value),
+                        numeric_value,
                         4
                     )
             })
@@ -443,9 +550,7 @@ def calculate_shap(
             reverse=True
         )
 
-
         return factors[:8]
-
 
     except Exception as e:
 
@@ -467,14 +572,12 @@ def predict_behavior(
 
     values = {}
 
-
     for feature in feature_columns:
 
         value = payload.get(
             feature,
             0
         )
-
 
         try:
 
@@ -488,7 +591,6 @@ def predict_behavior(
         ):
 
             value = 0.0
-
 
         values[feature] = value
 
@@ -531,9 +633,14 @@ def predict_behavior(
 
 
     prediction_name = (
+
         "INSIDER"
+
         if prediction == 1
-        else "NORMAL"
+
+        else
+
+        "NORMAL"
     )
 
 
@@ -575,15 +682,135 @@ def predict_behavior(
 
 
 # ============================================================
+# LOGIN
+# ============================================================
+
+@app.route(
+    "/login",
+    methods=[
+        "GET",
+        "POST"
+    ]
+)
+def login():
+
+    if session.get(
+        "logged_in"
+    ):
+
+        return redirect(
+            url_for("dashboard")
+        )
+
+
+    error = None
+
+
+    if request.method == "POST":
+
+        email = (
+            request.form
+            .get(
+                "email",
+                ""
+            )
+            .strip()
+            .lower()
+        )
+
+        password = request.form.get(
+            "password",
+            ""
+        )
+
+
+        if (
+            email == ADMIN_EMAIL.lower()
+            and
+            password == ADMIN_PASSWORD
+        ):
+
+            session.clear()
+
+            session["logged_in"] = True
+
+            session["email"] = email
+
+            return redirect(
+                url_for("dashboard")
+            )
+
+
+        error = "Invalid email or password."
+
+
+    return render_template(
+        "login.html",
+        error=error
+    )
+
+
+# ============================================================
+# LOGOUT
+# ============================================================
+
+@app.route(
+    "/logout"
+)
+def logout():
+
+    session.clear()
+
+    return redirect(
+        url_for("login")
+    )
+
+
+# ============================================================
 # DASHBOARD
 # ============================================================
 
 @app.route("/")
+@login_required
 def dashboard():
+
+    prediction_history = (
+        load_predictions()
+    )
+
 
     total_employees = len(
         employees
     )
+
+
+    total_predictions = len(
+        prediction_history
+    )
+
+
+    high_risk_predictions = [
+
+        p
+
+        for p in prediction_history
+
+        if p.get(
+            "prediction"
+        ) == "INSIDER"
+    ]
+
+
+    safe_predictions = [
+
+        p
+
+        for p in prediction_history
+
+        if p.get(
+            "prediction"
+        ) == "NORMAL"
+    ]
 
 
     stats = {
@@ -592,19 +819,108 @@ def dashboard():
             total_employees,
 
         "total_predictions":
-            0,
+            total_predictions,
 
         "high_risk_count":
-            0,
+            len(
+                high_risk_predictions
+            ),
 
         "safe_count":
-            total_employees
+            len(
+                safe_predictions
+            )
     }
+
+
+    sorted_predictions = sorted(
+
+        prediction_history,
+
+        key=lambda x:
+            float(
+                x.get(
+                    "risk_score_100",
+                    0
+                )
+            ),
+
+        reverse=True
+    )
 
 
     top_risk = []
 
+
+    for prediction in sorted_predictions[:10]:
+
+        top_risk.append({
+
+            "user":
+                prediction.get(
+                    "employee_id",
+                    "Manual Analysis"
+                ),
+
+            "name":
+                prediction.get(
+                    "employee_name",
+                    prediction.get(
+                        "employee_id",
+                        "Manual Analysis"
+                    )
+                ),
+
+            "risk_score_100":
+                prediction.get(
+                    "risk_score_100",
+                    0
+                ),
+
+            "confidence":
+                prediction.get(
+                    "confidence",
+                    0
+                ),
+
+            "status":
+                "High Risk"
+
+                if prediction.get(
+                    "prediction"
+                ) == "INSIDER"
+
+                else
+
+                "Safe"
+        })
+
+
     alerts = []
+
+    for prediction in sorted_predictions[:10]:
+
+        if prediction.get(
+            "prediction"
+        ) == "INSIDER":
+
+            alerts.append({
+
+                "name":
+                    prediction.get(
+                        "employee_name",
+                        prediction.get(
+                            "employee_id",
+                            "Unknown"
+                        )
+                    ),
+
+                "day":
+                    prediction.get(
+                        "timestamp",
+                        ""
+                    )
+            })
 
 
     return render_template(
@@ -622,6 +938,7 @@ def dashboard():
 @app.route(
     "/employees"
 )
+@login_required
 def employee_list():
 
     query = request.args.get(
@@ -637,9 +954,7 @@ def employee_list():
 
         q = query.lower()
 
-
         filtered = []
-
 
         for employee in employees:
 
@@ -672,7 +987,6 @@ def employee_list():
                         ""
                     )
                 )
-
             ]).lower()
 
 
@@ -726,13 +1040,9 @@ def employee_list():
 
 
     return render_template(
-
         "employees.html",
-
         employees=result,
-
         total=len(result),
-
         query=query
     )
 
@@ -744,6 +1054,7 @@ def employee_list():
 @app.route(
     "/employees/<user>"
 )
+@login_required
 def profile(user):
 
     employee = None
@@ -768,6 +1079,80 @@ def profile(user):
         return (
             "Employee not found",
             404
+        )
+
+
+    # Calculate prediction information
+    history = load_predictions()
+
+    user_predictions = [
+
+        p
+
+        for p in history
+
+        if str(
+            p.get(
+                "employee_id",
+                ""
+            )
+        ) == str(user)
+    ]
+
+
+    high_risk_days = sum(
+
+        1
+
+        for p in user_predictions
+
+        if p.get(
+            "prediction"
+        ) == "INSIDER"
+    )
+
+
+    if user_predictions:
+
+        latest = max(
+
+            user_predictions,
+
+            key=lambda x:
+                x.get(
+                    "timestamp",
+                    ""
+                )
+        )
+
+        risk_score = latest.get(
+            "risk_score_100",
+            0
+        )
+
+        status = (
+
+            "High Risk"
+
+            if latest.get(
+                "prediction"
+            ) == "INSIDER"
+
+            else
+
+            "Safe"
+        )
+
+    else:
+
+        risk_score = employee.get(
+            "risk_score_100",
+            0
+        )
+
+        status = employee.get(
+            "status",
+            "Safe"
         )
 
 
@@ -804,28 +1189,18 @@ def profile(user):
             ),
 
         "total_predictions":
-            employee.get(
-                "total_predictions",
-                0
+            len(
+                user_predictions
             ),
 
         "high_risk_days":
-            employee.get(
-                "high_risk_days",
-                0
-            ),
+            high_risk_days,
 
         "risk_score_100":
-            employee.get(
-                "risk_score_100",
-                0
-            ),
+            risk_score,
 
         "status":
-            employee.get(
-                "status",
-                "Safe"
-            )
+            status
     }
 
 
@@ -842,6 +1217,7 @@ def profile(user):
 @app.route(
     "/pipeline"
 )
+@login_required
 def pipeline():
 
     return render_template(
@@ -850,17 +1226,24 @@ def pipeline():
 
 
 # ============================================================
-# PREDICTIONS
+# PREDICTIONS PAGE
 # ============================================================
 
 @app.route(
     "/predictions"
 )
+@login_required
 def predictions():
+
+    history = load_predictions()
+
+    history.reverse()
+
 
     return render_template(
         "predictions.html",
-        fields=fields
+        fields=fields,
+        prediction_history=history
     )
 
 
@@ -872,6 +1255,7 @@ def predictions():
     "/predict",
     methods=["POST"]
 )
+@login_required
 def predict_api():
 
     try:
@@ -888,6 +1272,88 @@ def predict_api():
 
         result = predict_behavior(
             payload
+        )
+
+
+        # ====================================================
+        # SAVE PREDICTION
+        # ====================================================
+
+        employee_id = payload.get(
+            "employee_id",
+            "Manual Analysis"
+        )
+
+        employee_name = payload.get(
+            "employee_name",
+            "Manual Analysis"
+        )
+
+
+        record = {
+
+            "timestamp":
+                datetime.now().strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),
+
+            "user_email":
+                session.get(
+                    "email",
+                    "unknown"
+                ),
+
+            "employee_id":
+                employee_id,
+
+            "employee_name":
+                employee_name,
+
+            "prediction":
+                result.get(
+                    "prediction"
+                ),
+
+            "severity":
+                result.get(
+                    "severity"
+                ),
+
+            "risk_score_100":
+                result.get(
+                    "risk_score_100"
+                ),
+
+            "confidence":
+                result.get(
+                    "confidence"
+                ),
+
+            "top_factors":
+                result.get(
+                    "top_factors",
+                    []
+                )
+        }
+
+
+        save_prediction(
+            record
+        )
+
+
+        # Add saved information to response
+
+        result["timestamp"] = record[
+            "timestamp"
+        ]
+
+        result["employee_id"] = (
+            employee_id
+        )
+
+        result["employee_name"] = (
+            employee_name
         )
 
 
@@ -913,6 +1379,25 @@ def predict_api():
 
 
 # ============================================================
+# PREDICTION HISTORY API
+# ============================================================
+
+@app.route(
+    "/api/predictions"
+)
+@login_required
+def prediction_history_api():
+
+    history = load_predictions()
+
+    history.reverse()
+
+    return jsonify(
+        history
+    )
+
+
+# ============================================================
 # PDF REPORT
 # ============================================================
 
@@ -920,6 +1405,7 @@ def predict_api():
     "/export/pdf",
     methods=["POST"]
 )
+@login_required
 def export_pdf():
 
     try:
@@ -948,7 +1434,6 @@ def export_pdf():
             20
         )
 
-
         pdf.drawString(
             50,
             height - 50,
@@ -961,7 +1446,6 @@ def export_pdf():
             11
         )
 
-
         pdf.drawString(
             50,
             height - 70,
@@ -972,13 +1456,46 @@ def export_pdf():
         y = height - 120
 
 
-        # Prediction
+        # Employee
 
         pdf.setFont(
             "Helvetica-Bold",
             12
         )
 
+        pdf.drawString(
+            50,
+            y,
+            "Employee:"
+        )
+
+
+        pdf.setFont(
+            "Helvetica",
+            12
+        )
+
+        pdf.drawString(
+            150,
+            y,
+            str(
+                data.get(
+                    "employee_name",
+                    "Manual Analysis"
+                )
+            )
+        )
+
+
+        y -= 25
+
+
+        # Prediction
+
+        pdf.setFont(
+            "Helvetica-Bold",
+            12
+        )
 
         pdf.drawString(
             50,
@@ -991,7 +1508,6 @@ def export_pdf():
             "Helvetica",
             12
         )
-
 
         pdf.drawString(
             150,
@@ -1015,7 +1531,6 @@ def export_pdf():
             12
         )
 
-
         pdf.drawString(
             50,
             y,
@@ -1027,7 +1542,6 @@ def export_pdf():
             "Helvetica",
             12
         )
-
 
         pdf.drawString(
             150,
@@ -1044,13 +1558,12 @@ def export_pdf():
         y -= 25
 
 
-        # Score
+        # Risk
 
         pdf.setFont(
             "Helvetica-Bold",
             12
         )
-
 
         pdf.drawString(
             50,
@@ -1064,7 +1577,6 @@ def export_pdf():
             12
         )
 
-
         pdf.drawString(
             150,
             y,
@@ -1073,8 +1585,7 @@ def export_pdf():
                     "risk_score_100",
                     "N/A"
                 )
-            )
-            + "/100"
+            ) + "/100"
         )
 
 
@@ -1087,7 +1598,6 @@ def export_pdf():
             "Helvetica-Bold",
             12
         )
-
 
         pdf.drawString(
             50,
@@ -1117,7 +1627,6 @@ def export_pdf():
                 "feature",
                 "Unknown"
             )
-
 
             value = factor.get(
                 "shap_value",
@@ -1155,8 +1664,7 @@ def export_pdf():
 
             buffer,
 
-            mimetype=
-                "application/pdf",
+            mimetype="application/pdf",
 
             as_attachment=True,
 
@@ -1193,11 +1701,19 @@ def health():
             "XGBoost",
 
         "features":
-            len(feature_columns),
+            len(
+                feature_columns
+            ),
 
         "employees":
-            len(employees)
+            len(
+                employees
+            ),
 
+        "predictions":
+            len(
+                load_predictions()
+            )
     })
 
 
@@ -1226,14 +1742,19 @@ if __name__ == "__main__":
         f"Templates exist: {os.path.exists(TEMPLATE_DIR)}"
     )
 
+    print(
+        f"Login email: {ADMIN_EMAIL}"
+    )
+
+    print(
+        f"Prediction history: {PREDICTIONS_PATH}"
+    )
+
     print("=" * 60)
 
 
     app.run(
-
         host="0.0.0.0",
-
         port=PORT,
-
         debug=False
     )
