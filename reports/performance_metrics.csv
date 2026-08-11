@@ -1,0 +1,6 @@
+Metric,Value
+Fastest Model,PCA
+Slowest Model,LOF
+Highest Detection Model,DBSCAN
+Average Training Time,0.5114
+Average Detection Rate,4.94

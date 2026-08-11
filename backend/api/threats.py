@@ -18,6 +18,7 @@ from backend.services.threat_service import (
     resolve_existing_threat,
 )
 
+
 router = APIRouter()
 
 
@@ -26,31 +27,33 @@ router = APIRouter()
 # ============================================================
 
 @router.get("/")
-def get_threats(db: Session = Depends(get_db)):
-    result = get_all_threats(db)
+def get_threats(
+    db: Session = Depends(get_db),
+):
+    """
+    Return ML-derived risky employees for Threat Center.
 
-    print("=" * 40)
-    print(result)
-    print(type(result))
+    This endpoint intentionally uses the existing employee
+    behavioral intelligence pipeline rather than the legacy
+    SQL Threat table.
+    """
 
-    if result:
-        print(result[0].__dict__)
-
-    print("=" * 40)
-
-    return result
+    return get_all_threats(db)
 
 
 # ============================================================
 # GET THREAT BY ID
 # ============================================================
 
-@router.get(
-    "/{threat_id}",
-    response_model=ThreatResponse,
-)
-def get_threat(threat_id: int, db: Session = Depends(get_db)):
-    threat = get_threat_by_id(db, threat_id)
+@router.get("/{threat_id}")
+def get_threat(
+    threat_id: int,
+    db: Session = Depends(get_db),
+):
+    threat = get_threat_by_id(
+        db,
+        threat_id,
+    )
 
     if threat is None:
         raise HTTPException(
@@ -74,7 +77,10 @@ def create_threat(
     threat: ThreatCreate,
     db: Session = Depends(get_db),
 ):
-    return create_new_threat(db, threat)
+    return create_new_threat(
+        db,
+        threat,
+    )
 
 
 # ============================================================

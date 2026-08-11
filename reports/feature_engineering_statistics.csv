@@ -1,0 +1,8 @@
+Feature,Mean,Median,Minimum,Maximum,Standard Deviation
+total_events,32770.22,36569.0,480,150994,22551.71
+active_days,330.45,346.0,25,495,69.16
+after_hours_activity,1134.07,225.0,0,15625,2187.1
+weekend_activity,650.15,0.0,0,23119,2670.36
+device_events,405.38,0.0,0,8502,1234.48
+web_events,28434.42,32870.0,350,138000,20222.01
+file_events,445.58,0.0,0,11627,1461.94

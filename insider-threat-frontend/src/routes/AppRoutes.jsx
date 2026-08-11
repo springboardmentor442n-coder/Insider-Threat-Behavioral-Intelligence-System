@@ -1,26 +1,70 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
+
+// ============================================================
+// PUBLIC PAGES
+// ============================================================
 
 import LoginPage from "../pages/auth/LoginPage";
+import RegisterPage from "../pages/auth/RegisterPage";
+
+// ============================================================
+// APPLICATION PAGES
+// ============================================================
+
 import DashboardPage from "../pages/dashboard/DashboardPage";
 
-// Feature Pages
-import EmployeesPage from "../features/employees/pages/EmployeesPage";
-import ThreatCenterPage from "../features/threats/pages/ThreatCenterPage";
+// IMPORTANT:
+// Use the ML-powered Employees page.
+// The old feature-based EmployeesPage contains the CRUD
+// employee interface and is not the ML intelligence page.
+import EmployeesPage from "../pages/employees/EmployeesPage";
 
-// Layout & Auth
+import ThreatCenterPage from "../features/threats/pages/ThreatCenterPage";
+import AnalyticsPage from "../features/analytics/pages/AnalyticsPage";
+import InvestigationPage from "../features/investigation/pages/InvestigationPage";
+import ReportsPage from "../features/reports/pages/ReportsPage";
+
+import ModelsPage from "../features/models/pages/ModelsPage";
+import ExplainabilityPage from "../features/explainability/pages/ExplainabilityPage";
+
+import SettingsPage from "../pages/settings/SettingsPage";
+
+// ============================================================
+// LAYOUT / AUTH
+// ============================================================
+
 import AppShell from "../layouts/AppShell";
 import ProtectedRoute from "../components/auth/ProtectedRoute";
+
+// ============================================================
+// ROUTES
+// ============================================================
 
 export default function AppRoutes() {
   return (
     <Routes>
+
+      {/* ======================================================
+          PUBLIC AUTHENTICATION
+          ====================================================== */}
+
       {/* Login */}
       <Route
         path="/login"
         element={<LoginPage />}
       />
 
-      {/* Protected Routes */}
+      {/* Registration */}
+      <Route
+        path="/register"
+        element={<RegisterPage />}
+      />
+
+
+      {/* ======================================================
+          ROOT
+          ====================================================== */}
+
       <Route
         path="/"
         element={
@@ -29,24 +73,200 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        {/* Dashboard */}
         <Route
           index
           element={<DashboardPage />}
         />
+      </Route>
 
-        {/* Employees */}
+
+      {/* ======================================================
+          DASHBOARD
+          ====================================================== */}
+
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route
-          path="employees"
+          index
+          element={<DashboardPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          EMPLOYEES
+          
+          IMPORTANT:
+          This now loads:
+          
+          src/pages/employees/EmployeesPage.jsx
+          
+          which is the ML-powered Employees page.
+          ====================================================== */}
+
+      <Route
+        path="/employees"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
           element={<EmployeesPage />}
         />
+      </Route>
 
-        {/* Threat Center */}
+
+      {/* ======================================================
+          THREAT CENTER
+          ====================================================== */}
+
+      <Route
+        path="/threats"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
         <Route
-          path="threats"
+          index
           element={<ThreatCenterPage />}
         />
       </Route>
+
+
+      {/* ======================================================
+          ANALYTICS
+          ====================================================== */}
+
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<AnalyticsPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          MODELS
+          ====================================================== */}
+
+      <Route
+        path="/models"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<ModelsPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          EXPLAINABILITY
+          ====================================================== */}
+
+      <Route
+        path="/explainability"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<ExplainabilityPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          INVESTIGATION
+          ====================================================== */}
+
+      <Route
+        path="/investigation"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<InvestigationPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          REPORTS
+          ====================================================== */}
+
+      <Route
+        path="/reports"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<ReportsPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          SETTINGS
+          ====================================================== */}
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<SettingsPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          UNKNOWN ROUTES
+          ====================================================== */}
+
+      <Route
+        path="*"
+        element={<Navigate to="/" replace />}
+      />
+
     </Routes>
   );
 }

@@ -1,0 +1,10 @@
+Metric,Value
+Total Records,1000.0
+Total Columns,44.0
+Numeric Features,33.0
+Categorical Features,11.0
+Duplicate Records,0.0
+Missing Values,0.0
+Missing Percentage,0.0
+Dataset Completeness (%),100.0
+Memory Usage (MB),0.74

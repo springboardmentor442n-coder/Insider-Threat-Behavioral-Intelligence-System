@@ -1,10 +1,13 @@
 import { NavLink } from "react-router-dom";
+
 import {
-  Shield,
   LayoutDashboard,
   TriangleAlert,
   Users,
   BarChart3,
+  BrainCircuit,
+  Sparkles,
+  Search,
   FileText,
   Settings,
 } from "lucide-react";
@@ -12,7 +15,7 @@ import {
 const menuItems = [
   {
     name: "Dashboard",
-    path: "/",
+    path: "/dashboard",
     icon: LayoutDashboard,
   },
   {
@@ -31,6 +34,21 @@ const menuItems = [
     icon: BarChart3,
   },
   {
+    name: "Models",
+    path: "/models",
+    icon: BrainCircuit,
+  },
+  {
+    name: "Explainability",
+    path: "/explainability",
+    icon: Sparkles,
+  },
+  {
+    name: "Investigation",
+    path: "/investigation",
+    icon: Search,
+  },
+  {
     name: "Reports",
     path: "/reports",
     icon: FileText,
@@ -46,194 +64,235 @@ export default function Sidebar() {
   return (
     <aside
       className="
-      glass-card
-      m-4
-      w-72
-      rounded-3xl
-      border
-      border-cyan-500/20
-      overflow-hidden
-      flex
-      flex-col
-      shadow-2xl
-    "
+        relative
+        z-20
+
+        flex
+        h-full
+        w-[264px]
+        min-w-[264px]
+        shrink-0
+        flex-col
+
+        overflow-hidden
+
+        border-r
+        border-white/10
+
+        bg-slate-950/90
+
+        backdrop-blur-xl
+      "
     >
-      {/* ========================= */}
-      {/* Logo */}
-      {/* ========================= */}
-
-      <div className="border-b border-white/10 p-8">
-
-        <div className="flex items-center gap-4">
-
-          <div
-            className="
-            flex
-            h-14
-            w-14
-            items-center
-            justify-center
-
-            rounded-2xl
-
-            bg-gradient-to-br
-            from-cyan-500
-            via-sky-500
-            to-blue-600
-
-            shadow-lg
-            shadow-cyan-500/30
-          "
-          >
-            <Shield
-              size={30}
-              className="text-white"
-            />
-          </div>
-
-          <div>
-
-            <h1 className="text-2xl font-bold tracking-wide">
-              SentinelAI
-            </h1>
-
-            <p className="mt-1 text-sm text-slate-400">
-              Insider Threat Platform
-            </p>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* ========================= */}
-      {/* Navigation */}
-      {/* ========================= */}
-
-      <nav className="flex-1 px-4 py-6 space-y-2">
-
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-
-          return (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              end={item.path === "/"}
-              className={({ isActive }) =>
-                `
-                group
-                flex
-                items-center
-                gap-4
-
-                rounded-2xl
-
-                px-5
-                py-4
-
-                transition-all
-                duration-300
-
-                ${
-                  isActive
-                    ? `
-                      bg-cyan-500/20
-                      border
-                      border-cyan-400/30
-
-                      text-cyan-300
-
-                      shadow-lg
-                      shadow-cyan-500/20
-                    `
-                    : `
-                      text-slate-300
-
-                      hover:bg-cyan-500/10
-                      hover:text-cyan-300
-                      hover:translate-x-1
-                    `
-                }
-              `
-              }
-            >
-              <Icon
-                size={20}
-                className="
-                transition-transform
-                duration-300
-                group-hover:scale-110
-              "
-              />
-
-              <span className="font-medium tracking-wide">
-                {item.name}
-              </span>
-            </NavLink>
-          );
-        })}
-
-      </nav>
-
-      {/* ========================= */}
-      {/* Footer */}
-      {/* ========================= */}
+      {/* =====================================================
+          BRAND
+          ===================================================== */}
 
       <div
         className="
-        border-t
-        border-white/10
+          flex
+          h-[136px]
+          shrink-0
+          items-center
 
-        p-5
-      "
+          border-b
+          border-white/10
+
+          px-7
+        "
       >
+        <div className="flex min-w-0 items-center gap-4">
+          <div
+            className="
+              flex
+              h-16
+              w-16
+              shrink-0
+              items-center
+              justify-center
 
-        <div
-          className="
-          rounded-2xl
+              rounded-2xl
 
-          bg-gradient-to-r
-          from-cyan-500/10
-          to-blue-500/10
+              bg-gradient-to-br
+              from-cyan-400
+              to-blue-600
 
-          border
-          border-cyan-500/20
+              shadow-lg
+              shadow-cyan-500/25
+            "
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              className="h-9 w-9 text-white"
+            >
+              <path
+                d="M12 3L19 6V11.5C19 16.3 16.1 20.4 12 21C7.9 20.4 5 16.3 5 11.5V6L12 3Z"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinejoin="round"
+              />
 
+              <path
+                d="M9 12L11 14L15 10"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+
+          <div className="min-w-0">
+            <h1 className="whitespace-nowrap text-[24px] font-bold tracking-tight text-white">
+              SentinelAI
+            </h1>
+
+            <p className="mt-0.5 whitespace-nowrap text-[13px] text-slate-400">
+              Insider Threat Platform
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* =====================================================
+          NAVIGATION
+          ===================================================== */}
+
+      <nav
+        className="
+          min-h-0
+          flex-1
+          overflow-y-auto
+
+          px-4
+          py-5
+
+          scrollbar-thin
+          scrollbar-thumb-cyan-500/20
+          scrollbar-track-transparent
+        "
+      >
+        <div className="space-y-1.5">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+
+            return (
+              <NavLink
+                key={item.name}
+                to={item.path}
+                className={({ isActive }) =>
+                  `
+                    group
+                    flex
+                    min-h-[50px]
+                    w-full
+                    items-center
+                    gap-3.5
+
+                    rounded-2xl
+
+                    border
+
+                    px-4
+                    py-3
+
+                    transition-all
+                    duration-200
+
+                    ${
+                      isActive
+                        ? `
+                          border-cyan-400/25
+                          bg-cyan-500/15
+                          text-cyan-300
+                          shadow-lg
+                          shadow-cyan-500/10
+                        `
+                        : `
+                          border-transparent
+                          text-slate-300
+                          hover:border-cyan-500/10
+                          hover:bg-cyan-500/10
+                          hover:text-cyan-300
+                        `
+                    }
+                  `
+                }
+              >
+                <Icon
+                  size={21}
+                  strokeWidth={1.9}
+                  className="
+                    shrink-0
+                    transition-transform
+                    duration-200
+                    group-hover:scale-105
+                  "
+                />
+
+                <span className="truncate text-[15px] font-medium">
+                  {item.name}
+                </span>
+              </NavLink>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* =====================================================
+          SECURITY STATUS
+          ===================================================== */}
+
+      <div
+        className="
+          shrink-0
+          border-t
+          border-white/10
           p-4
         "
-        >
+      >
+        <div
+          className="
+            rounded-2xl
+            border
+            border-cyan-500/20
 
-          <p className="text-xs text-slate-400">
+            bg-gradient-to-r
+            from-cyan-500/10
+            to-blue-500/10
+
+            px-4
+            py-3.5
+          "
+        >
+          <p className="text-[11px] text-slate-400">
             Security Status
           </p>
 
           <div className="mt-2 flex items-center gap-2">
-
-            <div
+            <span
               className="
-              h-3
-              w-3
+                h-2.5
+                w-2.5
+                shrink-0
+                rounded-full
 
-              rounded-full
+                bg-emerald-500
 
-              bg-green-500
+                shadow-sm
+                shadow-emerald-500/50
 
-              animate-pulse
-            "
+                animate-pulse
+              "
             />
 
-            <span className="font-semibold text-green-400">
+            <span className="text-sm font-semibold text-emerald-400">
               System Protected
             </span>
-
           </div>
-
         </div>
-
       </div>
-
     </aside>
   );
 }

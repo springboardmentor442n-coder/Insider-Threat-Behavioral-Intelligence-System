@@ -1,0 +1,6 @@
+user,weighted_score,Consensus_Percentage,risk_level,after_hours_activity,weekend_activity,device_events,web_events,file_events,total_events
+AJF0370,100.0,100.0,Critical,3056,3205,8502,42445,11053,69194
+BAL0044,100.0,100.0,Critical,2993,4,2258,41379,2900,53379
+EIS0041,100.0,100.0,Critical,2760,0,2644,39270,3676,51929
+IBB0359,85.0,85.71428571428571,Critical,3281,4,7852,39444,3199,57212
+HDS0367,85.0,85.71428571428571,Critical,2737,0,2722,39420,3406,52209

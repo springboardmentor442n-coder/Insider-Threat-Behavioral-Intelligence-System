@@ -25,63 +25,142 @@ export default function DashboardPage() {
     isLoading: suspiciousLoading,
   } = useTopSuspicious();
 
+  // ============================================================
+  // LOADING STATE
+  // ============================================================
+
   if (isLoading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center">
-        Loading Dashboard...
+      <div className="flex min-h-[60vh] items-center justify-center px-4">
+        <div className="flex flex-col items-center gap-4 text-center">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-cyan-400/20 border-t-cyan-400" />
+
+          <div>
+            <p className="text-lg font-semibold text-white">
+              Loading Dashboard...
+            </p>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Loading behavioral intelligence data
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
+
+  // ============================================================
+  // ERROR STATE
+  // ============================================================
 
   if (isError) {
     return (
-      <div className="rounded-xl border border-red-500 bg-red-500/10 p-6 text-red-400">
-        Failed to load dashboard.
-        <br />
-        {error?.message}
+      <div className="px-1 sm:px-0">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 shadow-lg">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-lg font-semibold text-red-400">
+              Failed to load dashboard
+            </h2>
+
+            <p className="text-sm text-slate-400">
+              The dashboard could not retrieve the latest behavioral
+              intelligence data.
+            </p>
+
+            {error?.message && (
+              <p className="mt-2 break-words rounded-lg bg-black/20 p-3 font-mono text-xs text-red-300">
+                {error.message}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     );
   }
 
+  // ============================================================
+  // DASHBOARD
+  // ============================================================
+
   return (
-    <div className="space-y-8">
+    <main className="w-full min-w-0 space-y-8 pb-8">
 
-      <HeroBanner />
+      {/* ======================================================
+          HERO
+      ====================================================== */}
 
-      <MetricGrid data={data} />
+      <section className="w-full min-w-0">
+        <HeroBanner />
+      </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      {/* ======================================================
+          SYSTEM OVERVIEW METRICS
+      ====================================================== */}
 
-        <div className="xl:col-span-2">
+      <section className="w-full min-w-0">
+        <MetricGrid data={data} />
+      </section>
+
+      {/* ======================================================
+          THREAT ANALYTICS + AI INSIGHTS
+      ====================================================== */}
+
+      <section className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-3">
+
+        <div className="min-w-0 xl:col-span-2">
           <ThreatTrendChart />
         </div>
 
-        <AIInsightsPanel />
+        <div className="min-w-0">
+          <AIInsightsPanel />
+        </div>
 
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
+      {/* ======================================================
+          ACTIVITY + SYSTEM STATUS
+      ====================================================== */}
 
-        <div className="xl:col-span-2">
+      <section className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-3">
+
+        <div className="min-w-0 xl:col-span-2">
           <ActivityFeed />
         </div>
 
-        <SystemStatus />
+        <div className="min-w-0">
+          <SystemStatus />
+        </div>
 
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-2">
+      {/* ======================================================
+          INVESTIGATION + TOP SUSPICIOUS EMPLOYEES
+      ====================================================== */}
 
-        <InvestigationQueue
-          employees={suspiciousEmployees}
-        />
+      <section className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-2">
 
-        <TopSuspiciousEmployees
-          employees={suspiciousEmployees}
-        />
+        <div className="min-w-0">
+          <InvestigationQueue
+            employees={
+              suspiciousLoading
+                ? []
+                : suspiciousEmployees
+            }
+          />
+        </div>
+
+        <div className="min-w-0">
+          <TopSuspiciousEmployees
+            employees={
+              suspiciousLoading
+                ? []
+                : suspiciousEmployees
+            }
+          />
+        </div>
 
       </section>
 
-    </div>
+    </main>
   );
 }

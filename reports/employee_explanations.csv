@@ -1,0 +1,1001 @@
+user,risk_level,weighted_score,Consensus_Percentage,Explanation
+AJF0370,Critical,100.0,100.0,Detected consistently by nearly all anomaly detection models | High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Extremely high overall behavioral anomaly score
+BAL0044,Critical,100.0,100.0,Detected consistently by nearly all anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Extremely high overall behavioral anomaly score
+EIS0041,Critical,100.0,100.0,Detected consistently by nearly all anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Extremely high overall behavioral anomaly score
+IBB0359,Critical,85.0,85.71,Detected by most anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Very high behavioral anomaly score
+HDS0367,Critical,85.0,85.71,Detected by most anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Very high behavioral anomaly score
+OBH0499,High,75.0,71.43,Detected by most anomaly detection models | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Very high behavioral anomaly score
+BRM0995,High,70.0,71.43,Detected by most anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+HRL0540,High,70.0,71.43,Detected by most anomaly detection models | High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+DLM0051,High,65.0,57.14,Detected by multiple anomaly detection models | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+LBF0214,High,65.0,57.14,Detected by multiple anomaly detection models | High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+ATE0869,High,65.0,57.14,Detected by multiple anomaly detection models | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+MPM0220,High,65.0,57.14,Detected by multiple anomaly detection models | High after-hours activity | Excessive device activity | Frequent file access | Large volume of overall activity | Elevated behavioral anomaly score
+JCC0225,High,60.0,57.14,Detected by multiple anomaly detection models | High web browsing activity | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+HDD0806,High,60.0,57.14,Detected by multiple anomaly detection models | High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+WPR0368,High,60.0,57.14,Detected by multiple anomaly detection models | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days | Elevated behavioral anomaly score
+BSS0369,Medium,55.0,57.14,Detected by multiple anomaly detection models | High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+KKW0879,Medium,55.0,57.14,Detected by multiple anomaly detection models | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CAS0507,Medium,55.0,57.14,Detected by multiple anomaly detection models | Excessive device activity | Frequent file access | High number of active working days
+HPH0075,Medium,50.0,42.86,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+WIF0691,Medium,50.0,42.86,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+LBH0942,Medium,50.0,42.86,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HSB0196,Medium,50.0,42.86,High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+NAF0326,Medium,50.0,42.86,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+GTD0219,Medium,50.0,42.86,Excessive device activity | Frequent file access
+CCA0046,Medium,45.0,42.86,High after-hours activity | Excessive device activity | Frequent file access
+HAD0246,Medium,45.0,42.86,High weekend activity | Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AJR0319,Medium,45.0,42.86,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KBP0008,Medium,45.0,42.86,High web browsing activity | Large volume of overall activity | High number of active working days
+TVS0006,Medium,45.0,42.86,High web browsing activity | Large volume of overall activity | High number of active working days
+NWK0215,Medium,45.0,42.86,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DMG0358,Medium,45.0,42.86,High web browsing activity | Large volume of overall activity | High number of active working days
+MSS0001,Medium,45.0,42.86,High web browsing activity | Large volume of overall activity | High number of active working days
+ESJ0670,Medium,45.0,42.86,High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+JDC0030,Medium,45.0,42.86,High after-hours activity | High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HCS0003,Medium,45.0,42.86,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+AIP0982,Medium,40.0,42.86,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+MSO0222,Medium,40.0,42.86,No significant behavioral anomalies detected
+GTD0116,Medium,40.0,42.86,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SBN0866,Medium,40.0,42.86,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+MLL0598,Medium,40.0,42.86,Excessive device activity | High number of active working days
+IIW0249,Medium,40.0,42.86,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+DFH0188,Medium,40.0,42.86,Excessive device activity | Frequent file access | High number of active working days
+JDF0593,Medium,40.0,42.86,High after-hours activity | Excessive device activity | High number of active working days
+XWD0923,Medium,40.0,42.86,High after-hours activity | Excessive device activity | Frequent file access | Large volume of overall activity
+BAJ0654,Medium,40.0,42.86,High after-hours activity | Frequent file access | High number of active working days
+AVM0947,Medium,35.0,28.57,Excessive device activity | Frequent file access | High number of active working days
+MOS0047,Medium,35.0,28.57,High after-hours activity | Excessive device activity | Frequent file access
+CLB0774,Medium,35.0,28.57,Excessive device activity | Frequent file access | High number of active working days
+THR0873,Medium,35.0,28.57,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BJM0111,Medium,35.0,28.57,High after-hours activity | High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+MOH0273,Medium,35.0,28.57,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BMG0917,Medium,35.0,28.57,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+LBC0356,Medium,30.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+UIR0043,Medium,30.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+HRB0351,Medium,30.0,28.57,High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+COF0120,Medium,30.0,28.57,High after-hours activity | High web browsing activity | Large volume of overall activity
+BTW0005,Medium,30.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+IRM0931,Medium,30.0,28.57,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+DAR0885,Medium,30.0,28.57,No significant behavioral anomalies detected
+RZC0746,Medium,30.0,28.57,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JGT0221,Medium,30.0,28.57,No significant behavioral anomalies detected
+NAH0503,Medium,30.0,28.57,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+EHB0420,Medium,30.0,28.57,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JDB0169,Medium,30.0,28.57,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+YIC0195,Medium,30.0,28.57,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BRS0734,Medium,30.0,28.57,High weekend activity | Frequent file access
+LIM0674,Medium,30.0,28.57,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+WIQ0567,Medium,30.0,28.57,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KWC0004,Medium,30.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+CMB0912,Medium,30.0,28.57,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SSJ0784,Medium,30.0,28.57,High weekend activity | High number of active working days
+HTH0007,Medium,30.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+BJP0134,Medium,30.0,28.57,Excessive device activity | Frequent file access | High number of active working days
+ACV0812,Medium,30.0,28.57,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FFC0891,Medium,30.0,28.57,Excessive device activity | Frequent file access
+IBS0836,Medium,30.0,28.57,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+HCM0267,Medium,30.0,28.57,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CTA0020,Low,25.0,28.57,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KSP0357,Low,25.0,28.57,No significant behavioral anomalies detected
+RSC0089,Low,25.0,28.57,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+AIB0948,Low,25.0,28.57,Excessive device activity | Frequent file access | High number of active working days
+FUM0015,Low,25.0,28.57,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KCO0122,Low,25.0,28.57,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+VTT0385,Low,25.0,28.57,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SOB0360,Low,25.0,28.57,No significant behavioral anomalies detected
+SGG0787,Low,25.0,28.57,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JBD0616,Low,25.0,28.57,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LCB0664,Low,25.0,28.57,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CBB0365,Low,25.0,28.57,High web browsing activity | Large volume of overall activity | High number of active working days
+HWY0038,Low,15.0,14.29,No significant behavioral anomalies detected
+JNA0559,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+CRK0916,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SRH0155,Low,15.0,14.29,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CSC0217,Low,15.0,14.29,No significant behavioral anomalies detected
+FGW0853,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+WKD0013,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+PMJ0564,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+JTM0223,Low,15.0,14.29,No significant behavioral anomalies detected
+LRR0148,Low,15.0,14.29,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BAM0636,Low,15.0,14.29,High after-hours activity | High number of active working days
+BBS0039,Low,15.0,14.29,No significant behavioral anomalies detected
+AIP0394,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DBB0384,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CHM0821,Low,15.0,14.29,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+LPH0572,Low,15.0,14.29,No significant behavioral anomalies detected
+IMB0481,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+ABC0174,Low,15.0,14.29,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+AMW0392,Low,15.0,14.29,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BVC0790,Low,15.0,14.29,High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+EDA0684,Low,15.0,14.29,No significant behavioral anomalies detected
+HRD0635,Low,15.0,14.29,No significant behavioral anomalies detected
+CTR0341,Low,15.0,14.29,High after-hours activity | High weekend activity | High number of active working days
+FKK0055,Low,15.0,14.29,High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+XHG0902,Low,15.0,14.29,High number of active working days
+BIH0745,Low,15.0,14.29,No significant behavioral anomalies detected
+DGW0752,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+RHL0992,Low,15.0,14.29,High after-hours activity | Excessive device activity
+RAW0915,Low,15.0,14.29,High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+AMM0014,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ZKS0899,Low,15.0,14.29,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+VIA0063,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+JNJ0556,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HBO0413,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+TDS0984,Low,15.0,14.29,High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+QRM0739,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SBK0161,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MLM0950,Low,15.0,14.29,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+PEV0323,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ATP0662,Low,15.0,14.29,High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KLH0596,Low,15.0,14.29,No significant behavioral anomalies detected
+NGC0058,Low,15.0,14.29,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+PID0426,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+WDO0870,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+BRB0355,Low,15.0,14.29,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+GZC0735,Low,15.0,14.29,High weekend activity | Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RLB0719,Low,15.0,14.29,High number of active working days
+RTO0313,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JMC0925,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RKD0604,Low,15.0,14.29,No significant behavioral anomalies detected
+CJM0521,Low,15.0,14.29,High weekend activity | High number of active working days
+RKF0164,Low,15.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+DID0650,Low,15.0,14.29,High after-hours activity | High number of active working days
+TVS0050,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BJH0811,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+HVB0037,Low,15.0,14.29,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BAH0875,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ANM0123,Low,15.0,14.29,No significant behavioral anomalies detected
+MVH0373,Low,15.0,14.29,No significant behavioral anomalies detected
+JCR0172,Low,15.0,14.29,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SAA0999,Low,15.0,14.29,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BQS0525,Low,15.0,14.29,High weekend activity | Excessive device activity
+MDH0686,Low,15.0,14.29,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LDD0560,Low,15.0,14.29,High weekend activity
+VCC0396,Low,15.0,14.29,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+DCH0843,Low,15.0,14.29,No significant behavioral anomalies detected
+MDM0625,Low,15.0,14.29,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CSH0626,Low,15.0,14.29,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JBM0350,Low,15.0,14.29,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AHG0634,Low,15.0,14.29,High after-hours activity
+DPS0262,Low,15.0,14.29,No significant behavioral anomalies detected
+CGB0637,Low,15.0,14.29,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+CRD0624,Low,15.0,14.29,No significant behavioral anomalies detected
+LJT0817,Low,15.0,14.29,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KCF0045,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+JAV0361,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+JLM0364,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+ACC0042,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+SAK0375,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+TSM0363,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+KRV0372,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+MSH0040,Low,10.0,14.29,High web browsing activity | Large volume of overall activity
+WDD0366,Low,10.0,14.29,High web browsing activity | Large volume of overall activity
+KJP0371,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+BKW0374,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+QNP0216,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+JRS0362,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+MNS0224,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+DFR0218,Low,10.0,14.29,High web browsing activity | Large volume of overall activity | High number of active working days
+KRL0501,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+CAB0614,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+MMG0943,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EWH0191,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BJW0619,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ABM0845,Low,0.0,0.0,High number of active working days
+NDM0417,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CUD0795,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CKP0721,Low,0.0,0.0,High number of active working days
+TMA0069,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CQH0701,Low,0.0,0.0,High number of active working days
+RNF0765,Low,0.0,0.0,High number of active working days
+NMB0972,Low,0.0,0.0,High number of active working days
+JRG0207,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+CIM0271,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+NMC0486,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CCM0467,Low,0.0,0.0,High number of active working days
+CNE0352,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LNR0656,Low,0.0,0.0,High after-hours activity | High number of active working days
+HRW0550,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RHC0335,Low,0.0,0.0,High number of active working days
+KBS0874,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LHB0967,Low,0.0,0.0,High number of active working days
+DGN0480,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+BLB0114,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LOM0086,Low,0.0,0.0,Excessive device activity
+UFK0208,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ARB0881,Low,0.0,0.0,High number of active working days
+AKK0329,Low,0.0,0.0,High number of active working days
+DBG0261,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NAB0801,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RAR0725,Low,0.0,0.0,Excessive device activity
+SOG0411,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+XRS0633,Low,0.0,0.0,High after-hours activity | High number of active working days
+GCL0016,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RDM0150,Low,0.0,0.0,High number of active working days
+MJS0890,Low,0.0,0.0,High number of active working days
+DIW0118,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KBC0054,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FTM0406,Low,0.0,0.0,No significant behavioral anomalies detected
+RDM0115,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HSG0818,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BSA0431,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SAC0687,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+USH0199,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KES0729,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EDB0714,Low,0.0,0.0,Excessive device activity | Frequent file access
+TJB0302,Low,0.0,0.0,High number of active working days
+CQH0730,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+QCH0110,Low,0.0,0.0,No significant behavioral anomalies detected
+HSD0457,Low,0.0,0.0,High number of active working days
+KPP0452,Low,0.0,0.0,High number of active working days
+NAF0033,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PNL0301,Low,0.0,0.0,Excessive device activity
+SIJ0661,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SNC0187,Low,0.0,0.0,Frequent file access
+DDM0579,Low,0.0,0.0,High number of active working days
+CPG0322,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EGD0409,Low,0.0,0.0,No significant behavioral anomalies detected
+AHD0848,Low,0.0,0.0,High after-hours activity | High number of active working days
+MYD0978,Low,0.0,0.0,High web browsing activity
+CJG0470,Low,0.0,0.0,High number of active working days
+KMB0922,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+EGK0893,Low,0.0,0.0,High number of active working days
+NCH0179,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BBS0422,Low,0.0,0.0,High after-hours activity | High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HDL0748,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MAS0025,Low,0.0,0.0,High web browsing activity
+TSR0676,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HJA0018,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OLW0689,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+DMK0257,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+IEB0153,Low,0.0,0.0,High after-hours activity | High weekend activity | High number of active working days
+HBB0056,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ALD0529,Low,0.0,0.0,High number of active working days
+ICH0294,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+ASG0048,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OLB0749,Low,0.0,0.0,No significant behavioral anomalies detected
+PBP0002,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GCS0518,Low,0.0,0.0,High number of active working days
+DOP0562,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HGG0240,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JKM0303,Low,0.0,0.0,High number of active working days
+HAV0121,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+QOS0878,Low,0.0,0.0,High weekend activity | Excessive device activity
+ORG0339,Low,0.0,0.0,High number of active working days
+TJD0996,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CJM0138,Low,0.0,0.0,High number of active working days
+HSP0290,Low,0.0,0.0,High number of active working days
+SKG0759,Low,0.0,0.0,High number of active working days
+KSP0966,Low,0.0,0.0,High number of active working days
+GCG0951,Low,0.0,0.0,High number of active working days
+MAR0955,Low,0.0,0.0,No significant behavioral anomalies detected
+JMD0520,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+NCE0097,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OYM0026,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RCC0617,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RRC0553,Low,0.0,0.0,High weekend activity | Frequent file access
+AAM0658,Low,0.0,0.0,High after-hours activity
+EJW0884,Low,0.0,0.0,High number of active working days
+NMG0766,Low,0.0,0.0,High number of active working days
+BER0314,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MCF0327,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IRT0491,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SAT0194,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FQA0854,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SCB0534,Low,0.0,0.0,High number of active working days
+AKR0057,Low,0.0,0.0,High after-hours activity | Excessive device activity | Frequent file access
+ZDW0859,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OCB0805,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HIA0414,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NLO0131,Low,0.0,0.0,High number of active working days
+HVF0067,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+LRW0970,Low,0.0,0.0,High number of active working days
+SJW0451,Low,0.0,0.0,High number of active working days
+AAF0791,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CAN0842,Low,0.0,0.0,High number of active working days
+ZSB0649,Low,0.0,0.0,High after-hours activity | High number of active working days
+YJV0699,Low,0.0,0.0,High number of active working days
+GMF0738,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+XAA0104,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SOB0586,Low,0.0,0.0,High number of active working days
+KNW0644,Low,0.0,0.0,High after-hours activity | High number of active working days
+NGF0157,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MTB0620,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+EMW0105,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TSM0927,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ASS0517,Low,0.0,0.0,High number of active working days
+ECF0828,Low,0.0,0.0,No significant behavioral anomalies detected
+NGO0690,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+EMW0772,Low,0.0,0.0,High number of active working days
+SED0886,Low,0.0,0.0,High number of active working days
+LUR0896,Low,0.0,0.0,No significant behavioral anomalies detected
+BHW0458,Low,0.0,0.0,High number of active working days
+SMY0792,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+AJD0074,Low,0.0,0.0,High weekend activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HDH0928,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HXL0968,Low,0.0,0.0,Excessive device activity | Frequent file access
+CFG0959,Low,0.0,0.0,High number of active working days
+AHC0142,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+WAB0143,Low,0.0,0.0,No significant behavioral anomalies detected
+WBC0315,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NKH0807,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AHM0410,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SJO0209,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ONL0276,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KBL0260,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HJB0742,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+PMC0328,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+SVL0803,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JXH0493,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LJJ0905,Low,0.0,0.0,High number of active working days
+RAS0432,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TQS0212,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MIC0726,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MCT0720,Low,0.0,0.0,High number of active working days
+MBG0438,Low,0.0,0.0,No significant behavioral anomalies detected
+DLS0383,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CCL0068,Low,0.0,0.0,Excessive device activity | Frequent file access
+GKO0078,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+KVS0425,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IIA0092,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GRM0868,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ELH0960,Low,0.0,0.0,High number of active working days
+ILR0304,Low,0.0,0.0,High number of active working days
+RGG0064,Low,0.0,0.0,No significant behavioral anomalies detected
+SSG0250,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+VFM0814,Low,0.0,0.0,High after-hours activity
+FKB0163,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FRR0832,Low,0.0,0.0,High number of active working days
+RGN0408,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ABH0663,Low,0.0,0.0,High number of active working days
+HCC0344,Low,0.0,0.0,High number of active working days
+WGR0833,Low,0.0,0.0,High number of active working days
+IJM0139,Low,0.0,0.0,High number of active working days
+BTN0061,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SHW0578,Low,0.0,0.0,High number of active working days
+DJB0159,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ZSK0258,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JRH0455,Low,0.0,0.0,No significant behavioral anomalies detected
+AAF0535,Low,0.0,0.0,Excessive device activity
+CGA0629,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EBC0390,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PDW0259,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TCD0009,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CSP0197,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MJM0510,Low,0.0,0.0,High number of active working days
+BWP0202,Low,0.0,0.0,High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+DCC0160,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MAW0166,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JLW0053,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CFW0264,Low,0.0,0.0,No significant behavioral anomalies detected
+AIM0627,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CJF0802,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PAD0773,Low,0.0,0.0,Frequent file access | High number of active working days
+HKI0171,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SLT0907,Low,0.0,0.0,No significant behavioral anomalies detected
+MCS0035,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ORM0669,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JIG0128,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JPW0741,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IMG0320,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ESR0693,Low,0.0,0.0,High after-hours activity | Frequent file access
+ALB0892,Low,0.0,0.0,High weekend activity
+APG0307,Low,0.0,0.0,High number of active working days
+IBP0883,Low,0.0,0.0,High after-hours activity | High number of active working days
+OJK0233,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FDE0117,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MSD0939,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ANP0555,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TOR0193,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RNL0695,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TDJ0998,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+IJM0776,Low,0.0,0.0,Excessive device activity
+RIH0777,Low,0.0,0.0,High number of active working days
+IUY0279,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+WTR0563,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JMH0543,Low,0.0,0.0,No significant behavioral anomalies detected
+CBG0398,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CYA0506,Low,0.0,0.0,No significant behavioral anomalies detected
+QJR0688,Low,0.0,0.0,High after-hours activity | High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+HAM0985,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AKH0758,Low,0.0,0.0,High number of active working days
+ADF0397,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AAL0706,Low,0.0,0.0,High number of active working days
+BNR0965,Low,0.0,0.0,High number of active working days
+MJB0588,Low,0.0,0.0,High number of active working days
+SBD0913,Low,0.0,0.0,High number of active working days
+ORB0473,Low,0.0,0.0,High number of active working days
+AMH0464,Low,0.0,0.0,High number of active working days
+CLH0703,Low,0.0,0.0,High number of active working days
+TLH0648,Low,0.0,0.0,High after-hours activity | High number of active working days
+KRM0541,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GHL0460,Low,0.0,0.0,No significant behavioral anomalies detected
+PRM0740,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GQF0659,Low,0.0,0.0,High after-hours activity | High number of active working days
+AAV0450,Low,0.0,0.0,High number of active working days
+MLG0475,Low,0.0,0.0,High number of active working days
+PNH0761,Low,0.0,0.0,Frequent file access | High number of active working days
+SDO0170,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TEB0251,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MAH0864,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ETR0428,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MKP0861,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CFM0767,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+NSS0876,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CJK0200,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ALD0544,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PDH0716,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+CCW0031,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BDV0168,Low,0.0,0.0,No significant behavioral anomalies detected
+CWR0502,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+CJC0494,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MAE0331,Low,0.0,0.0,High number of active working days
+ECL0930,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AQD0820,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MDM0976,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+XBN0229,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LDB0090,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TIW0299,Low,0.0,0.0,High number of active working days
+KJG0910,Low,0.0,0.0,High number of active working days
+SMH0291,Low,0.0,0.0,High weekend activity | High number of active working days
+JCR0921,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DLF0377,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HMM0108,Low,0.0,0.0,No significant behavioral anomalies detected
+OMS0101,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CJH0702,Low,0.0,0.0,High number of active working days
+CTR0697,Low,0.0,0.0,High number of active working days
+CCC0393,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BVN0514,Low,0.0,0.0,No significant behavioral anomalies detected
+LTS0860,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IAR0694,Low,0.0,0.0,High after-hours activity | High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+WVB0539,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KKC0683,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+NUL0471,Low,0.0,0.0,High number of active working days
+AMD0077,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WAS0254,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DIC0988,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SDB0106,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BIS0247,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FIR0920,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ESH0135,Low,0.0,0.0,High number of active working days
+UCH0519,Low,0.0,0.0,No significant behavioral anomalies detected
+BEH0615,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RMS0266,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AWM0764,Low,0.0,0.0,High number of active working days
+AJH0175,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JML0909,Low,0.0,0.0,High number of active working days
+HIW0536,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BTS0011,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CCH0182,Low,0.0,0.0,High number of active working days
+KBB0189,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JSA0775,Low,0.0,0.0,High number of active working days
+ABC0253,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RYB0718,Low,0.0,0.0,High number of active working days
+EHD0584,Low,0.0,0.0,No significant behavioral anomalies detected
+TDG0962,Low,0.0,0.0,High number of active working days
+AJP0723,Low,0.0,0.0,High number of active working days
+DIB0081,Low,0.0,0.0,Excessive device activity | Frequent file access
+BCR0581,Low,0.0,0.0,High number of active working days
+ILH0958,Low,0.0,0.0,Frequent file access | High number of active working days
+MSG0839,Low,0.0,0.0,High number of active working days
+ROB0272,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MBJ0312,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+GCC0945,Low,0.0,0.0,High number of active working days
+IHK0841,Low,0.0,0.0,High number of active working days
+SLP0762,Low,0.0,0.0,High number of active working days
+WDV0573,Low,0.0,0.0,High number of active working days
+LDG0459,Low,0.0,0.0,Frequent file access | High number of active working days
+JHP0583,Low,0.0,0.0,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+JFC0557,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+JOL0024,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MVF0594,Low,0.0,0.0,High number of active working days
+DSB0731,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+UJC0737,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IBB0696,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+RRP0568,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+NHH0185,Low,0.0,0.0,High number of active working days
+OSH0655,Low,0.0,0.0,High after-hours activity | High number of active working days
+AOB0019,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HAH0248,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WBC0192,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SGB0140,Low,0.0,0.0,High number of active working days
+HTF0641,Low,0.0,0.0,High after-hours activity | High number of active working days
+SSS0345,Low,0.0,0.0,High number of active working days
+CNM0800,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SMB0804,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+VMJ0147,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AKC0924,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+IIL0513,Low,0.0,0.0,High weekend activity | High number of active working days
+RFP0380,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JFC0757,Low,0.0,0.0,High number of active working days
+AJL0462,Low,0.0,0.0,High number of active working days
+RAM0447,Low,0.0,0.0,High weekend activity | High number of active working days
+JKJ0698,Low,0.0,0.0,High weekend activity | High number of active working days
+TAP0551,Low,0.0,0.0,No significant behavioral anomalies detected
+AOK0844,Low,0.0,0.0,High after-hours activity | High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+PTH0830,Low,0.0,0.0,High after-hours activity | High weekend activity | High number of active working days
+HKF0831,Low,0.0,0.0,High number of active working days
+CCH0685,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FWM0707,Low,0.0,0.0,High number of active working days
+DOL0332,Low,0.0,0.0,High number of active working days
+IMP0530,Low,0.0,0.0,High number of active working days
+CAB0388,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HFB0347,Low,0.0,0.0,Frequent file access
+GQP0743,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ANT0430,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+UAD0771,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+JRF0835,Low,0.0,0.0,High number of active working days
+PGC0066,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DVM0265,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CMW0783,Low,0.0,0.0,High number of active working days
+JCR0289,Low,0.0,0.0,High number of active working days
+SJC0333,Low,0.0,0.0,High number of active working days
+GZB0469,Low,0.0,0.0,High number of active working days
+IJR0825,Low,0.0,0.0,High number of active working days
+OCS0865,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+LLV0602,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ZJE0857,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MKS0204,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SHR0334,Low,0.0,0.0,High number of active working days
+ASL0378,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RHO0732,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SDF0017,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TTD1000,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+EPW0434,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LHL0309,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KRL0062,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MAD0496,Low,0.0,0.0,High weekend activity
+NHE0919,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BCB0679,Low,0.0,0.0,No significant behavioral anomalies detected
+CMM0487,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MIL0255,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WNB0908,Low,0.0,0.0,High number of active working days
+ADC0391,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+IYB0918,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MKW0441,Low,0.0,0.0,Excessive device activity | High number of active working days
+MIB0904,Low,0.0,0.0,High number of active working days
+SGS0268,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JJB0127,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DJS0682,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+EZT0640,Low,0.0,0.0,High after-hours activity | High number of active working days
+PIS0522,Low,0.0,0.0,High number of active working days
+AJR0932,Low,0.0,0.0,No significant behavioral anomalies detected
+ASG0692,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+NWT0098,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+SBH0537,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DVW0103,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+YWW0660,Low,0.0,0.0,High after-hours activity
+EMB0531,Low,0.0,0.0,High number of active working days
+NJC0705,Low,0.0,0.0,High number of active working days
+MHH0180,Low,0.0,0.0,High weekend activity
+RCP0785,Low,0.0,0.0,High number of active working days
+SAB0781,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+NSC0597,Low,0.0,0.0,High number of active working days
+LAF0991,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+NRF0137,Low,0.0,0.0,High number of active working days
+TAC0300,Low,0.0,0.0,High number of active working days
+JKF0465,Low,0.0,0.0,High weekend activity | High number of active working days
+TPH0474,Low,0.0,0.0,High number of active working days
+JMK0099,Low,0.0,0.0,High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+JKB0126,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+HKR0628,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GOK0238,Low,0.0,0.0,No significant behavioral anomalies detected
+KSH0569,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JCR0770,Low,0.0,0.0,High number of active working days
+KCS0173,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SLB0049,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CJP0952,Low,0.0,0.0,High number of active working days
+YEV0793,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KPC0073,Low,0.0,0.0,No significant behavioral anomalies detected
+CCR0863,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PLH0862,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LHB0606,Low,0.0,0.0,No significant behavioral anomalies detected
+QNF0205,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KAL0395,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CRP0456,Low,0.0,0.0,High number of active working days
+CBG0490,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MCJ0324,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KDT0346,Low,0.0,0.0,High number of active working days
+DPM0423,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BBH0810,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+NMF0780,Low,0.0,0.0,High number of active working days
+MES0407,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HDD0789,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JAD0609,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ENL0100,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LMF0980,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BTL0226,Low,0.0,0.0,High after-hours activity
+RNP0211,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+RMW0542,Low,0.0,0.0,Excessive device activity
+FEB0306,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+FXF0957,Low,0.0,0.0,High number of active working days
+SNS0129,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CNB0900,Low,0.0,0.0,High number of active working days
+AOS0987,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LHN0151,Low,0.0,0.0,High number of active working days
+MPT0376,Low,0.0,0.0,High weekend activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+TNM0961,Low,0.0,0.0,Excessive device activity | Frequent file access
+IJM0444,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+TEM0093,Low,0.0,0.0,No significant behavioral anomalies detected
+UBF0645,Low,0.0,0.0,High after-hours activity | High number of active working days
+HWW0436,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+FPC0954,Low,0.0,0.0,High number of active working days
+GNZ0953,Low,0.0,0.0,High number of active working days
+HKB0418,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JCV0245,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CEL0561,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TRK0914,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+IUB0565,Low,0.0,0.0,Excessive device activity | Frequent file access
+MDH0580,Low,0.0,0.0,Excessive device activity | Frequent file access
+GJD0298,Low,0.0,0.0,High number of active working days
+KJW0416,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+UCS0227,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ILC0838,Low,0.0,0.0,High number of active working days
+IWM0816,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TSB0437,Low,0.0,0.0,High number of active working days
+KNB0022,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IBM0671,Low,0.0,0.0,High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+QPM0727,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CSB0080,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NNA0610,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MLD0755,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RAG0275,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GLR0975,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PKB0429,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HPR0585,Low,0.0,0.0,High number of active working days
+MVB0515,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+RUM0880,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+BEC0505,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LEM0605,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RJM0381,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RRA0938,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DTP0379,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RVC0232,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LJR0523,Low,0.0,0.0,No significant behavioral anomalies detected
+BTR0403,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+COM0321,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BSH0445,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CIG0052,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ETR0177,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AJN0607,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+VCY0751,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ILJ0526,Low,0.0,0.0,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+KJS0618,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BJH0354,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WRM0963,Low,0.0,0.0,No significant behavioral anomalies detected
+ASD0577,Low,0.0,0.0,High number of active working days
+NOB0181,Low,0.0,0.0,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+JJH0292,Low,0.0,0.0,High number of active working days
+CQW0652,Low,0.0,0.0,High after-hours activity | Excessive device activity | Frequent file access
+MBW0809,Low,0.0,0.0,No significant behavioral anomalies detected
+KKS0119,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SBN0971,Low,0.0,0.0,High weekend activity | Frequent file access | High number of active working days
+ONW0083,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JRL0574,Low,0.0,0.0,High number of active working days
+CTW0500,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JMW0638,Low,0.0,0.0,High after-hours activity | High number of active working days
+GDF0704,Low,0.0,0.0,High number of active working days
+LDM0587,Low,0.0,0.0,High number of active working days
+WPE0538,Low,0.0,0.0,High after-hours activity | High number of active working days
+TJG0582,Low,0.0,0.0,High number of active working days
+ICS0956,Low,0.0,0.0,No significant behavioral anomalies detected
+ALC0788,Low,0.0,0.0,High after-hours activity | High number of active working days
+EHB0824,Low,0.0,0.0,No significant behavioral anomalies detected
+BDB0453,Low,0.0,0.0,High number of active working days
+ASV0946,Low,0.0,0.0,High number of active working days
+BSS0463,Low,0.0,0.0,High number of active working days
+AMJ0297,Low,0.0,0.0,High number of active working days
+BTL0722,Low,0.0,0.0,High number of active working days
+FHO0630,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JCG0316,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SXM0895,Low,0.0,0.0,High number of active working days
+PGO0433,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MOP0763,Low,0.0,0.0,High number of active working days
+FRL0511,Low,0.0,0.0,High number of active working days
+CKD0680,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EMS0317,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NCO0666,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JCW0858,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HCL0113,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+HLM0933,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ARA0252,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RDT0424,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+GRC0145,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AMR0400,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+OHC0973,Low,0.0,0.0,High number of active working days
+DHM0937,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ZFM0468,Low,0.0,0.0,High number of active working days
+IJW0851,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SAP0867,Low,0.0,0.0,No significant behavioral anomalies detected
+POB0343,Low,0.0,0.0,High number of active working days
+MHG0244,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FSB0399,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+RVF0201,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AKW0167,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CKB0427,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SJF0094,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ZMC0284,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+GCR0554,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CRO0027,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TET0621,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HLH0512,Low,0.0,0.0,High weekend activity | High number of active working days
+BSB0990,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AAS0442,Low,0.0,0.0,No significant behavioral anomalies detected
+ESA0642,Low,0.0,0.0,High after-hours activity | High number of active working days
+TUC0632,Low,0.0,0.0,High after-hours activity | High number of active working days
+CAM0102,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+VSA0230,Low,0.0,0.0,High after-hours activity
+VSS0154,Low,0.0,0.0,High after-hours activity | Excessive device activity
+HGN0287,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BLS0678,Low,0.0,0.0,No significant behavioral anomalies detected
+DAL0673,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SSH0799,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DZC0228,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TYB0779,Low,0.0,0.0,High number of active working days
+GJT0386,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EIM0156,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DEB0782,Low,0.0,0.0,High number of active working days
+HCW0419,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SAH0599,Low,0.0,0.0,High number of active working days
+ECR0822,Low,0.0,0.0,High number of active working days
+PSF0133,Low,0.0,0.0,Excessive device activity | Frequent file access
+ERH0449,Low,0.0,0.0,High number of active working days
+KQC0708,Low,0.0,0.0,High number of active working days
+SAC0592,Low,0.0,0.0,High number of active working days
+ZSL0305,Low,0.0,0.0,High number of active working days
+ADD0846,Low,0.0,0.0,High number of active working days
+LNS0989,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ZCF0590,Low,0.0,0.0,High number of active working days
+RAH0440,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OKC0107,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+GCS0571,Low,0.0,0.0,Frequent file access | High number of active working days
+SCP0130,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+MIM0712,Low,0.0,0.0,High number of active working days
+MCD0125,Low,0.0,0.0,High after-hours activity | High weekend activity
+FBW0747,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+VEB0935,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CSL0949,Low,0.0,0.0,High number of active working days
+MFV0897,Low,0.0,0.0,High number of active working days
+JGM0934,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CLD0894,Low,0.0,0.0,High number of active working days
+RLG0856,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KRG0158,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ESH0283,Low,0.0,0.0,High after-hours activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+IAT0263,Low,0.0,0.0,No significant behavioral anomalies detected
+FOB0756,Low,0.0,0.0,High weekend activity | High number of active working days
+SVL0940,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ATF0274,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NMS0280,Low,0.0,0.0,High after-hours activity | High weekend activity | High number of active working days
+CAH0936,Low,0.0,0.0,No significant behavioral anomalies detected
+AMR0318,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MNC0717,Low,0.0,0.0,High number of active working days
+HWH0646,Low,0.0,0.0,High after-hours activity | High number of active working days
+DDA0476,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JJB0700,Low,0.0,0.0,High number of active working days
+WJD0576,Low,0.0,0.0,High number of active working days
+LQP0508,Low,0.0,0.0,High number of active working days
+OKB0439,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CCM0136,Low,0.0,0.0,High number of active working days
+AKF0709,Low,0.0,0.0,High number of active working days
+BAK0964,Low,0.0,0.0,High number of active working days
+SSR0278,Low,0.0,0.0,No significant behavioral anomalies detected
+KAT0489,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MKL0941,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LQC0479,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+KTG0091,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HPM0986,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+OLF0504,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GCC0744,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DTT0076,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TSG0906,Low,0.0,0.0,High number of active working days
+GBM0603,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+JJH0613,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+RBB0485,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KDS0349,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BCM0653,Low,0.0,0.0,High after-hours activity | High number of active working days
+CKH0144,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BHC0665,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LAM0911,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CXC0336,Low,0.0,0.0,High number of active working days
+BMC0547,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FMG0527,Low,0.0,0.0,No significant behavioral anomalies detected
+DBW0483,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LPC0492,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+THD0448,Low,0.0,0.0,High number of active working days
+AJC0840,Low,0.0,0.0,High number of active working days
+MCF0600,Low,0.0,0.0,No significant behavioral anomalies detected
+WXH0872,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SBQ0786,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IDO0176,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CCM0855,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RHY0079,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AIH0675,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CWB0065,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JER0404,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FSC0601,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+SBN0495,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CAM0681,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+YCE0983,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WTF0387,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NBC0412,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NJB0243,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JAJ0849,Low,0.0,0.0,High after-hours activity | High weekend activity | High number of active working days
+NBH0256,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+YDN0198,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JJM0203,Low,0.0,0.0,Excessive device activity
+HCL0651,Low,0.0,0.0,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+CLF0852,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AES0827,Low,0.0,0.0,High number of active working days
+BWH0813,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KJM0887,Low,0.0,0.0,High number of active working days
+AGB0643,Low,0.0,0.0,High after-hours activity | High number of active working days
+CAC0889,Low,0.0,0.0,No significant behavioral anomalies detected
+JZD0888,Low,0.0,0.0,High number of active working days
+JSH0330,Low,0.0,0.0,High number of active working days
+SRS0231,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KVT0028,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CAA0612,Low,0.0,0.0,High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+SVS0871,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+IKR0401,Low,0.0,0.0,High after-hours activity | Excessive device activity | Frequent file access
+MKG0711,Low,0.0,0.0,High number of active working days
+ASB0796,Low,0.0,0.0,No significant behavioral anomalies detected
+OQH0183,Low,0.0,0.0,High number of active working days
+SES0477,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BNG0237,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SGM0021,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+MHG0733,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EIP0997,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+SER0165,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+DBS0235,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ARD0509,Low,0.0,0.0,High number of active working days
+AAN0823,Low,0.0,0.0,High number of active working days
+LFS0071,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+LJB0826,Low,0.0,0.0,High number of active working days
+LCC0819,Low,0.0,0.0,High after-hours activity | Excessive device activity
+NAR0981,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HOB0994,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MMB0488,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+HWM0342,Low,0.0,0.0,High number of active working days
+KQS0415,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+XHW0498,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity
+LCD0622,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PPF0435,Low,0.0,0.0,No significant behavioral anomalies detected
+BBG0325,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+BMM0112,Low,0.0,0.0,High number of active working days
+EZH0736,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NAB0903,Low,0.0,0.0,High number of active working days
+BAM0611,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PGH0184,Low,0.0,0.0,No significant behavioral anomalies detected
+AAW0353,Low,0.0,0.0,High number of active working days
+BDI0533,Low,0.0,0.0,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+HAC0282,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+FBA0348,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WGS0516,Low,0.0,0.0,High number of active working days
+CSJ0340,Low,0.0,0.0,High number of active working days
+YJF0532,Low,0.0,0.0,High number of active working days
+DMM0623,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WLV0566,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HCV0478,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+VAA0087,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WSR0241,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CGF0337,Low,0.0,0.0,High number of active working days
+NCK0295,Low,0.0,0.0,High number of active working days
+HGH0595,Low,0.0,0.0,High number of active working days
+FHS0837,Low,0.0,0.0,High number of active working days
+PLH0715,Low,0.0,0.0,High number of active working days
+HJS0072,Low,0.0,0.0,No significant behavioral anomalies detected
+BYP0070,Low,0.0,0.0,No significant behavioral anomalies detected
+QSV0778,Low,0.0,0.0,High number of active working days
+JIM0095,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AAE0190,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+AGB0186,Low,0.0,0.0,High number of active working days
+KJJ0293,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+VLB0647,Low,0.0,0.0,High after-hours activity | High number of active working days
+MAH0149,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RJB0088,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SOF0808,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+KMW0545,Low,0.0,0.0,High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+PMV0850,Low,0.0,0.0,High after-hours activity | Excessive device activity | Frequent file access | High number of active working days
+JMB0308,Low,0.0,0.0,No significant behavioral anomalies detected
+HMW0713,Low,0.0,0.0,High number of active working days
+CCW0524,Low,0.0,0.0,High number of active working days
+DGF0443,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RSM0277,Low,0.0,0.0,Excessive device activity | High web browsing activity | Large volume of overall activity | High number of active working days
+LAP0338,Low,0.0,0.0,High weekend activity | High number of active working days
+CMS0454,Low,0.0,0.0,High number of active working days
+HDJ0446,Low,0.0,0.0,High number of active working days
+XLB0710,Low,0.0,0.0,High number of active working days
+RAB0589,Low,0.0,0.0,No significant behavioral anomalies detected
+EGD0132,Low,0.0,0.0,Excessive device activity
+KMS0657,Low,0.0,0.0,High after-hours activity | High number of active working days
+ELB0847,Low,0.0,0.0,High number of active working days
+DRR0162,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+KBG0549,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RGH0728,Low,0.0,0.0,High web browsing activity | Large volume of overall activity
+BXJ0010,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NRO0768,Low,0.0,0.0,No significant behavioral anomalies detected
+MBR0724,Low,0.0,0.0,High number of active working days
+DSM0591,Low,0.0,0.0,High number of active working days
+NKP0236,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CLS0296,Low,0.0,0.0,High number of active working days
+EAH0466,Low,0.0,0.0,No significant behavioral anomalies detected
+DAG0558,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FLM0213,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KJA0152,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MAD0753,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DGM0754,Low,0.0,0.0,No significant behavioral anomalies detected
+MSZ0310,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NRD0548,Low,0.0,0.0,High web browsing activity
+CKB0482,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MGS0974,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ARL0034,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AMV0036,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KNG0672,Low,0.0,0.0,High web browsing activity
+SCF0608,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+RHP0484,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+EHR0096,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+ELT0769,Low,0.0,0.0,High number of active working days
+KCB0815,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ABN0239,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KPR0497,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+NNS0059,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+PKB0281,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+OMM0944,Low,0.0,0.0,High number of active working days
+FAW0032,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CHG0146,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+PTH0552,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GTD0898,Low,0.0,0.0,High number of active working days
+PES0085,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SMW0084,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+AMH0794,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TLK0993,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+TBT0461,Low,0.0,0.0,High number of active working days
+MNR0829,Low,0.0,0.0,High number of active working days
+ASM0575,Low,0.0,0.0,High number of active working days
+NKH0979,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CJV0286,Low,0.0,0.0,High number of active working days
+NIH0969,Low,0.0,0.0,High number of active working days
+ARB0834,Low,0.0,0.0,No significant behavioral anomalies detected
+JPA0667,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GHH0288,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+ASS0206,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+WKF0012,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+SPA0141,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TEM0977,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DLH0029,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JTS0389,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KWE0082,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+AIS0405,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+JAM0382,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+FRB0023,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+CIM0926,Low,0.0,0.0,High after-hours activity
+BMT0528,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+SEJ0677,Low,0.0,0.0,No significant behavioral anomalies detected
+ZJS0269,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+MLP0668,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+TLM0797,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GAF0570,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+JOM0750,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BMS0877,Low,0.0,0.0,No significant behavioral anomalies detected
+DKB0631,Low,0.0,0.0,High after-hours activity | High number of active working days
+ENC0234,Low,0.0,0.0,High after-hours activity
+IKP0472,Low,0.0,0.0,High weekend activity | Excessive device activity | Frequent file access | High number of active working days
+DIB0285,Low,0.0,0.0,High after-hours activity | Excessive device activity
+KAC0124,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+MHA0798,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+BLL0929,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KAT0270,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+GNS0178,Low,0.0,0.0,High after-hours activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+LOF0311,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+KLM0639,Low,0.0,0.0,High after-hours activity | High number of active working days
+GAF0060,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+ALH0402,Low,0.0,0.0,High after-hours activity | High web browsing activity | Large volume of overall activity | High number of active working days
+CEJ0109,Low,0.0,0.0,High after-hours activity | Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity
+CEB0210,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+DRR0242,Low,0.0,0.0,High weekend activity | High web browsing activity | Large volume of overall activity | High number of active working days
+NCK0421,Low,0.0,0.0,High web browsing activity | Large volume of overall activity | High number of active working days
+HAH0760,Low,0.0,0.0,Excessive device activity | Frequent file access | High number of active working days
+VMJ0546,Low,0.0,0.0,Excessive device activity | High web browsing activity | Frequent file access | Large volume of overall activity | High number of active working days
+EFS0882,Low,0.0,0.0,High number of active working days
+MTT0901,Low,0.0,0.0,No significant behavioral anomalies detected

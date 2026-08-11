@@ -6,125 +6,739 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
-    --color-sidebar-ring: var(--sidebar-ring);
-    --color-sidebar-border: var(--sidebar-border);
-    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-    --color-sidebar-accent: var(--sidebar-accent);
-    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-    --color-sidebar-primary: var(--sidebar-primary);
-    --color-sidebar-foreground: var(--sidebar-foreground);
-    --color-sidebar: var(--sidebar);
-    --color-chart-5: var(--chart-5);
-    --color-chart-4: var(--chart-4);
-    --color-chart-3: var(--chart-3);
-    --color-chart-2: var(--chart-2);
-    --color-chart-1: var(--chart-1);
-    --color-ring: var(--ring);
-    --color-input: var(--input);
-    --color-border: var(--border);
-    --color-destructive: var(--destructive);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-accent: var(--accent);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-muted: var(--muted);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-secondary: var(--secondary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-primary: var(--primary);
-    --color-popover-foreground: var(--popover-foreground);
-    --color-popover: var(--popover);
-    --color-card-foreground: var(--card-foreground);
-    --color-card: var(--card);
-    --color-foreground: var(--foreground);
-    --color-background: var(--background);
-    --radius-sm: calc(var(--radius) * 0.6);
-    --radius-md: calc(var(--radius) * 0.8);
-    --radius-lg: var(--radius);
-    --radius-xl: calc(var(--radius) * 1.4);
-    --radius-2xl: calc(var(--radius) * 1.8);
-    --radius-3xl: calc(var(--radius) * 2.2);
-    --radius-4xl: calc(var(--radius) * 2.6);
+  --font-heading: var(--font-sans);
+  --font-sans: "Geist Variable", sans-serif;
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
+
+/* ============================================================
+   LIGHT THEME
+   ============================================================ */
 
 :root {
-    --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
-    --card: oklch(1 0 0);
-    --card-foreground: oklch(0.145 0 0);
-    --popover: oklch(1 0 0);
-    --popover-foreground: oklch(0.145 0 0);
-    --primary: oklch(0.205 0 0);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
-    --secondary-foreground: oklch(0.205 0 0);
-    --muted: oklch(0.97 0 0);
-    --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
-    --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
-    --ring: oklch(0.708 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --radius: 0.625rem;
-    --sidebar: oklch(0.985 0 0);
-    --sidebar-foreground: oklch(0.145 0 0);
-    --sidebar-primary: oklch(0.205 0 0);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.97 0 0);
-    --sidebar-accent-foreground: oklch(0.205 0 0);
-    --sidebar-border: oklch(0.922 0 0);
-    --sidebar-ring: oklch(0.708 0 0);
+  color-scheme: light;
+
+  --background: oklch(0.985 0.003 250);
+  --foreground: oklch(0.145 0.02 250);
+
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0.02 250);
+
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0.02 250);
+
+  --primary: oklch(0.205 0.03 250);
+  --primary-foreground: oklch(0.985 0 0);
+
+  --secondary: oklch(0.965 0.008 250);
+  --secondary-foreground: oklch(0.205 0.02 250);
+
+  --muted: oklch(0.965 0.008 250);
+  --muted-foreground: oklch(0.48 0.025 250);
+
+  --accent: oklch(0.955 0.012 235);
+  --accent-foreground: oklch(0.205 0.025 250);
+
+  --destructive: oklch(0.577 0.245 27.325);
+
+  --border: oklch(0.89 0.012 250);
+  --input: oklch(0.89 0.012 250);
+  --ring: oklch(0.65 0.15 220);
+
+  --chart-1: oklch(0.65 0.18 220);
+  --chart-2: oklch(0.62 0.18 160);
+  --chart-3: oklch(0.72 0.16 80);
+  --chart-4: oklch(0.62 0.2 300);
+  --chart-5: oklch(0.65 0.2 30);
+
+  --radius: 0.625rem;
+
+  --sidebar: oklch(0.98 0.004 250);
+  --sidebar-foreground: oklch(0.2 0.02 250);
+  --sidebar-primary: oklch(0.55 0.18 220);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.94 0.012 230);
+  --sidebar-accent-foreground: oklch(0.2 0.02 250);
+  --sidebar-border: oklch(0.89 0.012 250);
+  --sidebar-ring: oklch(0.65 0.15 220);
 }
 
+/* ============================================================
+   DARK THEME
+   ============================================================ */
+
 .dark {
-    --background: oklch(0.145 0 0);
-    --foreground: oklch(0.985 0 0);
-    --card: oklch(0.205 0 0);
-    --card-foreground: oklch(0.985 0 0);
-    --popover: oklch(0.205 0 0);
-    --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(0.922 0 0);
-    --primary-foreground: oklch(0.205 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
-    --muted: oklch(0.269 0 0);
-    --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.704 0.191 22.216);
-    --border: oklch(1 0 0 / 10%);
-    --input: oklch(1 0 0 / 15%);
-    --ring: oklch(0.556 0 0);
-    --chart-1: oklch(0.87 0 0);
-    --chart-2: oklch(0.556 0 0);
-    --chart-3: oklch(0.439 0 0);
-    --chart-4: oklch(0.371 0 0);
-    --chart-5: oklch(0.269 0 0);
-    --sidebar: oklch(0.205 0 0);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.488 0.243 264.376);
-    --sidebar-primary-foreground: oklch(0.985 0 0);
-    --sidebar-accent: oklch(0.269 0 0);
-    --sidebar-accent-foreground: oklch(0.985 0 0);
-    --sidebar-border: oklch(1 0 0 / 10%);
-    --sidebar-ring: oklch(0.556 0 0);
+  color-scheme: dark;
+
+  --background: oklch(0.105 0.025 250);
+  --foreground: oklch(0.985 0.005 250);
+
+  --card: oklch(0.145 0.025 250);
+  --card-foreground: oklch(0.985 0.005 250);
+
+  --popover: oklch(0.13 0.025 250);
+  --popover-foreground: oklch(0.985 0.005 250);
+
+  --primary: oklch(0.82 0.16 220);
+  --primary-foreground: oklch(0.12 0.025 250);
+
+  --secondary: oklch(0.19 0.025 250);
+  --secondary-foreground: oklch(0.95 0.005 250);
+
+  --muted: oklch(0.19 0.025 250);
+  --muted-foreground: oklch(0.68 0.02 250);
+
+  --accent: oklch(0.2 0.035 230);
+  --accent-foreground: oklch(0.95 0.005 250);
+
+  --destructive: oklch(0.704 0.191 22.216);
+
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.65 0.15 220);
+
+  --chart-1: oklch(0.72 0.17 220);
+  --chart-2: oklch(0.7 0.17 160);
+  --chart-3: oklch(0.78 0.15 80);
+  --chart-4: oklch(0.7 0.18 300);
+  --chart-5: oklch(0.72 0.19 30);
+
+  --sidebar: oklch(0.115 0.025 250);
+  --sidebar-foreground: oklch(0.985 0.005 250);
+  --sidebar-primary: oklch(0.72 0.17 220);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.19 0.03 240);
+  --sidebar-accent-foreground: oklch(0.985 0.005 250);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.65 0.15 220);
 }
+
+/* ============================================================
+   BASE
+   ============================================================ */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
-  body {
-    @apply bg-background text-foreground;
-    }
+    box-sizing: border-box;
+  }
+
   html {
     @apply font-sans;
-    }
+
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+
+    width: 100%;
+    min-width: 320px;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+
+    overflow-x: hidden;
+
+    font-family: "Geist Variable", sans-serif;
+
+    transition:
+      background-color 220ms ease,
+      color 220ms ease;
+  }
+
+  #root {
+    width: 100%;
+    min-width: 320px;
+    min-height: 100vh;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+  }
+
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  img,
+  svg {
+    max-width: 100%;
+  }
+
+  ::selection {
+    background: rgba(6, 182, 212, 0.25);
+    color: inherit;
+  }
+}
+
+/* ============================================================
+   GLOBAL THEME ROOT
+   ============================================================ */
+
+html.light {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+/* ============================================================
+   LIGHT THEME — APPLICATION BACKGROUNDS
+   ============================================================ */
+
+html.light body {
+  background:
+    radial-gradient(
+      circle at 85% 5%,
+      rgba(6, 182, 212, 0.08),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(59, 130, 246, 0.05),
+      transparent 30%
+    ),
+    #f1f5f9;
+
+  color: #0f172a;
+}
+
+/* ============================================================
+   LIGHT THEME — DARK SLATE BACKGROUNDS
+   ============================================================ */
+
+/*
+   These overrides are intentional.
+
+   The existing application uses many hard-coded Tailwind
+   slate utilities. We preserve those classes in dark mode,
+   while translating them into the light design system here.
+*/
+
+html.light .bg-slate-950 {
+  background-color: #f8fafc;
+}
+
+html.light .bg-slate-950\/95 {
+  background-color: rgba(248, 250, 252, 0.97);
+}
+
+html.light .bg-slate-950\/90 {
+  background-color: rgba(248, 250, 252, 0.94);
+}
+
+html.light .bg-slate-950\/80 {
+  background-color: rgba(248, 250, 252, 0.9);
+}
+
+html.light .bg-slate-950\/70 {
+  background-color: rgba(248, 250, 252, 0.82);
+}
+
+html.light .bg-slate-950\/60 {
+  background-color: rgba(248, 250, 252, 0.75);
+}
+
+html.light .bg-slate-950\/50 {
+  background-color: rgba(248, 250, 252, 0.68);
+}
+
+html.light .bg-slate-950\/40 {
+  background-color: rgba(248, 250, 252, 0.6);
+}
+
+html.light .bg-slate-950\/35 {
+  background-color: rgba(255, 255, 255, 0.78);
+}
+
+html.light .bg-slate-950\/30 {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+html.light .bg-slate-950\/25 {
+  background-color: rgba(255, 255, 255, 0.66);
+}
+
+html.light .bg-slate-950\/20 {
+  background-color: rgba(255, 255, 255, 0.58);
+}
+
+html.light .bg-slate-950\/10 {
+  background-color: rgba(15, 23, 42, 0.04);
+}
+
+/* ============================================================
+   LIGHT THEME — SLATE 900
+   ============================================================ */
+
+html.light .bg-slate-900 {
+  background-color: #ffffff;
+}
+
+html.light .bg-slate-900\/95 {
+  background-color: rgba(255, 255, 255, 0.97);
+}
+
+html.light .bg-slate-900\/90 {
+  background-color: rgba(255, 255, 255, 0.94);
+}
+
+html.light .bg-slate-900\/80 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+html.light .bg-slate-900\/70 {
+  background-color: rgba(255, 255, 255, 0.84);
+}
+
+html.light .bg-slate-900\/60 {
+  background-color: rgba(255, 255, 255, 0.78);
+}
+
+html.light .bg-slate-900\/50 {
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+html.light .bg-slate-900\/40 {
+  background-color: rgba(255, 255, 255, 0.66);
+}
+
+html.light .bg-slate-900\/30 {
+  background-color: rgba(248, 250, 252, 0.88);
+}
+
+html.light .bg-slate-900\/20 {
+  background-color: rgba(248, 250, 252, 0.72);
+}
+
+/* ============================================================
+   LIGHT THEME — SLATE 800
+   ============================================================ */
+
+html.light .bg-slate-800 {
+  background-color: #e2e8f0;
+}
+
+html.light .bg-slate-800\/80 {
+  background-color: rgba(226, 232, 240, 0.9);
+}
+
+html.light .bg-slate-800\/70 {
+  background-color: rgba(226, 232, 240, 0.82);
+}
+
+html.light .bg-slate-800\/60 {
+  background-color: rgba(226, 232, 240, 0.72);
+}
+
+html.light .bg-slate-800\/50 {
+  background-color: rgba(226, 232, 240, 0.62);
+}
+
+html.light .bg-slate-800\/40 {
+  background-color: rgba(226, 232, 240, 0.5);
+}
+
+html.light .bg-slate-800\/30 {
+  background-color: rgba(226, 232, 240, 0.42);
+}
+
+/* ============================================================
+   LIGHT THEME — SLATE 700 / 600
+   ============================================================ */
+
+html.light .bg-slate-700 {
+  background-color: #cbd5e1;
+}
+
+html.light .bg-slate-600 {
+  background-color: #94a3b8;
+}
+
+/* ============================================================
+   LIGHT THEME — PURE BLACK SURFACES
+   ============================================================ */
+
+html.light .bg-black {
+  background-color: #f8fafc;
+}
+
+html.light .bg-black\/95 {
+  background-color: rgba(248, 250, 252, 0.97);
+}
+
+html.light .bg-black\/90 {
+  background-color: rgba(248, 250, 252, 0.94);
+}
+
+html.light .bg-black\/80 {
+  background-color: rgba(248, 250, 252, 0.88);
+}
+
+html.light .bg-black\/70 {
+  background-color: rgba(248, 250, 252, 0.82);
+}
+
+html.light .bg-black\/60 {
+  background-color: rgba(248, 250, 252, 0.72);
+}
+
+html.light .bg-black\/50 {
+  background-color: rgba(248, 250, 252, 0.62);
+}
+
+html.light .bg-black\/40 {
+  background-color: rgba(248, 250, 252, 0.52);
+}
+
+html.light .bg-black\/30 {
+  background-color: rgba(248, 250, 252, 0.42);
+}
+
+/* ============================================================
+   LIGHT THEME — TEXT
+   ============================================================ */
+
+html.light .text-white {
+  color: #0f172a;
+}
+
+html.light .text-slate-50 {
+  color: #0f172a;
+}
+
+html.light .text-slate-100 {
+  color: #1e293b;
+}
+
+html.light .text-slate-200 {
+  color: #334155;
+}
+
+html.light .text-slate-300 {
+  color: #475569;
+}
+
+html.light .text-slate-400 {
+  color: #64748b;
+}
+
+html.light .text-slate-500 {
+  color: #64748b;
+}
+
+html.light .text-slate-600 {
+  color: #475569;
+}
+
+html.light .text-slate-700 {
+  color: #334155;
+}
+
+html.light .text-slate-800 {
+  color: #1e293b;
+}
+
+html.light .text-slate-900 {
+  color: #0f172a;
+}
+
+/* ============================================================
+   LIGHT THEME — BORDERS
+   ============================================================ */
+
+html.light .border-slate-900 {
+  border-color: #e2e8f0;
+}
+
+html.light .border-slate-800 {
+  border-color: #e2e8f0;
+}
+
+html.light .border-slate-800\/80 {
+  border-color: rgba(226, 232, 240, 0.9);
+}
+
+html.light .border-slate-800\/70 {
+  border-color: rgba(226, 232, 240, 0.82);
+}
+
+html.light .border-slate-800\/60 {
+  border-color: rgba(226, 232, 240, 0.72);
+}
+
+html.light .border-slate-700 {
+  border-color: #cbd5e1;
+}
+
+html.light .border-slate-700\/80 {
+  border-color: rgba(203, 213, 225, 0.88);
+}
+
+html.light .border-slate-700\/70 {
+  border-color: rgba(203, 213, 225, 0.78);
+}
+
+html.light .border-slate-700\/60 {
+  border-color: rgba(203, 213, 225, 0.68);
+}
+
+html.light .border-slate-600 {
+  border-color: #cbd5e1;
+}
+
+html.light .border-black {
+  border-color: #e2e8f0;
+}
+
+/* ============================================================
+   LIGHT THEME — DIVIDERS
+   ============================================================ */
+
+html.light .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #e2e8f0;
+}
+
+html.light .divide-slate-700 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #cbd5e1;
+}
+
+/* ============================================================
+   LIGHT THEME — INPUTS
+   ============================================================ */
+
+html.light input,
+html.light textarea,
+html.light select {
+  color: #0f172a;
+  background-color: rgba(255, 255, 255, 0.72);
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8;
+}
+
+html.light input:focus,
+html.light textarea:focus,
+html.light select:focus {
+  background-color: #ffffff;
+}
+
+/* ============================================================
+   LIGHT THEME — COMMON HOVER STATES
+   ============================================================ */
+
+html.light .hover\:bg-slate-950:hover {
+  background-color: #f1f5f9;
+}
+
+html.light .hover\:bg-slate-900:hover {
+  background-color: #f1f5f9;
+}
+
+html.light .hover\:bg-slate-800:hover {
+  background-color: #e2e8f0;
+}
+
+html.light .hover\:bg-slate-700:hover {
+  background-color: #cbd5e1;
+}
+
+html.light .hover\:text-white:hover {
+  color: #0f172a;
+}
+
+html.light .hover\:text-slate-200:hover {
+  color: #1e293b;
+}
+
+html.light .hover\:text-slate-300:hover {
+  color: #334155;
+}
+
+/* ============================================================
+   LIGHT THEME — GRADIENT SURFACES
+   ============================================================ */
+
+html.light .from-slate-950 {
+  --tw-gradient-from: #f8fafc var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(248 250 252 / 0) var(--tw-gradient-to-position);
+}
+
+html.light .from-slate-900 {
+  --tw-gradient-from: #ffffff var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(255 255 255 / 0) var(--tw-gradient-to-position);
+}
+
+html.light .from-slate-800 {
+  --tw-gradient-from: #e2e8f0 var(--tw-gradient-from-position);
+  --tw-gradient-to: rgb(226 232 240 / 0) var(--tw-gradient-to-position);
+}
+
+html.light .to-slate-950 {
+  --tw-gradient-to: #f1f5f9 var(--tw-gradient-to-position);
+}
+
+html.light .to-slate-900 {
+  --tw-gradient-to: #ffffff var(--tw-gradient-to-position);
+}
+
+html.light .to-slate-800 {
+  --tw-gradient-to: #e2e8f0 var(--tw-gradient-to-position);
+}
+
+/* ============================================================
+   LIGHT THEME — SHADOWS
+   ============================================================ */
+
+html.light .shadow-black\/20 {
+  --tw-shadow-color: rgb(15 23 42 / 0.08);
+}
+
+html.light .shadow-black\/30 {
+  --tw-shadow-color: rgb(15 23 42 / 0.1);
+}
+
+html.light .shadow-black\/40 {
+  --tw-shadow-color: rgb(15 23 42 / 0.12);
+}
+
+html.light .shadow-black\/50 {
+  --tw-shadow-color: rgb(15 23 42 / 0.14);
+}
+
+/* ============================================================
+   LIGHT THEME — RINGS
+   ============================================================ */
+
+html.light .ring-slate-950 {
+  --tw-ring-color: #f8fafc;
+}
+
+html.light .ring-slate-900 {
+  --tw-ring-color: #ffffff;
+}
+
+html.light .ring-slate-800 {
+  --tw-ring-color: #e2e8f0;
+}
+
+/* ============================================================
+   LIGHT THEME — SCROLLBAR
+   ============================================================ */
+
+html.light {
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ============================================================
+   DARK THEME — SCROLLBAR
+   ============================================================ */
+
+html.dark {
+  scrollbar-color: #334155 #020617;
+}
+
+html.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 999px;
+}
+
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ============================================================
+   THEME TRANSITION
+   ============================================================ */
+
+html.light body,
+html.dark body {
+  transition:
+    background-color 220ms ease,
+    color 220ms ease;
 }

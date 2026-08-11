@@ -15,6 +15,8 @@ from backend.api.models import router as models_router
 from backend.api.explainability import router as explainability_router
 from backend.api.reports import router as reports_router
 from backend.api.threats import router as threats_router
+from backend.api.investigation import router as investigation_router
+from backend.api.notifications import router as notifications_router
 from backend.api import activity
 from backend.api import risk
 
@@ -57,6 +59,7 @@ def root():
         "status": "Running",
     }
 
+
 # =============================================================================
 # Health Check
 # =============================================================================
@@ -73,6 +76,7 @@ def verify_database_on_startup() -> None:
     """Check database connectivity without blocking application startup."""
 
     is_available, message = check_database_connection()
+
     app.state.database_available = is_available
     app.state.database_error = message
 
@@ -102,6 +106,7 @@ def database_health():
         content=payload,
     )
 
+
 # =============================================================================
 # Register Routers
 # =============================================================================
@@ -120,6 +125,13 @@ app.include_router(
     tags=["Dashboard"],
 )
 
+# Notifications
+app.include_router(
+    notifications_router,
+    prefix="/notifications",
+    tags=["Notifications"],
+)
+
 # Employees
 app.include_router(
     employees_router,
@@ -130,8 +142,6 @@ app.include_router(
 # Models
 app.include_router(
     models_router,
-    prefix="/models",
-    tags=["Models"],
 )
 
 # Explainability
@@ -148,7 +158,7 @@ app.include_router(
     tags=["Reports"],
 )
 
-#Threat
+# Threat Center
 app.include_router(
     threats_router,
     prefix="/threats",
@@ -156,14 +166,25 @@ app.include_router(
 )
 
 # =============================================================================
-# Routers that already define their own prefix
+# Routers That Already Define Their Own Prefix
 # =============================================================================
 
-# Analytics -> prefix="/analytics" is already inside analytics.py
-app.include_router(analytics_router)
+# Investigation -> prefix="/investigation" defined inside investigation.py
+app.include_router(
+    investigation_router,
+)
 
-# Activity -> prefix="/activity" is already inside activity.py
-app.include_router(activity.router)
+# Analytics -> prefix="/analytics" defined inside analytics.py
+app.include_router(
+    analytics_router,
+)
 
-# Risk -> prefix="/risk" is already inside risk.py
-app.include_router(risk.router)
+# Activity -> prefix="/activity" defined inside activity.py
+app.include_router(
+    activity.router,
+)
+
+# Risk -> prefix="/risk" defined inside risk.py
+app.include_router(
+    risk.router,
+)

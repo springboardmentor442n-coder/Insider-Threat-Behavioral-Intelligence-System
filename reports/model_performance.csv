@@ -1,0 +1,8 @@
+Model,Training Time (sec),Suspicious Employees,Detection Rate (%),Average Risk Score,Maximum Risk Score,Minimum Risk Score
+DBSCAN,0.03,139,13.9,0.139,1.0,0.0
+One-Class SVM,0.02,62,6.2,-1.43,-1.052,-2.0
+Isolation Forest,0.75,30,3.0,0.437,0.718,0.364
+Elliptic Envelope,0.43,30,3.0,33317.662,1261057.935,4.08
+PCA,0.01,30,3.0,0.037,0.968,0.001
+KMeans,0.17,30,3.0,3.476,14.054,1.111
+LOF,2.17,25,2.5,1.084,2.153,0.955
