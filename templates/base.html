@@ -392,50 +392,31 @@
 <body>
 
 <header>
-
     <div class="logo">
-
-        <div class="logo-icon">
-            🛡️
-        </div>
-
+        <div class="logo-icon">🛡️</div>
         <div>
-
-            <div class="logo-text">
-                InsightGuard Pro
-            </div>
-
-            <div class="logo-sub">
-                BEHAVIOURAL INTELLIGENCE
-            </div>
-
+            <div class="logo-text">InsightGuard Pro</div>
+            <div class="logo-sub">BEHAVIOURAL INTELLIGENCE</div>
         </div>
-
     </div>
 
-
     <nav>
-
-        <a href="/">
-            Dashboard
-        </a>
-
-        <a href="/employees">
-            Employees
-        </a>
-
-        <a href="/pipeline">
-            Pipeline
-        </a>
-
-        <a href="/predictions">
-            Predictions
-        </a>
-
+        <a href="/">Dashboard</a>
+        <a href="/employees">Employees</a>
+        <a href="/pipeline">Pipeline</a>
+        <a href="/predictions">Predictions</a>
     </nav>
 
+    <div style="display:flex;align-items:center;gap:.8rem">
+        {% if session.get('user_email') %}
+        <div style="text-align:right">
+            <div style="font-size:.72rem;color:var(--muted)">Logged in as</div>
+            <div style="font-size:.83rem;font-weight:700">{{ session.get('user_email') }}</div>
+        </div>
+        {% endif %}
+        <a href="/logout" class="btn secondary" style="padding:.5rem .9rem;font-size:.78rem">Logout</a>
+    </div>
 </header>
-
 
 <main>
 
