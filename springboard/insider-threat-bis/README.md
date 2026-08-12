@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/30863922/README.md)
 # 🛡️ Insider Threat Behavioral Intelligence System
 
 An end-to-end **UEBA (User & Entity Behaviour Analytics)** platform that detects

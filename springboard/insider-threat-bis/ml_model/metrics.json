@@ -1,0 +1,46 @@
+{
+  "backend": "gb",
+  "model": "GradientBoostingClassifier",
+  "n_rows": 26045,
+  "n_users": 160,
+  "n_features": 16,
+  "train_rows": 18231,
+  "test_rows": 7814,
+  "train_positives": 139,
+  "test_positives": 88,
+  "pr_auc": 0.8897,
+  "average_precision": 0.8901,
+  "roc_auc": 0.9938,
+  "precision": 0.9359,
+  "recall": 0.8295,
+  "f1": 0.8795,
+  "confusion_matrix": {
+    "tn": 7721,
+    "fp": 5,
+    "fn": 15,
+    "tp": 73
+  },
+  "user_level_recall": "5/5",
+  "date_range": [
+    "2010-01-04",
+    "2010-08-14"
+  ],
+  "feature_importance": {
+    "sensitive_files_to_usb": 0.55469,
+    "distinct_pcs": 0.15724,
+    "http_requests": 0.09767,
+    "supervisor_encoded": 0.08365,
+    "logon_count": 0.05177,
+    "role_encoded": 0.02749,
+    "off_hours_logons": 0.01192,
+    "cloud_job_visits": 0.00487,
+    "external_emails_sent": 0.00339,
+    "department_encoded": 0.00229,
+    "total_emails_sent": 0.00189,
+    "files_copied_to_usb": 0.00169,
+    "total_email_size": 0.00133,
+    "off_hours_usb": 7e-05,
+    "total_attachments": 3e-05,
+    "usb_connects": 2e-05
+  }
+}
