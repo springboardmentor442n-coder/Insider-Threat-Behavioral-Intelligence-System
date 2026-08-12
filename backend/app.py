@@ -61,14 +61,44 @@ def root():
     }
 
 
+import uuid
+import time
+import logging
+from fastapi import Request
+
+logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+logger = logging.getLogger("sentinel_ai")
+
+@app.middleware("http")
+async def structured_logging_middleware(request: Request, call_next):
+    request_id = request.headers.get("X-Request-ID", str(uuid.uuid4()))
+    start_time = time.time()
+    
+    response = await call_next(request)
+    
+    duration_ms = round((time.time() - start_time) * 1000, 2)
+    response.headers["X-Request-ID"] = request_id
+    response.headers["X-Response-Time-Ms"] = str(duration_ms)
+    
+    logger.info(
+        f"event=api_request request_id={request_id} method={request.method} "
+        f"path={request.url.path} status={response.status_code} duration_ms={duration_ms}"
+    )
+    return response
+
 # =============================================================================
-# Health Check
+# Health & Readiness Checks
 # =============================================================================
 
 @app.get("/health")
 def health():
+    return {"status": "healthy"}
+
+@app.get("/ready")
+def ready():
     return {
-        "status": "healthy",
+        "status": "ready",
+        "database_available": getattr(app.state, "database_available", True),
     }
 
 

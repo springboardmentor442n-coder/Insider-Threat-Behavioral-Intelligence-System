@@ -56,11 +56,12 @@ def register(
 
 
 @router.post("/login")
+@router.post("/token")
 def login(
     form_data: OAuth2PasswordRequestForm = Depends(),
 ):
     """
-    Login and receive JWT token.
+    Login and receive JWT token (OAuth2 compliant).
     """
 
     token = login_user(
