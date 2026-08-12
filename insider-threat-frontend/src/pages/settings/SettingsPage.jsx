@@ -13,6 +13,7 @@ import {
 
 import authService from "../../services/auth/authService";
 import { useTheme } from "../../providers/ThemeProvider";
+import PageHeader from "../../components/shared/PageHeader";
 
 export default function SettingsPage() {
   const [user, setUser] = useState(null);
@@ -68,27 +69,15 @@ export default function SettingsPage() {
       className="space-y-6"
     >
       {/* Header */}
-      <section className="rounded-3xl border border-cyan-500/20 bg-slate-900/70 p-8">
-        <div className="flex items-center gap-4">
-          <div className="rounded-2xl bg-cyan-500/20 p-4">
-            <Settings className="h-8 w-8 text-cyan-400" />
-          </div>
-
-          <div>
-            <h1 className="text-4xl font-bold text-white">
-              Settings
-            </h1>
-
-            <p className="mt-2 text-slate-400">
-              Manage your account, appearance and security session.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        icon={Settings}
+        title="Settings"
+        subtitle="Manage system appearance, interface themes, and security session preferences"
+      />
 
       {/* Account */}
-      <section className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-        <div className="mb-6 flex items-center gap-3">
+      <section className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-sm">
+        <div className="mb-4 flex items-center gap-3">
           <User className="text-cyan-400" size={24} />
 
           <div>
@@ -139,8 +128,8 @@ export default function SettingsPage() {
       </section>
 
       {/* Security */}
-      <section className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-        <div className="mb-6 flex items-center gap-3">
+      <section className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-sm">
+        <div className="mb-4 flex items-center gap-3">
           <Shield className="text-green-400" size={24} />
 
           <div>
@@ -175,8 +164,8 @@ export default function SettingsPage() {
       </section>
 
       {/* Appearance */}
-      <section className="rounded-3xl border border-slate-700 bg-slate-900/70 p-6">
-        <div className="mb-6 flex items-center gap-3">
+      <section className="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-sm">
+        <div className="mb-4 flex items-center gap-3">
           {isDark ? (
             <Moon className="text-cyan-400" size={24} />
           ) : (
@@ -229,7 +218,7 @@ export default function SettingsPage() {
       </section>
 
       {/* Logout */}
-      <section className="rounded-3xl border border-red-500/20 bg-slate-900/70 p-6">
+      <section className="rounded-2xl border border-red-500/20 bg-slate-900/60 p-5 backdrop-blur-sm">
         <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-3">
             <KeyRound

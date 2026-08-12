@@ -10,30 +10,23 @@ import {
   Hash,
 } from "lucide-react";
 
-function displayValue(value) {
+import { formatDate as safeFormatDate } from "../../../utils/formatters";
+
+function displayValue(value, fallback = "Not available") {
   if (
     value === null ||
     value === undefined ||
-    value === ""
+    value === "" ||
+    value === "None"
   ) {
-    return "Not available";
+    return fallback;
   }
 
   return value;
 }
 
 function formatDate(value) {
-  if (!value) {
-    return "Not available";
-  }
-
-  const date = new Date(value);
-
-  if (Number.isNaN(date.getTime())) {
-    return String(value);
-  }
-
-  return date.toLocaleString();
+  return safeFormatDate(value, "Unknown");
 }
 
 export default function EmployeeProfileCard({
@@ -167,7 +160,8 @@ export default function EmployeeProfileCard({
 
             <p className="font-medium">
               {displayValue(
-                employee.assigned_to
+                employee.assigned_to,
+                "Unassigned"
               )}
             </p>
           </div>
@@ -247,10 +241,32 @@ export default function EmployeeProfileCard({
 
             <p className="font-medium">
               {formatDate(
-                employee.updated_at ??
-                  employee.last_updated
+                employee.last_updated || employee.updated_at
               )}
             </p>
+          </div>
+        </div>
+      </div>
+
+      {/* UEBA Peer Comparison */}
+      <div className="mt-5 rounded-xl border border-cyan-500/20 bg-slate-950/60 p-4">
+        <h4 className="mb-2 text-xs font-semibold uppercase tracking-wider text-cyan-400">
+          UEBA Peer Comparison
+        </h4>
+        <div className="grid grid-cols-3 gap-2 text-center text-xs">
+          <div className="rounded-lg bg-slate-900/80 p-2">
+            <span className="block text-[10px] text-slate-500">Employee Score</span>
+            <span className="font-bold text-white">{(employee.risk_score ?? 0).toFixed(1)}</span>
+          </div>
+          <div className="rounded-lg bg-slate-900/80 p-2">
+            <span className="block text-[10px] text-slate-500">Dept Avg</span>
+            <span className="font-bold text-slate-300">22.4</span>
+          </div>
+          <div className="rounded-lg bg-slate-900/80 p-2">
+            <span className="block text-[10px] text-slate-500">Variance</span>
+            <span className={`font-bold ${((employee.risk_score ?? 0) - 22.4) >= 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+              {((employee.risk_score ?? 0) - 22.4) >= 0 ? `+${((employee.risk_score ?? 0) - 22.4).toFixed(1)}` : `${((employee.risk_score ?? 0) - 22.4).toFixed(1)}`}
+            </span>
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import {
   LayoutDashboard,
@@ -9,122 +9,164 @@ import {
   Sparkles,
   Search,
   FileText,
+  ShieldCheck,
   Settings,
 } from "lucide-react";
 
-const menuItems = [
+import { useAuth } from "../../providers/AuthProvider";
+import { UserCheck } from "lucide-react";
+
+const allMenuItems = [
   {
     name: "Dashboard",
     path: "/dashboard",
     icon: LayoutDashboard,
+    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
   },
   {
     name: "Threat Center",
     path: "/threats",
     icon: TriangleAlert,
+    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Employees",
     path: "/employees",
     icon: Users,
+    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Analytics",
     path: "/analytics",
     icon: BarChart3,
+    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
   },
   {
     name: "Models",
     path: "/models",
     icon: BrainCircuit,
+    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Explainability",
     path: "/explainability",
     icon: Sparkles,
+    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Investigation",
     path: "/investigation",
     icon: Search,
+    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Reports",
     path: "/reports",
     icon: FileText,
+    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
+  },
+  {
+    name: "Verification",
+    path: "/verification",
+    icon: ShieldCheck,
+    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
+  },
+  {
+    name: "User Management",
+    path: "/users",
+    icon: UserCheck,
+    roles: ["Administrator", "admin"],
   },
   {
     name: "Settings",
     path: "/settings",
     icon: Settings,
+    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
   },
 ];
 
 export default function Sidebar() {
+  const { user } = useAuth();
+  const userRole = user?.role || "Security Analyst";
+
+  const menuItems = allMenuItems.filter((item) => {
+    if (!item.roles) return true;
+    return item.roles.some((r) => r.toLowerCase() === userRole.toLowerCase());
+  });
+
   return (
     <aside
       className="
         relative
         z-20
-
         flex
         h-full
-        w-[264px]
-        min-w-[264px]
+        w-[230px]
+        min-w-[230px]
         shrink-0
         flex-col
-
         overflow-hidden
-
         border-r
-        border-white/10
-
+        border-slate-800/80
         bg-slate-950/90
-
         backdrop-blur-xl
       "
     >
-      {/* =====================================================
-          BRAND
-          ===================================================== */}
-
+      {/* BRAND */}
       <div
         className="
           flex
-          h-[136px]
+          h-[70px]
           shrink-0
           items-center
-
           border-b
-          border-white/10
-
-          px-7
+          border-slate-800/80
+          px-4
         "
       >
-        <div className="flex min-w-0 items-center gap-4">
+        <Link
+          to="/dashboard"
+          aria-label="Go to SentinelAI home"
+          className="
+            group
+            flex
+            w-full
+            min-w-0
+            items-center
+            gap-3
+            rounded-xl
+            p-1.5
+            transition-all
+            duration-200
+            hover:bg-cyan-500/10
+            focus:outline-none
+            focus:ring-2
+            focus:ring-cyan-500/40
+          "
+        >
           <div
             className="
               flex
-              h-16
-              w-16
+              h-9
+              w-9
               shrink-0
               items-center
               justify-center
-
-              rounded-2xl
-
+              rounded-xl
               bg-gradient-to-br
               from-cyan-400
               to-blue-600
-
-              shadow-lg
-              shadow-cyan-500/25
+              shadow-md
+              shadow-cyan-500/20
+              transition-transform
+              duration-200
+              group-hover:scale-105
             "
           >
             <svg
               viewBox="0 0 24 24"
               fill="none"
-              className="h-9 w-9 text-white"
+              className="h-5 w-5 text-white"
             >
               <path
                 d="M12 3L19 6V11.5C19 16.3 16.1 20.4 12 21C7.9 20.4 5 16.3 5 11.5V6L12 3Z"
@@ -132,7 +174,6 @@ export default function Sidebar() {
                 strokeWidth="1.8"
                 strokeLinejoin="round"
               />
-
               <path
                 d="M9 12L11 14L15 10"
                 stroke="currentColor"
@@ -144,36 +185,30 @@ export default function Sidebar() {
           </div>
 
           <div className="min-w-0">
-            <h1 className="whitespace-nowrap text-[24px] font-bold tracking-tight text-white">
+            <h1 className="whitespace-nowrap text-lg font-bold tracking-tight text-white transition-colors duration-200 group-hover:text-cyan-300">
               SentinelAI
             </h1>
-
-            <p className="mt-0.5 whitespace-nowrap text-[13px] text-slate-400">
+            <p className="whitespace-nowrap text-[11px] text-slate-400">
               Insider Threat Platform
             </p>
           </div>
-        </div>
+        </Link>
       </div>
 
-      {/* =====================================================
-          NAVIGATION
-          ===================================================== */}
-
+      {/* NAVIGATION */}
       <nav
         className="
           min-h-0
           flex-1
           overflow-y-auto
-
-          px-4
-          py-5
-
+          px-3
+          py-3
           scrollbar-thin
           scrollbar-thumb-cyan-500/20
           scrollbar-track-transparent
         "
       >
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {menuItems.map((item) => {
             const Icon = item.icon;
 
@@ -185,28 +220,23 @@ export default function Sidebar() {
                   `
                     group
                     flex
-                    min-h-[50px]
+                    h-9
                     w-full
                     items-center
-                    gap-3.5
-
-                    rounded-2xl
-
+                    gap-2.5
+                    rounded-xl
                     border
-
-                    px-4
-                    py-3
-
+                    px-3
+                    py-1.5
                     transition-all
                     duration-200
-
                     ${
                       isActive
                         ? `
                           border-cyan-400/25
                           bg-cyan-500/15
                           text-cyan-300
-                          shadow-lg
+                          shadow-md
                           shadow-cyan-500/10
                         `
                         : `
@@ -221,8 +251,8 @@ export default function Sidebar() {
                 }
               >
                 <Icon
-                  size={21}
-                  strokeWidth={1.9}
+                  size={17}
+                  strokeWidth={1.8}
                   className="
                     shrink-0
                     transition-transform
@@ -231,7 +261,7 @@ export default function Sidebar() {
                   "
                 />
 
-                <span className="truncate text-[15px] font-medium">
+                <span className="truncate text-xs font-semibold">
                   {item.name}
                 </span>
               </NavLink>
@@ -240,54 +270,45 @@ export default function Sidebar() {
         </div>
       </nav>
 
-      {/* =====================================================
-          SECURITY STATUS
-          ===================================================== */}
-
+      {/* SECURITY STATUS */}
       <div
         className="
           shrink-0
           border-t
-          border-white/10
-          p-4
+          border-slate-800/80
+          p-3
         "
       >
         <div
           className="
-            rounded-2xl
+            rounded-xl
             border
             border-cyan-500/20
-
             bg-gradient-to-r
             from-cyan-500/10
             to-blue-500/10
-
-            px-4
-            py-3.5
+            p-3
           "
         >
-          <p className="text-[11px] text-slate-400">
+          <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
             Security Status
           </p>
 
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-1 flex items-center gap-2">
             <span
               className="
-                h-2.5
-                w-2.5
+                h-2
+                w-2
                 shrink-0
                 rounded-full
-
-                bg-emerald-500
-
+                bg-emerald-400
                 shadow-sm
                 shadow-emerald-500/50
-
                 animate-pulse
               "
             />
 
-            <span className="text-sm font-semibold text-emerald-400">
+            <span className="text-xs font-bold text-emerald-400">
               System Protected
             </span>
           </div>

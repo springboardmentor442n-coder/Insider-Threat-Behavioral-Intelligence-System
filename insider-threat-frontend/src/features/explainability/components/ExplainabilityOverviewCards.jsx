@@ -5,6 +5,7 @@ import {
   ShieldAlert,
   Users,
 } from "lucide-react";
+import { formatFeatureName } from "../../../utils/formatters";
 
 function Card({
   title,
@@ -12,31 +13,33 @@ function Card({
   color,
   Icon,
 }) {
+  const isLong = String(value).length > 15;
+  const fontSizeClass = isLong ? "mt-3 text-lg font-bold truncate" : "mt-3 text-2xl font-bold";
+
   return (
     <motion.div
-      whileHover={{ scale: 1.03 }}
+      whileHover={{ scale: 1.02 }}
       className="
         rounded-2xl
         border
-        border-slate-700
+        border-slate-800
         bg-slate-900/60
         p-5
+        backdrop-blur-sm
       "
     >
       <div className="flex items-center justify-between">
-        <p className="text-sm text-slate-400">
+        <p className="text-xs font-semibold text-slate-400">
           {title}
         </p>
 
         <Icon
-          size={21}
+          size={20}
           className={color}
         />
       </div>
 
-      <h2
-        className={`mt-3 text-3xl font-bold ${color}`}
-      >
+      <h2 className={`${fontSizeClass} ${color}`} title={String(value)}>
         {value}
       </h2>
     </motion.div>
@@ -44,18 +47,21 @@ function Card({
 }
 
 export default function ExplainabilityOverviewCards({
-  featureImportance,
-  behavioralFactors,
+  featureImportance = [],
+  behavioralFactors = [],
 }) {
-  const topFeature =
+  const rawTopFeature =
     featureImportance.length > 0
       ? featureImportance[0]?.Feature
       : "N/A";
 
-  const topBehavior =
+  const rawTopBehavior =
     behavioralFactors.length > 0
       ? behavioralFactors[0]?.Behavior
       : "N/A";
+
+  const topFeature = formatFeatureName(rawTopFeature);
+  const topBehavior = formatFeatureName(rawTopBehavior);
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">

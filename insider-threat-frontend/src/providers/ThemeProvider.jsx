@@ -28,10 +28,13 @@ function readStoredTheme() {
 }
 
 function applyThemeClass(theme) {
-  document.documentElement.classList.toggle(
-    "dark",
-    theme === "dark"
-  );
+  if (theme === "light") {
+    document.documentElement.classList.add("light");
+    document.documentElement.classList.remove("dark");
+  } else {
+    document.documentElement.classList.add("dark");
+    document.documentElement.classList.remove("light");
+  }
 }
 
 export function ThemeProvider({ children }) {

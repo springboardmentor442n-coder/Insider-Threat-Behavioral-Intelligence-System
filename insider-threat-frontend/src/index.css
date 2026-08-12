@@ -271,32 +271,64 @@ html.light body {
    while translating them into the light design system here.
 */
 
+/* ============================================================
+   LIGHT THEME — COMPREHENSIVE UTILITY OVERRIDES
+   ============================================================ */
+
+html.light body,
+html.light main {
+  background-color: #f8fafc !important;
+  color: #0f172a !important;
+}
+
+html.light aside {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light header {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Card surfaces */
+html.light [class*="bg-slate-950"],
+html.light [class*="bg-slate-900"] {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html.light [class*="bg-slate-800"] {
+  background-color: #f1f5f9 !important;
+}
+
+/* Borders & Dividers */
+html.light [class*="border-slate-800"],
+html.light [class*="border-slate-700"],
+html.light [class*="divide-slate-800"],
+html.light [class*="divide-slate-700"] {
+  border-color: #e2e8f0 !important;
+}
+
+/* Typography */
+html.light .text-white,
+html.light [class*="text-slate-100"],
+html.light [class*="text-slate-200"] {
+  color: #0f172a !important;
+}
+
+html.light [class*="text-slate-300"],
+html.light [class*="text-slate-400"] {
+  color: #475569 !important;
+}
+
+html.light [class*="text-slate-500"] {
+  color: #64748b !important;
+}
+
+/* Specific slate backgrounds */
 html.light .bg-slate-950 {
-  background-color: #f8fafc;
-}
-
-html.light .bg-slate-950\/95 {
-  background-color: rgba(248, 250, 252, 0.97);
-}
-
-html.light .bg-slate-950\/90 {
-  background-color: rgba(248, 250, 252, 0.94);
-}
-
-html.light .bg-slate-950\/80 {
-  background-color: rgba(248, 250, 252, 0.9);
-}
-
-html.light .bg-slate-950\/70 {
-  background-color: rgba(248, 250, 252, 0.82);
-}
-
-html.light .bg-slate-950\/60 {
-  background-color: rgba(248, 250, 252, 0.75);
-}
-
-html.light .bg-slate-950\/50 {
-  background-color: rgba(248, 250, 252, 0.68);
+  background-color: #f8fafc !important;
 }
 
 html.light .bg-slate-950\/40 {

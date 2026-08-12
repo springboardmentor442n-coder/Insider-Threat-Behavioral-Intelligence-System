@@ -1,0 +1,347 @@
+ .env.example                                       |     51 [32m+[m
+ .gitignore                                         |     84 [32m+[m
+ README.md                                          |      0
+ alembic.ini                                        |    148 [32m+[m
+ alembic/README                                     |      1 [32m+[m
+ alembic/env.py                                     |     58 [32m+[m
+ alembic/script.py.mako                             |     28 [32m+[m
+ alembic/versions/d6306c038839_create_all_tables.py |    105 [32m+[m
+ backend/__init__.py                                |      0
+ backend/api/__init__.py                            |      0
+ backend/api/activity.py                            |     96 [32m+[m
+ backend/api/alert.py                               |      0
+ backend/api/analytics.py                           |    191 [32m+[m
+ backend/api/auth.py                                |    104 [32m+[m
+ backend/api/dashboard.py                           |     90 [32m+[m
+ backend/api/employees.py                           |    263 [32m+[m
+ backend/api/explainability.py                      |     74 [32m+[m
+ backend/api/investigation.py                       |    106 [32m+[m
+ backend/api/models.py                              |    154 [32m+[m
+ backend/api/notifications.py                       |    126 [32m+[m
+ backend/api/reports.py                             |     83 [32m+[m
+ backend/api/risk.py                                |     80 [32m+[m
+ backend/api/threats.py                             |    162 [32m+[m
+ backend/app.py                                     |    190 [32m+[m
+ backend/backend.txt                                |    Bin [31m0[m -> [32m46968[m bytes
+ backend/core/__init__.py                           |      0
+ backend/core/config.py                             |      0
+ backend/core/logging.py                            |      0
+ backend/core/security.py                           |      0
+ backend/crud/__init__.py                           |      0
+ backend/crud/activity.py                           |      0
+ backend/crud/employee.py                           |      0
+ backend/crud/investigation.py                      |     84 [32m+[m
+ backend/crud/report.py                             |      0
+ backend/crud/risk.py                               |      0
+ backend/crud/threat.py                             |    114 [32m+[m
+ backend/crud/user.py                               |      0
+ backend/data/device.csv                            | 405381 [32m+++++++++[m
+ backend/data/duckdb_client.py                      |     25 [32m+[m
+ backend/data/email.csv                             |    Bin [31m0[m -> [32m1359471959[m bytes
+ backend/data/file.csv                              | 445582 [32m+++++++++[m
+ backend/data/http.csv                              |    Bin [31m0[m -> [32m1622921155[m bytes
+ backend/data/logon.csv                             | 854860 [32m++++++++++++++++++[m
+ backend/data/parquet_loader.py                     |     50 [32m+[m
+ backend/database/__init__.py                       |     36 [32m+[m
+ backend/database/base.py                           |     12 [32m+[m
+ backend/database/crud.py                           |      0
+ backend/database/database.py                       |     50 [32m+[m
+ backend/database/dependencies.py                   |     17 [32m+[m
+ backend/database/models.py                         |    348 [32m+[m
+ backend/database/notification_model.py             |     98 [32m+[m
+ backend/database/schemas.py                        |      0
+ backend/database/session.py                        |     32 [32m+[m
+ backend/inspect_parquet.py                         |     32 [32m+[m
+ backend/middleware/__init__.py                     |      0
+ backend/middleware/authentication.py               |      0
+ backend/middleware/authorization.py                |      0
+ backend/middleware/request_logger.py               |      0
+ backend/repositories/__init__.py                   |      0
+ backend/repositories/activity_repository.py        |      0
+ backend/repositories/employee_repository.py        |    104 [32m+[m
+ backend/repositories/risk_repository.py            |      0
+ backend/repositories/user_repository.py            |     98 [32m+[m
+ backend/schemas/__init__.py                        |      0
+ backend/schemas/auth.py                            |     26 [32m+[m
+ backend/schemas/dashboard.py                       |      0
+ backend/schemas/employee.py                        |    108 [32m+[m
+ backend/schemas/explainability.py                  |     81 [32m+[m
+ backend/schemas/investigation.py                   |    117 [32m+[m
+ backend/schemas/model.py                           |      0
+ backend/schemas/notification.py                    |     41 [32m+[m
+ backend/schemas/report.py                          |      6 [32m+[m
+ backend/schemas/threat.py                          |     59 [32m+[m
+ backend/services/__init__.py                       |      0
+ backend/services/activity_service.py               |    111 [32m+[m
+ backend/services/analytics_service.py              |    209 [32m+[m
+ backend/services/auth_service.py                   |    145 [32m+[m
+ backend/services/dashboard_service.py              |    641 [32m+[m
+ backend/services/employee_service.py               |    509 [32m+[m
+ backend/services/explain_service.py                |    207 [32m+[m
+ backend/services/explainability_service.py         |     97 [32m+[m
+ backend/services/export_service.py                 |     38 [32m+[m
+ backend/services/feature_service.py                |    483 [32m+[m
+ backend/services/investigation_service.py          |    308 [32m+[m
+ backend/services/ldap_service.py                   |     65 [32m+[m
+ backend/services/model_service.py                  |    189 [32m+[m
+ backend/services/notification_service.py           |    312 [32m+[m
+ backend/services/report_service.py                 |    856 [32m+[m
+ backend/services/risk_service.py                   |     96 [32m+[m
+ backend/services/threat_service.py                 |    614 [32m+[m
+ backend/settings.py                                |    219 [32m+[m
+ backend/threat_crud.txt                            |    Bin [31m0[m -> [32m4962[m bytes
+ backend/threat_schema.txt                          |    Bin [31m0[m -> [32m2986[m bytes
+ backend/threat_service.txt                         |    Bin [31m0[m -> [32m3936[m bytes
+ backend/threats_api.txt                            |    Bin [31m0[m -> [32m7146[m bytes
+ backend/utils/__init__.py                          |      0
+ backend/utils/config.py                            |     96 [32m+[m
+ backend/utils/data_loader.py                       |     44 [32m+[m
+ backend/utils/roles.py                             |     22 [32m+[m
+ backend/utils/security.py                          |    136 [32m+[m
+ frontend/.gitignore                                |     24 [32m+[m
+ frontend/README.md                                 |     16 [32m+[m
+ frontend/eslint.config.js                          |     21 [32m+[m
+ frontend/index.html                                |     13 [32m+[m
+ frontend/package-lock.json                         |   3926 [32m+[m
+ frontend/package.json                              |     41 [32m+[m
+ frontend/public/favicon.svg                        |      1 [32m+[m
+ frontend/public/icons.svg                          |     24 [32m+[m
+ frontend/src/App.jsx                               |     14 [32m+[m
+ frontend/src/assets/hero.png                       |    Bin [31m0[m -> [32m13057[m bytes
+ frontend/src/assets/vite.svg                       |      1 [32m+[m
+ frontend/src/context/AuthContext.jsx               |     32 [32m+[m
+ frontend/src/context/ThemeContext.jsx              |      0
+ frontend/src/index.css                             |    111 [32m+[m
+ frontend/src/main.jsx                              |     10 [32m+[m
+ frontend/src/pages/Login/Login.css                 |    362 [32m+[m
+ frontend/src/pages/Login/Login.jsx                 |    187 [32m+[m
+ frontend/src/routes/ProtectedRoute.jsx             |     11 [32m+[m
+ frontend/src/services/api.js                       |     25 [32m+[m
+ frontend/src/services/authService.js               |     31 [32m+[m
+ frontend/src/utils/constants.js                    |      0
+ frontend/vite.config.js                            |      7 [32m+[m
+ insider-threat-frontend/.gitignore                 |     24 [32m+[m
+ insider-threat-frontend/README.md                  |     16 [32m+[m
+ insider-threat-frontend/components.json            |     25 [32m+[m
+ insider-threat-frontend/eslint.config.js           |     21 [32m+[m
+ insider-threat-frontend/index.html                 |     21 [32m+[m
+ insider-threat-frontend/jsconfig.json              |      8 [32m+[m
+ insider-threat-frontend/package-lock.json          |   7868 [32m+[m
+ insider-threat-frontend/package.json               |     52 [32m+[m
+ insider-threat-frontend/project_structure.txt      |    Bin [31m0[m -> [32m27982[m bytes
+ insider-threat-frontend/public/favicon.svg         |      1 [32m+[m
+ insider-threat-frontend/public/icons.svg           |     24 [32m+[m
+ insider-threat-frontend/src/App.jsx                |      7 [32m+[m
+ insider-threat-frontend/src/assets/hero.png        |    Bin [31m0[m -> [32m13057[m bytes
+ insider-threat-frontend/src/assets/vite.svg        |      1 [32m+[m
+ .../src/components/ai/AIChatDrawer.jsx             |      0
+ .../src/components/ai/AICopilot.jsx                |      0
+ .../src/components/ai/AIRecommendationCard.jsx     |      0
+ .../src/components/ai/ExplainabilityPanel.jsx      |      0
+ .../src/components/auth/ProtectedRoute.jsx         |     56 [32m+[m
+ .../src/components/common/AnimatedBackground.jsx   |    153 [32m+[m
+ .../src/components/dashboard/AIInsights.jsx        |      0
+ .../src/components/dashboard/AIInsightsPanel.jsx   |     55 [32m+[m
+ .../src/components/dashboard/ActivityFeed.jsx      |     60 [32m+[m
+ .../src/components/dashboard/HeroBanner.jsx        |     29 [32m+[m
+ .../components/dashboard/InvestigationQueue.jsx    |    178 [32m+[m
+ .../src/components/dashboard/LiveActivityFeed.jsx  |      0
+ .../src/components/dashboard/MetricGrid.jsx        |     90 [32m+[m
+ .../src/components/dashboard/SystemHealth.jsx      |      0
+ .../src/components/dashboard/SystemStatus.jsx      |     35 [32m+[m
+ .../src/components/dashboard/ThreatTrendChart.jsx  |     49 [32m+[m
+ .../dashboard/TopSuspiciousEmployees.jsx           |    220 [32m+[m
+ .../src/components/dashboard/cards/InsightCard.jsx |      0
+ .../src/components/dashboard/cards/MetricCard.jsx  |      0
+ .../src/components/dashboard/cards/StatusCard.jsx  |      0
+ .../dashboard/charts/AreaThreatChart.jsx           |      0
+ .../dashboard/charts/BarIncidentChart.jsx          |      0
+ .../components/dashboard/charts/PieRiskChart.jsx   |      0
+ .../components/investigation/AIRecommendation.jsx  |      0
+ .../components/investigation/ActivityTimeline.jsx  |      0
+ .../src/components/investigation/EmailActivity.jsx |      0
+ .../components/investigation/EmployeeProfile.jsx   |      0
+ .../components/investigation/EmployeeSummary.jsx   |      0
+ .../src/components/investigation/FileActivity.jsx  |      0
+ .../src/components/investigation/HttpActivity.jsx  |      0
+ .../investigation/InvestigationActions.jsx         |      0
+ .../src/components/investigation/RiskScoreCard.jsx |      0
+ .../src/components/investigation/RiskTimeline.jsx  |      0
+ .../src/components/investigation/USBActivity.jsx   |      0
+ .../src/components/layout/Sidebar.jsx              |    298 [32m+[m
+ .../src/components/layout/TopNavbar.jsx            |   1592 [32m+[m
+ .../src/components/ui/AnimatedCounter.jsx          |     40 [32m+[m
+ .../src/components/ui/GlassCard.jsx                |     23 [32m+[m
+ .../src/components/ui/MetricCard.jsx               |     65 [32m+[m
+ .../src/components/ui/PageHeader.jsx               |     16 [32m+[m
+ .../src/components/ui/button.jsx                   |     57 [32m+[m
+ insider-threat-frontend/src/config/env.js          |      0
+ insider-threat-frontend/src/config/queryClient.js  |     17 [32m+[m
+ .../features/analytics/api/analyticsQueryKeys.js   |      9 [32m+[m
+ .../src/features/analytics/api/analyticsService.js |    130 [32m+[m
+ .../analytics/charts/DepartmentRiskChart.jsx       |     43 [32m+[m
+ .../analytics/charts/ModelComparisonChart.jsx      |     38 [32m+[m
+ .../analytics/charts/MonthlyTrendChart.jsx         |     40 [32m+[m
+ .../analytics/charts/RiskDistributionChart.jsx     |     46 [32m+[m
+ .../components/AnalyticsOverviewCards.jsx          |    106 [32m+[m
+ .../analytics/components/AnalyticsSkeleton.jsx     |     23 [32m+[m
+ .../analytics/components/AnalyticsToolbar.jsx      |    117 [32m+[m
+ .../src/features/analytics/hooks/useAnalytics.js   |     70 [32m+[m
+ .../src/features/analytics/pages/AnalyticsPage.jsx |    115 [32m+[m
+ .../src/features/dashboard/api/dashboardApi.js     |      0
+ .../dashboard/hooks/useDashboardSummary.js         |      0
+ .../features/employees/api/employeeQueryKeys.js    |     13 [32m+[m
+ .../src/features/employees/api/employeeService.js  |     94 [32m+[m
+ .../employees/components/AddEmployeeDialog.jsx     |    186 [32m+[m
+ .../employees/components/DeleteEmployeeDialog.jsx  |     96 [32m+[m
+ .../employees/components/EditEmployeeDialog.jsx    |    140 [32m+[m
+ .../components/EmployeeActivityTimeline.jsx        |    145 [32m+[m
+ .../employees/components/EmployeeFormFields.jsx    |    194 [32m+[m
+ .../employees/components/EmployeeOverviewCards.jsx |     88 [32m+[m
+ .../employees/components/EmployeeProfileDrawer.jsx |    348 [32m+[m
+ .../features/employees/components/EmployeeRow.jsx  |     78 [32m+[m
+ .../employees/components/EmployeeTable.jsx         |     94 [32m+[m
+ .../employees/components/EmployeeToolbar.jsx       |    138 [32m+[m
+ .../features/employees/components/RiskBadge.jsx    |     45 [32m+[m
+ .../employees/components/RiskSummaryCard.jsx       |     95 [32m+[m
+ .../employees/hooks/useEmployeeMutations.js        |     97 [32m+[m
+ .../src/features/employees/hooks/useEmployees.js   |     44 [32m+[m
+ .../employees/pages/EmployeesPage.backup.jsx       |    151 [32m+[m
+ .../src/features/employees/pages/EmployeesPage.jsx |    151 [32m+[m
+ .../explainability/api/explainabilityQueryKeys.js  |     21 [32m+[m
+ .../explainability/api/explainabilityService.js    |     29 [32m+[m
+ .../components/BehavioralFactors.jsx               |    129 [32m+[m
+ .../components/EmployeeExplanation.jsx             |    166 [32m+[m
+ .../components/ExplainabilityOverviewCards.jsx     |     91 [32m+[m
+ .../components/ExplainabilityToolbar.jsx           |    127 [32m+[m
+ .../components/FeatureImportanceTable.jsx          |    118 [32m+[m
+ .../explainability/hooks/useExplainability.js      |     67 [32m+[m
+ .../explainability/pages/ExplainabilityPage.jsx    |    212 [32m+[m
+ .../investigation/api/investigationQueryKeys.js    |     30 [32m+[m
+ .../investigation/api/investigationService.js      |    374 [32m+[m
+ .../components/EmployeeProfileCard.jsx             |    259 [32m+[m
+ .../components/InvestigationOverviewCards.jsx      |     93 [32m+[m
+ .../components/InvestigationSkeleton.jsx           |     17 [32m+[m
+ .../components/InvestigationTable.jsx              |     85 [32m+[m
+ .../components/InvestigationTimeline.jsx           |    558 [32m+[m
+ .../components/InvestigationToolbar.jsx            |     65 [32m+[m
+ .../investigation/hooks/useInvestigation.js        |     53 [32m+[m
+ .../investigation/hooks/useInvestigationDetail.js  |     47 [32m+[m
+ .../investigation/pages/InvestigationPage.jsx      |    608 [32m+[m
+ .../notifications/api/notificationService.js       |     34 [32m+[m
+ .../notifications/hooks/useNotifications.js        |     59 [32m+[m
+ .../src/features/reports/api/reportsQueryKeys.js   |     11 [32m+[m
+ .../src/features/reports/api/reportsService.js     |     85 [32m+[m
+ .../reports/components/ReportsOverviewCards.jsx    |     92 [32m+[m
+ .../reports/components/ReportsSkeleton.jsx         |     31 [32m+[m
+ .../features/reports/components/ReportsTable.jsx   |    211 [32m+[m
+ .../features/reports/components/ReportsToolbar.jsx |     65 [32m+[m
+ .../src/features/reports/hooks/useReports.js       |     59 [32m+[m
+ .../src/features/reports/pages/ReportsPage.jsx     |    527 [32m+[m
+ .../src/features/threats/api/threatQueryKeys.js    |     17 [32m+[m
+ .../src/features/threats/api/threatService.js      |     48 [32m+[m
+ .../threats/components/DeleteThreatDialog.jsx      |    296 [32m+[m
+ .../threats/components/ResolveThreatDialog.jsx     |    309 [32m+[m
+ .../threats/components/ThreatDetailsDrawer.jsx     |    561 [32m+[m
+ .../threats/components/ThreatOverviewCards.jsx     |    157 [32m+[m
+ .../src/features/threats/components/ThreatRow.jsx  |    280 [32m+[m
+ .../threats/components/ThreatSeverityBadge.jsx     |     19 [32m+[m
+ .../features/threats/components/ThreatTable.jsx    |    125 [32m+[m
+ .../features/threats/components/ThreatToolbar.jsx  |    269 [32m+[m
+ .../features/threats/hooks/useThreatMutations.js   |    179 [32m+[m
+ .../src/features/threats/hooks/useThreats.js       |     29 [32m+[m
+ .../features/threats/pages/ThreatCenterPage.jsx    |    281 [32m+[m
+ .../src/hooks/queries/useActivities.js             |      0
+ .../src/hooks/queries/useAnalytics.js              |      0
+ .../src/hooks/queries/useDashboard.js              |    187 [32m+[m
+ .../src/hooks/queries/useEmployees.js              |    130 [32m+[m
+ .../src/hooks/queries/useModelComparison.js        |     10 [32m+[m
+ .../src/hooks/queries/useReports.js                |      0
+ .../src/hooks/queries/useRiskDistribution.js       |     10 [32m+[m
+ .../src/hooks/queries/useTopSuspicious.js          |      3 [32m+[m
+ insider-threat-frontend/src/index.css              |    744 [32m+[m
+ insider-threat-frontend/src/layouts/AppShell.jsx   |    110 [32m+[m
+ insider-threat-frontend/src/lib/axios.js           |     51 [32m+[m
+ insider-threat-frontend/src/lib/utils.js           |      6 [32m+[m
+ insider-threat-frontend/src/main.jsx               |     39 [32m+[m
+ .../src/pages/auth/LoginPage.jsx                   |    415 [32m+[m
+ .../src/pages/auth/RegisterPage.jsx                |    517 [32m+[m
+ .../src/pages/dashboard/DashboardPage.jsx          |    166 [32m+[m
+ .../src/pages/employees/EmployeesPage.jsx          |   2511 [32m+[m
+ .../src/pages/investigation/InvestigationPage.jsx  |      0
+ .../src/pages/settings/SettingsPage.jsx            |    278 [32m+[m
+ .../src/pages/threat/ThreatCenterPage.jsx          |      5 [32m+[m
+ .../src/providers/AuthProvider.jsx                 |    181 [32m+[m
+ .../src/providers/QueryProvider.jsx                |      0
+ .../src/providers/ThemeProvider.jsx                |     92 [32m+[m
+ insider-threat-frontend/src/routes/AppRoutes.jsx   |    272 [32m+[m
+ .../src/services/api/activityService.js            |      0
+ .../src/services/api/analyticsService.js           |     25 [32m+[m
+ .../src/services/api/authService.js                |      0
+ .../src/services/api/axiosClient.js                |      0
+ .../src/services/api/dashboard/dashboardService.js |      0
+ .../src/services/api/dashboardService.js           |     55 [32m+[m
+ .../src/services/api/employee/employeeService.js   |      0
+ .../src/services/api/employeeService.js            |     32 [32m+[m
+ .../api/investigation/investigationService.js      |      0
+ .../src/services/api/reportService.js              |      0
+ .../src/services/api/riskService.js                |      0
+ .../src/services/auth/authService.js               |     39 [32m+[m
+ .../src/services/auth/tokenService.js              |     39 [32m+[m
+ insider-threat-frontend/src/styles/glass.css       |    101 [32m+[m
+ insider-threat-frontend/src/utils/exportUtils.js   |     93 [32m+[m
+ insider-threat-frontend/vite.config.js             |     16 [32m+[m
+ notebooks/01_feature_engineering.ipynb             |   3624 [32m+[m
+ notebooks/02_model_training.ipynb                  |      0
+ notebooks/03_model_comparison.ipynb                |      0
+ notebooks/04_risk_scoring.ipynb                    |      0
+ notebooks/05_model_evaluation.ipynb                |      0
+ notebooks/06_model_export.ipynb                    |      0
+ reports/classification_report.csv                  |      2 [32m+[m
+ reports/consensus_predictions.csv                  |   1001 [32m+[m
+ reports/consensus_summary.csv                      |      5 [32m+[m
+ reports/critical_employee_summary.csv              |      6 [32m+[m
+ reports/dataset_statistics.csv                     |     10 [32m+[m
+ reports/employee_explanations.csv                  |   1001 [32m+[m
+ reports/evaluation_summary.txt                     |     17 [32m+[m
+ reports/feature_engineering_statistics.csv         |      8 [32m+[m
+ reports/feature_importance.csv                     |     31 [32m+[m
+ reports/feature_statistics.csv                     |     24 [32m+[m
+ reports/model_comparison.csv                       |      8 [32m+[m
+ reports/model_performance.csv                      |      8 [32m+[m
+ reports/model_ranking.csv                          |      8 [32m+[m
+ reports/model_statistics.csv                       |      8 [32m+[m
+ reports/performance_metrics.csv                    |      6 [32m+[m
+ reports/risk_level_distribution.csv                |      5 [32m+[m
+ reports/risk_level_statistics.csv                  |      5 [32m+[m
+ reports/system_statistics.csv                      |      6 [32m+[m
+ reports/top_100_suspicious.csv                     |    101 [32m+[m
+ reports/top_behavioral_factors.csv                 |      8 [32m+[m
+ reports/top_suspicious.csv                         |   1001 [32m+[m
+ reports/training_time_performance.csv              |      8 [32m+[m
+ reports/training_time_ranking.csv                  |      8 [32m+[m
+ reports/training_times.csv                         |      8 [32m+[m
+ requirements.txt                                   |     20 [32m+[m
+ requirements/ai.txt                                |      0
+ requirements/base.txt                              |      0
+ requirements/database.txt                          |      0
+ requirements/dev.txt                               |      0
+ requirements/frontend.txt                          |      0
+ requirements/llm.txt                               |      0
+ scripts/data_engineering/01_dataset_inventory.py   |    254 [32m+[m
+ scripts/data_engineering/02_dataset_profiler.py    |    388 [32m+[m
+ scripts/data_engineering/03_data_dictionary.py     |    460 [32m+[m
+ scripts/data_engineering/04_data_cleaner.py        |    153 [32m+[m
+ scripts/data_engineering/05_data_integrator.py     |    206 [32m+[m
+ scripts/data_engineering/06_feature_engineering.py |    545 [32m+[m
+ scripts/data_engineering/07_model_training.py      |    919 [32m+[m
+ scripts/data_engineering/08_model_evaluation.py    |    590 [32m+[m
+ scripts/data_engineering/09_risk_scoring.py        |    448 [32m+[m
+ scripts/data_engineering/10_explainability.py      |   1496 [32m+[m
+ scripts/data_engineering/11_performance_metrics.py |   2080 [32m+[m
+ scripts/utilities/__init__.py                      |      0
+ scripts/utilities/constants.py                     |      0
+ scripts/utilities/file_utils.py                    |      0
+ scripts/utilities/logger.py                        |      0
+ start.ps1                                          |     61 [32m+[m
+ 346 files changed, 1761401 insertions(+)

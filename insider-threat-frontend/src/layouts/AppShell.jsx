@@ -70,24 +70,16 @@ export default function AppShell() {
           <TopNavbar />
 
           {/* PAGE AREA */}
-
           <main
             className="
               min-h-0
               min-w-0
               flex-1
-
               overflow-y-auto
               overflow-x-hidden
-
-              px-4
-              pb-8
-              pt-4
-
-              sm:px-5
-              lg:px-6
-              xl:px-8
-
+              p-4
+              sm:p-5
+              lg:p-6
               scrollbar-thin
               scrollbar-thumb-cyan-500/30
               scrollbar-track-transparent
@@ -97,7 +89,7 @@ export default function AppShell() {
               className="
                 mx-auto
                 w-full
-                max-w-[1700px]
+                max-w-[1600px]
               "
             >
               <Outlet />

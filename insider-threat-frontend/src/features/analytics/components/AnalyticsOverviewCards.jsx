@@ -81,20 +81,20 @@ export default function AnalyticsOverviewCards({
               y: -4,
               scale: 1.02,
             }}
-            className="rounded-3xl border border-slate-700 bg-slate-900/70 backdrop-blur-lg p-6"
+            className="rounded-2xl border border-slate-700/80 bg-slate-900/70 backdrop-blur-lg p-4"
           >
             <div className="flex items-center justify-between">
-              <Icon className={`h-8 w-8 ${card.color}`} />
+              <Icon className={`h-6 w-6 ${card.color}`} />
 
               <Activity className="text-slate-500 h-5 w-5" />
             </div>
 
-            <div className="mt-6">
-              <h3 className="text-slate-400 text-sm">
+            <div className="mt-3">
+              <h3 className="text-slate-400 text-xs font-semibold uppercase tracking-wider">
                 {card.title}
               </h3>
 
-              <p className="text-3xl font-bold text-white mt-2">
+              <p className="text-xl font-bold text-white mt-1">
                 {summary[card.key]}
               </p>
             </div>

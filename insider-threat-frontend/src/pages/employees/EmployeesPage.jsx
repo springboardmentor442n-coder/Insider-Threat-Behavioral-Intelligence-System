@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { formatPercent, formatScore } from "../../utils/formatters";
+import PageHeader from "../../components/shared/PageHeader";
 
 import {
   Search,
@@ -502,7 +504,7 @@ function EmployeeDetails({
                       text-cyan-400
                     "
                   >
-                    {data.consensus_percentage}%
+                    {formatPercent(data.consensus_percentage)}
                   </p>
 
                   <p
@@ -1288,158 +1290,40 @@ export default function EmployeesPage() {
           PAGE HEADER
       ====================================================== */}
 
-      <div
-        className="
-          flex
-          flex-col
-          justify-between
-          gap-4
-          xl:flex-row
-          xl:items-center
-        "
-      >
+      {/* ======================================================
+          PAGE HEADER
+      ====================================================== */}
 
-        <div>
-
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-            "
-          >
-
-            <div
-              className="
-                rounded-xl
-                bg-cyan-500/10
-                p-2.5
-              "
-            >
-              <Users
-                className="
-                  h-6
-                  w-6
-                  text-cyan-400
-                "
-              />
-            </div>
-
-            <div>
-
-              <h1
-                className="
-                  text-3xl
-                  font-bold
-                  tracking-tight
-                  text-white
-                "
-              >
-                Employees
-              </h1>
-
-              <p
-                className="
-                  mt-1
-                  text-sm
-                  text-slate-400
-                "
-              >
-                Live CERT insider-threat
-                behavioral intelligence
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        <div
-          className="
-            flex
-            items-center
-            gap-3
-          "
-        >
-
-          {/* LIVE INDICATOR */}
-
-          <div
-            className="
-              flex
-              items-center
-              gap-2
-              rounded-full
-              border
-              border-emerald-500/20
-              bg-emerald-500/5
-              px-3
-              py-2
-              text-xs
-              font-medium
-              text-emerald-400
-            "
-          >
-
-            <span
-              className="
-                h-2
-                w-2
-                animate-pulse
-                rounded-full
-                bg-emerald-400
-              "
-            />
-
+      <PageHeader
+        icon={Users}
+        title="Employee Intelligence"
+        subtitle={`Enterprise behavioral risk profiles • ${normalizedEmployees.length} employees evaluated`}
+        badge={
+          <div className="flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5 text-xs font-semibold text-emerald-400">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
             Live Data
-
           </div>
+        }
+      >
+        <button
+          type="button"
+          onClick={exportEmployees}
+          className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-slate-600 hover:bg-slate-800 hover:text-white"
+        >
+          <Download className="h-3.5 w-3.5" />
+          Export
+        </button>
 
-          {/* REFRESH */}
-
-          <button
-            type="button"
-            onClick={() =>
-              refetch()
-            }
-            disabled={isFetching}
-            className="
-              flex
-              items-center
-              gap-2
-              rounded-xl
-              border
-              border-slate-700
-              bg-slate-900
-              px-4
-              py-2.5
-              text-sm
-              font-medium
-              text-slate-300
-              transition
-              hover:border-slate-600
-              hover:bg-slate-800
-              hover:text-white
-              disabled:opacity-50
-            "
-          >
-
-            <RefreshCw
-              className={`h-4 w-4 ${
-                isFetching
-                  ? "animate-spin"
-                  : ""
-              }`}
-            />
-
-            Refresh
-
-          </button>
-
-        </div>
-
-      </div>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          disabled={isFetching}
+          className="flex items-center gap-1.5 rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-slate-600 hover:bg-slate-800 hover:text-white disabled:opacity-50"
+        >
+          <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
+          Refresh
+        </button>
+      </PageHeader>
 
       {/* ======================================================
           SUMMARY CARDS
@@ -2253,10 +2137,7 @@ export default function EmployeesPage() {
                             text-cyan-400
                           "
                         >
-                          {
-                            employee.consensus_percentage ??
-                            0
-                          }%
+                          {formatPercent(employee.consensus_percentage)}
                         </span>
 
                       </td>

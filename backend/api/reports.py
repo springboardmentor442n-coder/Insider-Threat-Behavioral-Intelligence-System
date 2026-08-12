@@ -54,6 +54,7 @@ def all_reports(
 @router.get("/download/{report_name}")
 def download(
     report_name: str,
+    format: str = "csv",
     current_user=Depends(
         require_roles(
             "admin",
@@ -62,7 +63,7 @@ def download(
         )
     ),
 ):
-    return download_report(report_name)
+    return download_report(report_name, export_format=format)
 
 
 # =============================================================================

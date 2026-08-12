@@ -5,6 +5,7 @@ import {
   BrainCircuit,
   CheckCircle,
 } from "lucide-react";
+import { formatPercent, formatScore } from "../../../utils/formatters";
 
 export default function EmployeeExplanation({
   explanation,
@@ -100,9 +101,7 @@ export default function EmployeeExplanation({
           </p>
 
           <p className="mt-1 font-semibold text-orange-400">
-            {Number(
-              explanation.weighted_score
-            ).toFixed(2)}
+            {formatScore(explanation.weighted_score)}
           </p>
         </div>
       </div>
@@ -120,10 +119,7 @@ export default function EmployeeExplanation({
             </p>
 
             <p className="font-semibold text-purple-400">
-              {Number(
-                explanation.Consensus_Percentage
-              ).toFixed(2)}
-              %
+              {formatPercent(explanation.Consensus_Percentage)}
             </p>
           </div>
         </div>

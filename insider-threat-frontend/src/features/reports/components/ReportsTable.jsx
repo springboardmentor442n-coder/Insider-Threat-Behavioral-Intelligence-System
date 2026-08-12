@@ -177,25 +177,44 @@ export default function ReportsTable({
                                                     disabled={!report.exists}
                                                     onClick={() =>
                                                         onDownload(
-                                                            report.name
+                                                            report.name,
+                                                            "csv"
                                                         )
                                                     }
-                                                    className="
-                                                        rounded-lg
-                                                        border
-                                                        border-transparent
-                                                        p-2
-                                                        text-slate-400
-                                                        transition
-                                                        hover:border-cyan-500/20
-                                                        hover:bg-cyan-500/10
-                                                        hover:text-cyan-300
-                                                        disabled:cursor-not-allowed
-                                                        disabled:opacity-30
-                                                    "
-                                                    title="Download report"
+                                                    className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-semibold text-cyan-400 hover:bg-slate-700 disabled:opacity-30"
+                                                    title="Export CSV"
                                                 >
-                                                    <Download className="h-4 w-4" />
+                                                    CSV
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    disabled={!report.exists}
+                                                    onClick={() =>
+                                                        onDownload(
+                                                            report.name,
+                                                            "pdf"
+                                                        )
+                                                    }
+                                                    className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-semibold text-red-400 hover:bg-slate-700 disabled:opacity-30"
+                                                    title="Export PDF"
+                                                >
+                                                    PDF
+                                                </button>
+
+                                                <button
+                                                    type="button"
+                                                    disabled={!report.exists}
+                                                    onClick={() =>
+                                                        onDownload(
+                                                            report.name,
+                                                            "excel"
+                                                        )
+                                                    }
+                                                    className="rounded-lg border border-slate-700 bg-slate-800 px-2 py-1 text-xs font-semibold text-emerald-400 hover:bg-slate-700 disabled:opacity-30"
+                                                    title="Export Excel"
+                                                >
+                                                    Excel
                                                 </button>
                                             </div>
                                         </td>

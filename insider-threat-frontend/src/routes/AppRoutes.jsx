@@ -28,6 +28,8 @@ import ModelsPage from "../features/models/pages/ModelsPage";
 import ExplainabilityPage from "../features/explainability/pages/ExplainabilityPage";
 
 import SettingsPage from "../pages/settings/SettingsPage";
+import AccountPage from "../pages/account/AccountPage";
+import VerificationPage from "../pages/verification/VerificationPage";
 
 // ============================================================
 // LAYOUT / AUTH
@@ -235,6 +237,44 @@ export default function AppRoutes() {
         <Route
           index
           element={<ReportsPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          VERIFICATION (BEHAVIORAL PATTERN VALIDATION)
+          ====================================================== */}
+
+      <Route
+        path="/verification"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<VerificationPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          ACCOUNT / PROFILE
+          ====================================================== */}
+
+      <Route
+        path="/account"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<AccountPage />}
         />
       </Route>
 

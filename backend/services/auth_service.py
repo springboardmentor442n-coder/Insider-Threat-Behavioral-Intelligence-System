@@ -11,6 +11,8 @@ from backend.repositories.user_repository import (
     create_user,
     get_all_users as repo_get_all_users,
     get_user_by_username as repo_get_user_by_username,
+    update_user_role as repo_update_user_role,
+    update_user_status as repo_update_user_status,
 )
 from backend.utils.security import (
     hash_password,
@@ -44,7 +46,7 @@ def register_user(
             db=db,
             username=username,
             password_hash=hash_password(password),
-            role=role,
+            role=role or "Security Analyst",
         )
 
         return {
@@ -74,7 +76,7 @@ def login_user(
             username,
         )
 
-        if user is None:
+        if user is None or user.is_active is False:
             return None
 
         if not verify_password(
@@ -93,6 +95,12 @@ def login_user(
         return {
             "access_token": access_token,
             "token_type": "bearer",
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "role": user.role,
+                "is_active": user.is_active,
+            }
         }
 
     finally:
@@ -134,7 +142,7 @@ def get_all_users():
             {
                 "id": user.id,
                 "username": user.username,
-                "role": user.role,
+                "role": user.role or "Security Analyst",
                 "is_active": user.is_active,
             }
             for user in users
@@ -142,4 +150,35 @@ def get_all_users():
 
     finally:
         db.close()
-        
+
+
+def update_user_role_service(user_id: int, role: str):
+    db: Session = SessionLocal()
+    try:
+        updated = repo_update_user_role(db, user_id, role)
+        if not updated:
+            return None
+        return {
+            "id": updated.id,
+            "username": updated.username,
+            "role": updated.role,
+            "is_active": updated.is_active,
+        }
+    finally:
+        db.close()
+
+
+def update_user_status_service(user_id: int, is_active: bool):
+    db: Session = SessionLocal()
+    try:
+        updated = repo_update_user_status(db, user_id, is_active)
+        if not updated:
+            return None
+        return {
+            "id": updated.id,
+            "username": updated.username,
+            "role": updated.role,
+            "is_active": updated.is_active,
+        }
+    finally:
+        db.close()

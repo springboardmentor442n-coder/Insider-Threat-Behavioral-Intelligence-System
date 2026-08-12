@@ -9,7 +9,15 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
+  Cell,
 } from "recharts";
+
+const SEVERITY_COLORS = {
+  Critical: "#ef4444",
+  High: "#f97316",
+  Medium: "#eab308",
+  Low: "#22c55e",
+};
 
 export default function ThreatTrendChart() {
   const { data, isLoading } = useRiskDistribution();
@@ -30,18 +38,32 @@ export default function ThreatTrendChart() {
 
       <ResponsiveContainer width="100%" height="90%">
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
 
-          <XAxis dataKey="Risk Level" />
+          <XAxis dataKey="Risk Level" stroke="#94a3b8" />
 
-          <YAxis />
+          <YAxis stroke="#94a3b8" />
 
-          <Tooltip />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: "#0f172a",
+              borderColor: "#334155",
+              borderRadius: "0.75rem",
+              color: "#f8fafc",
+            }}
+          />
 
           <Bar
             dataKey="Employees"
             radius={[6, 6, 0, 0]}
-          />
+          >
+            {Array.isArray(data) &&
+              data.map((entry, index) => {
+                const level = entry["Risk Level"] || entry["level"] || entry["name"];
+                const color = SEVERITY_COLORS[level] || "#06b6d4";
+                return <Cell key={`cell-${index}`} fill={color} />;
+              })}
+          </Bar>
         </BarChart>
       </ResponsiveContainer>
     </GlassCard>

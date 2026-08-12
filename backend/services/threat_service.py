@@ -8,7 +8,10 @@ The existing SQL threat CRUD operations are preserved
 for compatibility with the current application architecture.
 """
 
+from datetime import datetime, timezone
+from pathlib import Path
 from sqlalchemy.orm import Session
+from backend.data.parquet_loader import REPORTS
 
 from backend.crud.threat import (
     get_threats,
@@ -28,6 +31,13 @@ from backend.services.employee_service import (
     get_all_employee_intelligence_service,
     get_employee_intelligence_service,
 )
+
+
+from backend.utils.cert_date_helper import get_cert_date_for_user
+
+
+def _get_report_timestamp() -> str:
+    return "2011-05-31"
 
 
 # ============================================================
@@ -243,6 +253,8 @@ def _build_threat_record(record: dict) -> dict:
 
         "status": "Open",
 
+        "created_at": record.get("created_at") or _get_report_timestamp(),
+
         "threat_type": threat_type,
 
         "description": description,
@@ -381,11 +393,12 @@ def _build_threat_record(record: dict) -> dict:
             )
         ),
 
-        # ----------------------------------------------------
-        # ML report does not contain a threat event timestamp.
-        # ----------------------------------------------------
-
-        "created_at": None,
+        "created_at": (
+            record.get("created_at")
+            or record.get("date")
+            or record.get("timestamp")
+            or get_cert_date_for_user(user, rank)
+        ),
     }
 
 

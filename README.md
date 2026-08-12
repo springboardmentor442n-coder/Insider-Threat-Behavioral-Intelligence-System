@@ -1625,3 +1625,27 @@ Special thanks to
 This project is licensed under the **MIT License**.
 
 See the **LICENSE** file for additional details.
+
+---
+
+# 📌 System Specification & Enterprise Governance
+
+### Role-Based Access Control (RBAC)
+- **Security Analyst**: Full threat intelligence, employee scoring, investigation, models, explainability, reports, and verification workflow access.
+- **SOC Engineer**: Operational threat monitoring, incident response, investigation, and reporting access.
+- **Security Manager**: High-level executive overview, analytics, verification, settings, and high-level reports.
+- **Administrator**: Comprehensive system access including User Management, account activation/deactivation, and role assignments.
+
+### Alert & Incident Management States
+- **Status Lifecycle**: `Open` $\rightarrow$ `In Progress` $\rightarrow$ `Escalated` $\rightarrow$ `Resolved`
+- **Risk Severity Levels**: `Informational`, `Low`, `Medium`, `High`, `Critical`
+- **Escalation**: Escalates threat/investigation severity by one level (up to `Critical`) and logs escalation timestamps and analyst credentials.
+
+### Multi-Format Report Exports
+- **CSV Export**: Raw structured data exports for programmatic SIEM/SOC processing.
+- **PDF Export**: Formatted executive reports complete with system metadata and report table summaries.
+- **Excel Export**: Native `.xlsx` spreadsheets for audit and offline analysis.
+
+### CERT Layer 2 Behavioral Pattern Validation Methodology
+- **Validation Scope**: Evaluates 1,000 employee population features against statistical population baselines ($P_{90}$) across 6 behavioral vectors.
+- **Methodology Distinction**: Layer 2 performs **behavioral consistency validation** against CERT behavioral pattern vectors, **NOT** supervised ground-truth classification.

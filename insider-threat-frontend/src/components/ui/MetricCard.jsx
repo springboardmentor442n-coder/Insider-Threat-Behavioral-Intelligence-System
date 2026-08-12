@@ -19,7 +19,7 @@ export default function MetricCard({
         duration: 0.25,
       }}
     >
-      <GlassCard className="relative overflow-hidden p-6">
+      <GlassCard className="relative overflow-hidden p-4">
 
         {/* Background Glow */}
         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-blue-500/5" />
@@ -28,7 +28,7 @@ export default function MetricCard({
 
           <div className="flex items-center justify-between">
 
-            <p className="text-sm font-medium text-slate-400">
+            <p className="text-xs font-bold uppercase tracking-wider text-slate-400">
               {title}
             </p>
 
@@ -43,7 +43,7 @@ export default function MetricCard({
 
           </div>
 
-          <div className={`mt-5 text-4xl font-bold ${color}`}>
+          <div className={`mt-3 text-2xl font-bold ${color}`}>
 
             {typeof value === "number" ? (
               <AnimatedCounter value={value} />
@@ -53,7 +53,7 @@ export default function MetricCard({
 
           </div>
 
-          <p className="mt-3 text-sm text-slate-500">
+          <p className="mt-1.5 text-xs text-slate-500">
             {subtitle}
           </p>
 

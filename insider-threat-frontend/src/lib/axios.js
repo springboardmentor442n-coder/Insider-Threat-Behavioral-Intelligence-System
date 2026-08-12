@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000",
   timeout: 15000,
   headers: {
     "Content-Type": "application/json",
@@ -11,18 +11,11 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("access_token");
-
-    console.group("AXIOS REQUEST");
-    console.log("URL:", `${config.baseURL}${config.url}`);
-    console.log("TOKEN:", token);
+    const token = localStorage.getItem("access_token") || localStorage.getItem("token");
 
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-
-    console.log("HEADERS:", config.headers);
-    console.groupEnd();
 
     return config;
   },
@@ -30,20 +23,8 @@ api.interceptors.request.use(
 );
 
 api.interceptors.response.use(
-  (response) => {
-    console.group("AXIOS SUCCESS");
-    console.log("STATUS:", response.status);
-    console.log("DATA:", response.data);
-    console.groupEnd();
-
-    return response;
-  },
+  (response) => response,
   (error) => {
-    console.group("AXIOS ERROR");
-    console.log("STATUS:", error.response?.status);
-    console.log("DATA:", error.response?.data);
-    console.groupEnd();
-
     return Promise.reject(error);
   }
 );

@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { ShieldAlert, Activity, Wifi } from "lucide-react";
+import { ShieldAlert, Activity, Wifi, Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { useThreats } from "../hooks/useThreats";
+import PageHeader from "../../../components/shared/PageHeader";
 
 import ThreatOverviewCards from "../components/ThreatOverviewCards";
 import ThreatToolbar from "../components/ThreatToolbar";
@@ -12,7 +13,6 @@ import ResolveThreatDialog from "../components/ResolveThreatDialog";
 import DeleteThreatDialog from "../components/DeleteThreatDialog";
 
 export default function ThreatCenterPage() {
-
   const {
     data = [],
     isLoading,
@@ -20,9 +20,7 @@ export default function ThreatCenterPage() {
     error,
   } = useThreats();
 
-  const threats = Array.isArray(data)
-    ? data
-    : [];
+  const threats = Array.isArray(data) ? data : [];
 
   const [search, setSearch] = useState("");
   const [severity, setSeverity] = useState("");
@@ -35,208 +33,79 @@ export default function ThreatCenterPage() {
   const [deleteOpen, setDeleteOpen] = useState(false);
 
   const filteredThreats = useMemo(() => {
-
     let list = [...threats];
 
     list = list.filter((t) => {
-
       const matchesSearch =
-        t.employee_name
-          ?.toLowerCase()
-          .includes(search.toLowerCase()) ||
+        t.employee_name?.toLowerCase().includes(search.toLowerCase()) ||
+        t.user?.toLowerCase().includes(search.toLowerCase()) ||
+        t.employee_id?.toString().toLowerCase().includes(search.toLowerCase()) ||
+        t.department?.toLowerCase().includes(search.toLowerCase()) ||
+        t.threat_type?.toLowerCase().includes(search.toLowerCase());
 
-        t.department
-          ?.toLowerCase()
-          .includes(search.toLowerCase()) ||
+      const matchesSeverity = !severity || t.severity === severity;
+      const matchesStatus = !status || t.status === status;
 
-        t.threat_type
-          ?.toLowerCase()
-          .includes(search.toLowerCase());
-
-      const matchesSeverity =
-        !severity ||
-        t.severity === severity;
-
-      const matchesStatus =
-        !status ||
-        t.status === status;
-
-      return (
-        matchesSearch &&
-        matchesSeverity &&
-        matchesStatus
-      );
-
+      return matchesSearch && matchesSeverity && matchesStatus;
     });
 
     if (sortBy === "risk") {
-
-      list.sort(
-        (a, b) =>
-          b.risk_score - a.risk_score
-      );
-
-    }
-
-    if (sortBy === "latest") {
-
-      list.sort(
-        (a, b) =>
-          new Date(b.created_at) -
-          new Date(a.created_at)
-      );
-
-    }
-
-    if (sortBy === "oldest") {
-
-      list.sort(
-        (a, b) =>
-          new Date(a.created_at) -
-          new Date(b.created_at)
-      );
-
+      list.sort((a, b) => b.risk_score - a.risk_score);
+    } else if (sortBy === "latest") {
+      list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    } else if (sortBy === "oldest") {
+      list.sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
     }
 
     return list;
+  }, [threats, search, severity, status, sortBy]);
 
-  }, [
-    threats,
-    search,
-    severity,
-    status,
-    sortBy,
-  ]);
-
-  if (isLoading)
+  if (isLoading) {
     return (
-      <div className="flex h-[60vh] items-center justify-center text-2xl">
-        Loading Threat Center...
+      <div className="flex h-[60vh] flex-col items-center justify-center gap-3">
+        <Loader2 className="h-8 w-8 animate-spin text-cyan-400" />
+        <p className="text-sm font-semibold text-slate-300">Loading Threat Intelligence Console...</p>
       </div>
     );
+  }
 
-  if (isError)
+  if (isError) {
     return (
-      <div className="text-red-500">
-        {error.message}
+      <div className="rounded-2xl border border-red-500/30 bg-red-500/10 p-6 text-red-300">
+        <h3 className="text-lg font-bold">Failed to load threats</h3>
+        <p className="mt-1 text-xs">{error?.message || "Unable to retrieve threat intelligence feeds."}</p>
       </div>
     );
+  }
 
   return (
-
-    <div className="mx-auto max-w-7xl space-y-8 pb-10">
-
-      {/* Hero */}
-
-      <motion.div
-
-        initial={{
-          opacity: 0,
-          y: 25,
-        }}
-
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-
-        className="
-          relative
-
-          overflow-hidden
-
-          rounded-3xl
-
-          border
-
-          border-cyan-500/20
-
-          bg-white/5
-
-          backdrop-blur-3xl
-
-          p-10
-
-          shadow-[0_0_70px_rgba(6,182,212,.12)]
-        "
-
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="space-y-6 pb-8"
+    >
+      {/* Header */}
+      <PageHeader
+        icon={ShieldAlert}
+        title="Threat Center"
+        subtitle="Active enterprise anomaly monitoring & threat intelligence feed"
+        badge={
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
+            <Wifi className="h-3 w-3 animate-pulse" />
+            Live Threat Stream
+          </span>
+        }
       >
+        <span className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300">
+          100 Top Suspicious Records
+        </span>
+      </PageHeader>
 
-        <div className="absolute right-0 top-0 h-72 w-72 rounded-full bg-cyan-500/10 blur-[120px]" />
+      {/* Summary Metrics */}
+      <ThreatOverviewCards threats={filteredThreats} />
 
-        <div className="absolute left-0 bottom-0 h-64 w-64 rounded-full bg-blue-500/10 blur-[120px]" />
-
-        <div className="flex items-center justify-between">
-
-          <div>
-
-            <div className="flex items-center gap-3">
-
-              <ShieldAlert
-                size={38}
-                className="text-cyan-400"
-              />
-
-              <h1 className="text-5xl font-bold">
-
-                Threat Center
-
-              </h1>
-
-            </div>
-
-            <p className="mt-4 max-w-2xl text-lg text-slate-400">
-
-              AI-powered monitoring of insider threats,
-              anomalous employee behaviour,
-              suspicious activities and real-time investigations.
-
-            </p>
-
-          </div>
-
-          <div className="space-y-4">
-
-            <div className="flex items-center gap-3 rounded-full bg-green-500/15 px-5 py-3">
-
-              <Wifi
-                className="text-green-400"
-                size={18}
-              />
-
-              <span className="font-semibold text-green-400">
-
-                System Online
-
-              </span>
-
-            </div>
-
-            <div className="flex items-center gap-3 rounded-full bg-cyan-500/15 px-5 py-3">
-
-              <Activity
-                className="text-cyan-400"
-                size={18}
-              />
-
-              <span className="font-semibold text-cyan-300">
-
-                Live Monitoring Enabled
-
-              </span>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </motion.div>
-
-      <ThreatOverviewCards
-        threats={filteredThreats}
-      />
-
+      {/* Toolbar */}
       <ThreatToolbar
         search={search}
         setSearch={setSearch}
@@ -249,11 +118,13 @@ export default function ThreatCenterPage() {
         total={filteredThreats.length}
       />
 
+      {/* Threat Table */}
       <ThreatTable
         threats={filteredThreats}
         onRowClick={setSelectedThreat}
       />
 
+      {/* Threat Details Drawer */}
       <ThreatDetailsDrawer
         open={selectedThreat !== null}
         threat={selectedThreat}
@@ -262,6 +133,7 @@ export default function ThreatCenterPage() {
         onDelete={() => setDeleteOpen(true)}
       />
 
+      {/* Dialogs */}
       <ResolveThreatDialog
         open={resolveOpen}
         threat={selectedThreat}
@@ -273,9 +145,6 @@ export default function ThreatCenterPage() {
         threat={selectedThreat}
         onClose={() => setDeleteOpen(false)}
       />
-
-    </div>
-
+    </motion.div>
   );
-
 }

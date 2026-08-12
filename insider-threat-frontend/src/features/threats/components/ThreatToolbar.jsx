@@ -14,256 +14,80 @@ export default function ThreatToolbar({
 }) {
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        y: 15,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      className="
-        rounded-3xl
-
-        border
-        border-white/10
-
-        bg-white/5
-
-        backdrop-blur-2xl
-
-        shadow-xl
-
-        shadow-cyan-500/10
-
-        p-6
-      "
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="rounded-2xl border border-slate-800/80 bg-slate-900/70 p-5 backdrop-blur-xl shadow-lg"
     >
-      <div
-        className="
-          flex
-
-          flex-wrap
-
-          gap-4
-
-          items-center
-        "
-      >
+      <div className="flex flex-wrap gap-4 items-center justify-between">
         {/* Search */}
-
         <div className="relative flex-1 min-w-[280px]">
-
           <Search
-            size={20}
-            className="
-              absolute
-
-              left-4
-
-              top-3.5
-
-              text-cyan-400
-            "
+            size={18}
+            className="absolute left-3.5 top-3 text-cyan-400"
           />
-
           <input
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-            placeholder="Search employee, department or threat..."
-            className="
-              w-full
-
-              rounded-2xl
-
-              border
-              border-white/10
-
-              bg-slate-900/60
-
-              pl-12
-
-              pr-4
-
-              py-3
-
-              outline-none
-
-              transition
-
-              focus:border-cyan-400
-
-              focus:ring-2
-
-              focus:ring-cyan-500/20
-            "
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search employee ID, department, or threat pattern..."
+            className="w-full rounded-xl border border-slate-700/80 bg-slate-950/80 pl-10 pr-4 py-2 text-xs md:text-sm text-slate-100 placeholder-slate-500 outline-none transition focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30"
           />
-
         </div>
 
-        {/* Severity */}
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Severity */}
+          <div className="flex items-center gap-2">
+            <Filter size={16} className="text-cyan-400" />
+            <select
+              value={severity}
+              onChange={(e) => setSeverity(e.target.value)}
+              className="rounded-xl border border-slate-700/80 bg-slate-950/80 px-3 py-2 text-xs md:text-sm text-slate-200 outline-none transition focus:border-cyan-500"
+            >
+              <option value="">All Severities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
 
-        <div className="flex items-center gap-2">
-
-          <Filter
-            size={18}
-            className="text-cyan-400"
-          />
-
+          {/* Status */}
           <select
-            value={severity}
-            onChange={(e) =>
-              setSeverity(e.target.value)
-            }
-            className="
-              rounded-xl
-
-              border
-
-              border-white/10
-
-              bg-slate-900/60
-
-              px-4
-
-              py-3
-
-              outline-none
-            "
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="rounded-xl border border-slate-700/80 bg-slate-950/80 px-3 py-2 text-xs md:text-sm text-slate-200 outline-none transition focus:border-cyan-500"
           >
-            <option value="">All Severity</option>
-            <option>Critical</option>
-            <option>High</option>
-            <option>Medium</option>
-            <option>Low</option>
+            <option value="">All Statuses</option>
+            <option value="Open">Open</option>
+            <option value="Investigating">Investigating</option>
+            <option value="Resolved">Resolved</option>
           </select>
 
+          {/* Sort */}
+          <div className="flex items-center gap-2">
+            <ArrowUpDown size={16} className="text-cyan-400" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="rounded-xl border border-slate-700/80 bg-slate-950/80 px-3 py-2 text-xs md:text-sm text-slate-200 outline-none transition focus:border-cyan-500"
+            >
+              <option value="risk">Highest Risk First</option>
+              <option value="latest">Newest First</option>
+              <option value="oldest">Oldest First</option>
+            </select>
+          </div>
         </div>
-
-        {/* Status */}
-
-        <select
-          value={status}
-          onChange={(e) =>
-            setStatus(e.target.value)
-          }
-          className="
-            rounded-xl
-
-            border
-
-            border-white/10
-
-            bg-slate-900/60
-
-            px-4
-
-            py-3
-          "
-        >
-          <option value="">All Status</option>
-          <option>Open</option>
-          <option>Resolved</option>
-          <option>Investigating</option>
-        </select>
-
-        {/* Sort */}
-
-        <div className="flex items-center gap-2">
-
-          <ArrowUpDown
-            size={18}
-            className="text-cyan-400"
-          />
-
-          <select
-            value={sortBy}
-            onChange={(e) =>
-              setSortBy(e.target.value)
-            }
-            className="
-              rounded-xl
-
-              border
-
-              border-white/10
-
-              bg-slate-900/60
-
-              px-4
-
-              py-3
-            "
-          >
-            <option value="risk">
-              Highest Risk
-            </option>
-
-            <option value="latest">
-              Newest
-            </option>
-
-            <option value="oldest">
-              Oldest
-            </option>
-
-          </select>
-
-        </div>
-
       </div>
 
-      <div
-        className="
-          mt-6
-
-          flex
-
-          items-center
-
-          justify-between
-
-          border-t
-
-          border-white/10
-
-          pt-5
-        "
-      >
+      <div className="mt-4 flex items-center justify-between border-t border-slate-800/80 pt-3 text-xs">
         <span className="text-slate-400">
-          Showing
-          <span className="ml-2 font-semibold text-cyan-400">
-            {total}
-          </span>
-          {" "}threats
+          Displaying <span className="font-bold text-cyan-400">{total}</span> threat records
         </span>
 
-        <div
-          className="
-            rounded-full
-
-            border
-
-            border-cyan-500/30
-
-            bg-cyan-500/10
-
-            px-4
-
-            py-2
-
-            text-sm
-
-            text-cyan-300
-          "
-        >
-          Live Monitoring
-        </div>
-
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold text-cyan-300">
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          Active ML Detection Feed
+        </span>
       </div>
-
     </motion.div>
   );
 }

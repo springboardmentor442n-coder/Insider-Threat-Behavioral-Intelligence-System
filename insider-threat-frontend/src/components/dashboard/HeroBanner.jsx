@@ -1,29 +1,27 @@
 import { ShieldCheck } from "lucide-react";
-import { motion } from "framer-motion";
+import PageHeader from "../shared/PageHeader";
 
 export default function HeroBanner() {
   return (
-    <motion.section
-      initial={{ opacity: 0, y: -25 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      className="rounded-2xl border border-cyan-500/20 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 p-8 shadow-lg"
+    <PageHeader
+      icon={ShieldCheck}
+      title="Security Operations Overview"
+      subtitle="Real-time behavioral intelligence across the enterprise • CERT Dataset Baseline"
+      badge={
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold text-emerald-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          Active Intelligence
+        </span>
+      }
     >
-      <div className="flex items-center gap-4">
-        <div className="rounded-xl bg-cyan-500/10 p-4">
-          <ShieldCheck className="h-10 w-10 text-cyan-400" />
-        </div>
-
-        <div>
-          <h1 className="text-4xl font-bold text-white">
-            SentinelAI Dashboard
-          </h1>
-
-          <p className="mt-2 text-slate-400">
-            Insider Threat Behavioral Intelligence System
-          </p>
-        </div>
+      <div className="flex items-center gap-2">
+        <span className="rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300">
+          7-Model Ensemble
+        </span>
+        <span className="rounded-xl border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-xs font-semibold text-blue-300">
+          1,000 Employees Evaluated
+        </span>
       </div>
-    </motion.section>
+    </PageHeader>
   );
 }

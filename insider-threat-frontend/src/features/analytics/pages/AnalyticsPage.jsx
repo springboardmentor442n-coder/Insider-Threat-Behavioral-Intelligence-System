@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { BarChart3 } from "lucide-react";
+import { BarChart3, Activity } from "lucide-react";
 
+import PageHeader from "../../../components/shared/PageHeader";
 import useAnalytics from "../hooks/useAnalytics";
 
 import AnalyticsOverviewCards from "../components/AnalyticsOverviewCards";
@@ -38,39 +39,22 @@ export default function AnalyticsPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
 
-            className="space-y-6"
+            className="space-y-5 pb-6"
 
         >
 
-            <section className="rounded-3xl border border-cyan-500/20 bg-slate-900/70 p-8">
-
-                <div className="flex items-center gap-4">
-
-                    <div className="rounded-2xl bg-cyan-500/20 p-4">
-
-                        <BarChart3 className="h-8 w-8 text-cyan-400" />
-
-                    </div>
-
-                    <div>
-
-                        <h1 className="text-4xl font-bold text-white">
-
-                            Analytics Center
-
-                        </h1>
-
-                        <p className="mt-2 text-slate-400">
-
-                            AI Model Performance, Dataset Statistics and Insider Threat Analytics
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
+            {/* PAGE HEADER */}
+            <PageHeader
+                icon={BarChart3}
+                title="Analytics Center"
+                subtitle="AI Model Performance, Dataset Statistics and Insider Threat Analytics"
+                badge={
+                    <span className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-500/20 bg-cyan-500/10 px-3 py-1.5 text-xs font-semibold text-cyan-300">
+                        <Activity className="h-3.5 w-3.5 text-cyan-400" />
+                        7-Model Ensemble
+                    </span>
+                }
+            />
 
             <AnalyticsOverviewCards
 
@@ -80,7 +64,7 @@ export default function AnalyticsPage() {
 
             <AnalyticsToolbar />
 
-            <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
 
                 <ModelComparisonChart
 

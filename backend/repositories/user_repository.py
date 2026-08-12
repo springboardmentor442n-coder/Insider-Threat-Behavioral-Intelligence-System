@@ -96,3 +96,31 @@ def delete_user(
     db.commit()
 
     return True
+
+
+def update_user_role(
+    db: Session,
+    user_id: int,
+    role: str,
+) -> Optional[User]:
+    user = get_user_by_id(db, user_id)
+    if not user:
+        return None
+    user.role = role
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+def update_user_status(
+    db: Session,
+    user_id: int,
+    is_active: bool,
+) -> Optional[User]:
+    user = get_user_by_id(db, user_id)
+    if not user:
+        return None
+    user.is_active = is_active
+    db.commit()
+    db.refresh(user)
+    return user

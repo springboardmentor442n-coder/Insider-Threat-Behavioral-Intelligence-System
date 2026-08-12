@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
+
 import {
   Search,
   RefreshCcw,
@@ -16,7 +18,15 @@ import EmployeeProfileCard from "../components/EmployeeProfileCard";
 import InvestigationOverviewCards from "../components/InvestigationOverviewCards";
 import InvestigationTimeline from "../components/InvestigationTimeline";
 
+import { useAuth } from "../../../providers/AuthProvider";
+import investigationService from "../api/investigationService";
+import PageHeader from "../../../components/shared/PageHeader";
+
 export default function InvestigationPage() {
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const caseIdParam = searchParams.get("caseId") || searchParams.get("employee");
+
   const {
     cases,
     loading,
@@ -27,19 +37,24 @@ export default function InvestigationPage() {
   const [search, setSearch] = useState("");
   const [selectedCaseId, setSelectedCaseId] = useState("");
 
-  /*
-  |--------------------------------------------------------------------------
-  | Automatically select the highest-risk investigation
-  |--------------------------------------------------------------------------
-  |
-  | Threat Center defaults to highest risk.
-  | Investigation now follows the same behaviour.
-  |
-  */
   useEffect(() => {
     if (!cases.length) {
       setSelectedCaseId("");
       return;
+    }
+
+    if (caseIdParam) {
+      const match = cases.find(
+        (item) =>
+          item.id?.toString().toLowerCase() === caseIdParam.toLowerCase() ||
+          item.employee?.toString().toLowerCase() === caseIdParam.toLowerCase() ||
+          item.user?.toString().toLowerCase() === caseIdParam.toLowerCase()
+      );
+
+      if (match) {
+        setSelectedCaseId(match.id);
+        return;
+      }
     }
 
     const selectedStillExists = cases.some(
@@ -49,7 +64,7 @@ export default function InvestigationPage() {
     if (!selectedStillExists) {
       setSelectedCaseId(cases[0].id);
     }
-  }, [cases, selectedCaseId]);
+  }, [cases, selectedCaseId, caseIdParam]);
 
   /*
   |--------------------------------------------------------------------------
@@ -162,12 +177,48 @@ export default function InvestigationPage() {
       }
 
       toast.success(
-        "Investigation data refreshed successfully."
+        "Investigation data refreshed."
       );
     } catch {
       toast.error(
         "Unable to refresh investigation data."
       );
+    }
+  };
+
+  const handleAssignToMe = async () => {
+    if (!selectedCaseId) return;
+    try {
+      await investigationService.assignCase(selectedCaseId, user?.username || "Analyst");
+      toast.success("Case assigned successfully.");
+      refetchDetail();
+      refetch();
+    } catch {
+      toast.error("Failed to assign case.");
+    }
+  };
+
+  const handleEscalate = async () => {
+    if (!selectedCaseId) return;
+    try {
+      await investigationService.escalateCase(selectedCaseId);
+      toast.success("Case escalated to higher severity.");
+      refetchDetail();
+      refetch();
+    } catch {
+      toast.error("Failed to escalate case.");
+    }
+  };
+
+  const handleStatusChange = async (newStatus) => {
+    if (!selectedCaseId) return;
+    try {
+      await investigationService.updateStatus(selectedCaseId, newStatus);
+      toast.success(`Case status updated to ${newStatus}.`);
+      refetchDetail();
+      refetch();
+    } catch {
+      toast.error("Failed to update status.");
     }
   };
 
@@ -260,35 +311,21 @@ export default function InvestigationPage() {
           HEADER
       ====================================================== */}
 
-      <section
-        className="
-          rounded-3xl
-          border
-          border-cyan-500/20
-          bg-slate-900/70
-          p-8
-        "
-      >
-        <div className="flex items-center gap-4">
-          <div className="rounded-2xl bg-cyan-500/20 p-4">
-            <ShieldAlert
-              className="text-cyan-400"
-              size={34}
-            />
-          </div>
+      {/* =====================================================
+          HEADER
+      ====================================================== */}
 
-          <div>
-            <h1 className="text-4xl font-bold text-white">
-              Investigation Center
-            </h1>
-
-            <p className="mt-2 text-slate-400">
-              Investigate suspicious insider threat cases
-              and review supporting evidence.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        icon={ShieldAlert}
+        title="Investigation Center"
+        subtitle="Active insider-threat investigations, case management, and analyst response"
+        badge={
+          <span className="inline-flex items-center gap-1.5 rounded-full border border-cyan-500/20 bg-cyan-500/10 px-3 py-1 text-[11px] font-semibold text-cyan-300">
+            <FileText size={13} />
+            {cases.length} {cases.length === 1 ? "Case" : "Cases"}
+          </span>
+        }
+      />
 
       {/* =====================================================
           SEARCH + REFRESH
@@ -548,6 +585,41 @@ export default function InvestigationPage() {
               Loading case details...
             </div>
           )}
+
+          {/* Action Bar */}
+          <section className="mb-4 flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-cyan-500/20 bg-slate-900/80 p-4 backdrop-blur-xl">
+            <div className="flex flex-wrap items-center gap-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">Incident Response Actions:</span>
+              <button
+                type="button"
+                onClick={handleAssignToMe}
+                className="rounded-xl border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1.5 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-500/20"
+              >
+                Assign To Me ({user?.username || "Analyst"})
+              </button>
+              <button
+                type="button"
+                onClick={handleEscalate}
+                className="rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-1.5 text-xs font-semibold text-red-300 transition hover:bg-red-500/20"
+              >
+                Escalate Severity
+              </button>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold text-slate-400">Case Status:</span>
+              <select
+                value={selectedCase.status || "Open"}
+                onChange={(e) => handleStatusChange(e.target.value)}
+                className="rounded-xl border border-slate-700 bg-slate-800 px-3 py-1.5 text-xs font-medium text-slate-200 focus:border-cyan-500 focus:outline-none"
+              >
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Escalated">Escalated</option>
+                <option value="Resolved">Resolved</option>
+              </select>
+            </div>
+          </section>
 
           <InvestigationOverviewCards
             employee={selectedCase}

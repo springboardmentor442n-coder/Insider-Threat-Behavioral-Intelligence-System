@@ -13,6 +13,7 @@ import FeatureImportanceTable from "../components/FeatureImportanceTable";
 import BehavioralFactors from "../components/BehavioralFactors";
 import EmployeeExplanation from "../components/EmployeeExplanation";
 import ExplainabilityToolbar from "../components/ExplainabilityToolbar";
+import PageHeader from "../../../components/shared/PageHeader";
 
 export default function ExplainabilityPage() {
   const [employeeInput, setEmployeeInput] =
@@ -79,39 +80,14 @@ export default function ExplainabilityPage() {
         opacity: 1,
         y: 0,
       }}
-      className="space-y-6"
+      className="space-y-5 pb-6"
     >
       {/* Header */}
-
-      <section
-        className="
-          rounded-3xl
-          border border-cyan-500/20
-          bg-slate-900/70
-          p-8
-        "
-      >
-        <div className="flex items-center gap-4">
-          <div className="rounded-2xl bg-cyan-500/20 p-4">
-            <BrainCircuit
-              className="text-cyan-400"
-              size={34}
-            />
-          </div>
-
-          <div>
-            <h1 className="text-4xl font-bold text-white">
-              Explainability Center
-            </h1>
-
-            <p className="mt-2 text-slate-400">
-              Understand the behavioral factors and
-              statistical signals behind insider threat
-              predictions.
-            </p>
-          </div>
-        </div>
-      </section>
+      <PageHeader
+        icon={BrainCircuit}
+        title="Explainability Center"
+        subtitle="Why was this employee flagged? Understand the behavioral factors, SHAP importance, and statistical signals behind anomaly predictions."
+      />
 
       {/* Toolbar */}
 

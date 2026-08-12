@@ -337,6 +337,15 @@ const investigationService = {
   */
 
   async getCases() {
+    try {
+      const { data } = await api.get("/investigation");
+      if (Array.isArray(data) && data.length > 0) {
+        return data.map(normalizeThreat).filter(Boolean);
+      }
+    } catch (err) {
+      console.warn("Fallback to /threats/ endpoint:", err);
+    }
+
     const { data } = await api.get("/threats/");
 
     if (!Array.isArray(data)) {
@@ -346,6 +355,18 @@ const investigationService = {
     return data
       .map(normalizeThreat)
       .filter(Boolean);
+  },
+
+  /*
+  |--------------------------------------------------------------------------
+  | Create or Open investigation case
+  |--------------------------------------------------------------------------
+  */
+
+  async createCase(employeeId) {
+    if (!employeeId) return null;
+    const { data } = await api.post(`/investigation/create/${encodeURIComponent(employeeId)}`);
+    return normalizeThreat(data);
   },
 
   /*
@@ -363,10 +384,41 @@ const investigationService = {
       return null;
     }
 
+    try {
+      const { data } = await api.get(`/investigation/${encodeURIComponent(caseId)}`);
+      if (data) return normalizeThreat(data);
+    } catch (err) {
+      // fallback to threat endpoint
+    }
+
     const { data } = await api.get(
       `/threats/${encodeURIComponent(caseId)}`
     );
 
+    return normalizeThreat(data);
+  },
+
+  async escalateCase(caseId) {
+    if (!caseId) return null;
+    const { data } = await api.post(`/investigation/${encodeURIComponent(caseId)}/escalate`);
+    return normalizeThreat(data);
+  },
+
+  async updateStatus(caseId, status) {
+    if (!caseId) return null;
+    const { data } = await api.post(`/investigation/${encodeURIComponent(caseId)}/status?status=${encodeURIComponent(status)}`);
+    return normalizeThreat(data);
+  },
+
+  async assignCase(caseId, analyst) {
+    if (!caseId) return null;
+    const { data } = await api.post(`/investigation/${encodeURIComponent(caseId)}/assign?analyst=${encodeURIComponent(analyst)}`);
+    return normalizeThreat(data);
+  },
+
+  async addNote(caseId, note) {
+    if (!caseId) return null;
+    const { data } = await api.post(`/investigation/${encodeURIComponent(caseId)}/notes?note=${encodeURIComponent(note)}`);
     return normalizeThreat(data);
   },
 };

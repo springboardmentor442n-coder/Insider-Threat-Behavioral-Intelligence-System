@@ -18,16 +18,24 @@ export default function ModelComparisonChart({ data = [] }) {
       <div className="h-80">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
+            <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
 
-            <XAxis dataKey="model" />
+            <XAxis dataKey="model" stroke="#94a3b8" />
 
-            <YAxis />
+            <YAxis stroke="#94a3b8" />
 
-            <Tooltip />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: "#0f172a",
+                borderColor: "#334155",
+                borderRadius: "0.75rem",
+                color: "#f8fafc",
+              }}
+            />
 
             <Bar
               dataKey="accuracy"
+              fill="#06b6d4"
               radius={[8, 8, 0, 0]}
             />
           </BarChart>

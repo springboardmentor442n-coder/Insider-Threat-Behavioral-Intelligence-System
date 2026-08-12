@@ -5,7 +5,12 @@ import {
     Download,
     Radio,
     X,
+    Search,
+    AlertCircle,
+    FileSpreadsheet,
+    FileCode,
 } from "lucide-react";
+import PageHeader from "../../../components/shared/PageHeader";
 import { useMemo, useState } from "react";
 
 import useReports from "../hooks/useReports";
@@ -28,7 +33,9 @@ function formatReportName(name) {
         );
 }
 
-function formatCellValue(value) {
+import { formatPercent, formatScore, formatNumber, formatDecimal } from "../../../utils/formatters";
+
+function formatCellValue(value, key = "") {
     if (
         value === null ||
         value === undefined ||
@@ -39,6 +46,22 @@ function formatCellValue(value) {
 
     if (typeof value === "object") {
         return JSON.stringify(value);
+    }
+
+    const keyLower = String(key).toLowerCase();
+    const isIdOrCode = keyLower.includes("id") || keyLower.includes("user") || keyLower === "rank";
+
+    if (typeof value === "number" || (!isIdOrCode && !isNaN(value) && typeof value === "string" && value.trim() !== "")) {
+        const num = Number(value);
+        if (Number.isFinite(num)) {
+            if (keyLower.includes("percent") || keyLower.includes("consensus")) {
+                return formatPercent(num);
+            }
+            if (keyLower.includes("score")) {
+                return formatScore(num);
+            }
+            return formatDecimal(num);
+        }
     }
 
     return String(value);
@@ -148,7 +171,8 @@ export default function ReportsPage() {
         );
 
     const handleDownload = async (
-        reportName
+        reportName,
+        format = "csv"
     ) => {
         try {
             setDownloading(true);
@@ -158,7 +182,8 @@ export default function ReportsPage() {
              * at download time.
              */
             await reportsService.downloadReport(
-                reportName
+                reportName,
+                format
             );
         } catch (downloadError) {
             console.error(
@@ -197,76 +222,28 @@ export default function ReportsPage() {
                 HEADER
                 ===================================================== */}
 
-            <section
-                className="
-                    rounded-2xl
-                    border
-                    border-cyan-500/15
-                    bg-slate-900/65
-                    px-5
-                    py-5
-                "
+            {/* HEADER */}
+            <PageHeader
+                icon={FileText}
+                title="Reports Center"
+                subtitle="Current ML intelligence, investigation data and downloadable reports"
+                badge={
+                    <span className="inline-flex items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-400">
+                        <Radio className="h-3 w-3 animate-pulse" />
+                        Live
+                    </span>
+                }
             >
-                <div className="flex flex-wrap items-center justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-3">
-                        <div className="rounded-xl bg-cyan-500/10 p-3">
-                            <FileText className="h-6 w-6 text-cyan-400" />
-                        </div>
-
-                        <div className="min-w-0">
-                            <div className="flex items-center gap-2">
-                                <h1 className="truncate text-2xl font-bold text-white">
-                                    Reports Center
-                                </h1>
-
-                                <span className="hidden items-center gap-1 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-400 sm:inline-flex">
-                                    <Radio className="h-3 w-3" />
-                                    Live
-                                </span>
-                            </div>
-
-                            <p className="mt-1 text-sm text-slate-400">
-                                Current ML intelligence,
-                                investigation data and
-                                downloadable reports.
-                            </p>
-                        </div>
-                    </div>
-
-                    <button
-                        type="button"
-                        onClick={handleRefresh}
-                        disabled={refreshing}
-                        className="
-                            inline-flex
-                            items-center
-                            gap-2
-                            rounded-xl
-                            border
-                            border-cyan-500/20
-                            bg-cyan-500/10
-                            px-3
-                            py-2
-                            text-sm
-                            font-medium
-                            text-cyan-300
-                            transition
-                            hover:bg-cyan-500/15
-                            disabled:cursor-not-allowed
-                            disabled:opacity-50
-                        "
-                    >
-                        <RefreshCcw
-                            className={`h-4 w-4 ${
-                                refreshing
-                                    ? "animate-spin"
-                                    : ""
-                            }`}
-                        />
-
-                        Refresh
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={handleRefresh}
+                    disabled={refreshing}
+                    className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-300 transition hover:border-slate-600 hover:bg-slate-800 hover:text-white disabled:opacity-50"
+                >
+                    <RefreshCcw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+                    Refresh
+                </button>
+            </PageHeader>
 
                 <div className="mt-4 flex flex-wrap items-center gap-2 text-xs text-slate-500">
                     <span>
@@ -283,7 +260,6 @@ export default function ReportsPage() {
                         at request time.
                     </span>
                 </div>
-            </section>
 
             {/* =====================================================
                 ERROR
@@ -508,7 +484,8 @@ export default function ReportsPage() {
                                                             {formatCellValue(
                                                                 record[
                                                                     column
-                                                                ]
+                                                                ],
+                                                                column
                                                             )}
                                                         </td>
                                                     )
