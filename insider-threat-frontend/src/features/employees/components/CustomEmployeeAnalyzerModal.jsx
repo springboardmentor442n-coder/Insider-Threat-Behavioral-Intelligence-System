@@ -236,9 +236,9 @@ export default function CustomEmployeeAnalyzerModal({ open, onClose, onEmployeeA
 
             {/* Presets Bar */}
             <div className="px-6 py-3 border-b border-slate-800/60 bg-slate-950/40 flex items-center justify-between gap-4 flex-wrap">
-              <span className="text-xs font-medium text-slate-400 flex items-center gap-1.5">
+              <span className="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
                 <Sliders className="h-3.5 w-3.5 text-cyan-400" />
-                Quick Presets:
+                Quick Presets (Demonstration / Test Vectors):
               </span>
               <div className="flex items-center gap-2">
                 {Object.entries(PRESETS).map(([key, p]) => (

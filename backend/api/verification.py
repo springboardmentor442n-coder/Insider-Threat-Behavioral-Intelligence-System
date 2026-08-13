@@ -110,6 +110,11 @@ def evaluate_custom_employee(payload: Dict[str, Any]):
     """
     try:
         return evaluate_custom_employee_features(payload)
+    except ValueError as val_err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(val_err),
+        )
     except Exception as err:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -130,6 +135,11 @@ def add_custom_employee(payload: Dict[str, Any]):
     """
     try:
         return add_custom_employee_to_system(payload)
+    except ValueError as val_err:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(val_err),
+        )
     except Exception as err:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

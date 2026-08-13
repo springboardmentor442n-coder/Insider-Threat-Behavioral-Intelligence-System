@@ -18,6 +18,7 @@ from backend.api.threats import router as threats_router
 from backend.api.investigation import router as investigation_router
 from backend.api.notifications import router as notifications_router
 from backend.api.verification import router as verification_router
+from backend.api.threat_analysis import router as threat_analysis_router
 from backend.api import activity
 from backend.api import risk
 
@@ -223,5 +224,10 @@ app.include_router(
 # Verification -> prefix="/verification" defined inside verification.py
 app.include_router(
     verification_router,
+)
+
+# Threat Analysis -> prefix="/threat-analysis" defined inside threat_analysis.py
+app.include_router(
+    threat_analysis_router,
 )
 
