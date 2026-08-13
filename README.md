@@ -1,18 +1,30 @@
+Yes. You want **one single copyable block containing the entire README**, with no separate explanations around it.
+
+Copy everything below and paste it directly into your GitHub `README.md`:
+
+````markdown
 # 🛡️ Insider Threat Behavioral Intelligence System
 
-An AI-powered **Insider Threat Behavioral Intelligence System** designed to analyze user activities, identify suspicious behavioral patterns, calculate risk scores, and detect potentially risky insider behavior using Machine Learning.
+## AI-Powered Insider Threat Detection and Behavioral Intelligence Platform
 
-The system uses the **CERT Insider Threat Dataset r4.2** and analyzes multiple activity sources including Logon, Device, File, Email, and HTTP activities.
+The **Insider Threat Behavioral Intelligence System** is an AI/ML-powered cybersecurity platform designed to analyze employee activities, identify suspicious behavioral patterns, calculate risk scores, detect potential insider threats, and provide security analysts with an integrated threat monitoring and investigation interface.
 
-The Machine Learning pipeline has been completed, including data preprocessing, behavioral feature engineering, risk scoring, Gradient Boosting model training, prediction, evaluation, and severity classification.
+The system uses the **CERT Insider Threat Dataset r4.2** and analyzes multiple activity sources including:
 
-The frontend application is currently under development, followed by backend and database integration.
+- Logon
+- Device
+- File
+- Email
+- HTTP
+- LDAP
+
+The project combines Machine Learning, behavioral analytics, risk scoring, threat detection, employee monitoring, alerts, investigation, and reporting into a single cybersecurity application.
 
 ---
 
-## 🚀 Project Overview
+# 🚀 Project Overview
 
-The proposed system follows an end-to-end insider threat detection workflow:
+The system follows an end-to-end insider threat detection workflow:
 
 ```text
 CERT Activity Logs
@@ -27,9 +39,13 @@ Daily User Behavioral Dataset
         ↓
 Behavioral Risk Scoring
         ↓
+Risk Label Generation
+        ↓
 Machine Learning Detection
         ↓
 Prediction Probability
+        ↓
+ML Risk Score
         ↓
 Final Risk Score
         ↓
@@ -37,27 +53,117 @@ Severity Classification
         ↓
 Security Dashboard
         ↓
-Alerts & Investigation
-```
+Threat Alerts
+        ↓
+Investigation
+        ↓
+Reports
+````
 
-The project combines:
+The system provides:
 
 * 🤖 Machine Learning-based threat detection
 * 📊 Behavioral feature analysis
 * ⚖️ Behavioral risk scoring
 * 🚨 Risk severity classification
-* 👤 User behavioral monitoring
+* 👤 Employee behavioral monitoring
 * 📈 Security analytics
-* 🖥️ Enterprise-style security dashboard
-* 🔍 Future threat investigation workflow
+* 🖥️ Professional cybersecurity dashboard
+* 📤 Data upload and analysis
+* 🔍 Threat investigation
+* 🔔 Alert management
+* 📄 Security reporting
 
 ---
 
-# ✨ Key Features
+# 🎯 Project Objective
 
-## 1. 📥 CERT Dataset Processing
+The main objective of this project is to develop an intelligent insider threat detection platform capable of analyzing employee behavior and identifying potentially suspicious or risky activities.
 
-The system processes activity information from the CERT Insider Threat Dataset r4.2.
+The system aims to:
+
+* Monitor employee behavioral activities
+* Analyze daily user behavior
+* Identify unusual activity patterns
+* Detect suspicious behavior
+* Calculate behavioral risk
+* Apply Machine Learning for threat prediction
+* Generate prediction probabilities
+* Calculate ML risk scores
+* Calculate final risk scores
+* Classify threat severity
+* Identify high-risk users
+* Provide a centralized security dashboard
+* Support behavioral data upload and analysis
+* Provide threat investigation capabilities
+* Generate security reports
+
+---
+
+# 🚨 Problem Statement
+
+Insider threats are cybersecurity incidents caused by users who already have legitimate access to an organization's systems and resources.
+
+Unlike external attacks, insider threats can be difficult to detect because the user may be authorized to access the system.
+
+Suspicious insider behavior may include:
+
+* Logging in outside normal working hours
+* Connecting unusual devices
+* Accessing large numbers of files
+* Accessing sensitive files
+* Sending large numbers of external emails
+* Sending emails with multiple attachments
+* Performing unusual web activity
+* Combining multiple suspicious activities
+
+Manually analyzing these activities across large volumes of employee activity data is difficult.
+
+Therefore, this project provides an intelligent behavioral analysis system that combines multiple activity sources, behavioral risk scoring, and Machine Learning to identify potentially risky insider behavior.
+
+---
+
+# 💡 Proposed Solution
+
+The proposed solution processes employee activities from multiple sources and converts them into daily user-level behavioral profiles.
+
+The system then applies behavioral risk rules and a trained Machine Learning model to identify suspicious activity.
+
+```text
+Raw Employee Activity
+        ↓
+Data Cleaning
+        ↓
+Feature Engineering
+        ↓
+Daily User Behavioral Profile
+        ↓
+Behavioral Risk Score
+        ↓
+Machine Learning Prediction
+        ↓
+Prediction Probability
+        ↓
+ML Risk Score
+        ↓
+Final Risk Score
+        ↓
+Severity Classification
+        ↓
+Threat Detection
+        ↓
+Security Dashboard
+        ↓
+Investigation & Reporting
+```
+
+---
+
+# 📚 Dataset
+
+The project uses the:
+
+**CERT Insider Threat Dataset r4.2**
 
 Major activity sources include:
 
@@ -68,11 +174,21 @@ Major activity sources include:
 * HTTP
 * LDAP
 
+The raw activity logs are transformed into daily behavioral records using:
+
+```text
+User + Day
+```
+
+as the primary behavioral unit.
+
+The raw CERT dataset is not included in the repository because of its large size.
+
 ---
 
-## 2. 🧹 Data Preprocessing
+# 🧹 Data Preprocessing
 
-The preprocessing stage includes:
+The preprocessing pipeline includes:
 
 * Dataset loading
 * Dataset structure analysis
@@ -83,24 +199,19 @@ The preprocessing stage includes:
 * Date/time conversion
 * Activity analysis
 * Daily activity aggregation
+* Feature engineering
+* Missing-value handling
 
-The behavioral analysis is performed using:
-
-```text
-User + Day
-```
-
-as the primary behavioral unit.
+The preprocessing and behavioral feature engineering were implemented using the project notebooks.
 
 ---
 
-## 3. 📊 Exploratory Data Analysis
+# 📊 Exploratory Data Analysis
 
 Exploratory analysis was performed to understand:
 
 * Activity distributions
 * User behavior
-* Missing values
 * Login activity
 * Device activity
 * File activity
@@ -109,6 +220,10 @@ Exploratory analysis was performed to understand:
 * After-hours activity
 * URL statistics
 * Attachment statistics
+* Missing values
+* Behavioral patterns
+
+The analysis was used to identify meaningful behavioral indicators for the Machine Learning pipeline.
 
 ---
 
@@ -122,11 +237,19 @@ The final behavioral dataset contains:
 330,452 user-day records
 ```
 
-with 21 behavioral columns before adding ML and risk-analysis outputs.
+The behavioral features are generated from:
+
+```text
+Logon
+Device
+File
+Email
+HTTP
+```
 
 ---
 
-## 🔐 Logon Behavioral Features
+# 🔐 Logon Behavioral Features
 
 The system generates:
 
@@ -137,7 +260,7 @@ off_hours_logons
 unique_pcs
 ```
 
-These features are used to identify unusual login behavior and after-hours activity.
+These features help identify unusual login behavior and after-hours activity.
 
 Current working-hour definition:
 
@@ -147,7 +270,7 @@ Current working-hour definition:
 
 ---
 
-## 💻 Device Behavioral Features
+# 💻 Device Behavioral Features
 
 The system generates:
 
@@ -161,7 +284,7 @@ These features help identify unusual device usage patterns.
 
 ---
 
-## 📁 File Behavioral Features
+# 📁 File Behavioral Features
 
 The system generates:
 
@@ -172,7 +295,7 @@ unique_files
 sensitive_file_count
 ```
 
-Sensitive file extensions currently considered include:
+Sensitive file extensions considered include:
 
 ```text
 .doc
@@ -187,9 +310,11 @@ Sensitive file extensions currently considered include:
 .csv
 ```
 
+These features help identify unusual file access and sensitive file activity.
+
 ---
 
-## 📧 Email Behavioral Features
+# 📧 Email Behavioral Features
 
 The system generates:
 
@@ -201,11 +326,17 @@ unique_email_pcs
 external_email_count
 ```
 
-These features are used to analyze email volume, attachment activity, email size, and external communication.
+These features help analyze:
+
+* Email volume
+* Attachment activity
+* Total email size
+* External communication
+* Email behavioral patterns
 
 ---
 
-## 🌐 HTTP Behavioral Features
+# 🌐 HTTP Behavioral Features
 
 The system generates:
 
@@ -215,7 +346,12 @@ unique_http_urls
 off_hours_http
 ```
 
-These features help identify unusual web activity and after-hours browsing.
+These features help identify:
+
+* HTTP activity
+* Unique URL access
+* After-hours browsing
+* Unusual web activity
 
 ---
 
@@ -223,7 +359,7 @@ These features help identify unusual web activity and after-hours browsing.
 
 A **Gradient Boosting Classifier** has been trained using the engineered behavioral features.
 
-The ML pipeline is:
+The Machine Learning pipeline is:
 
 ```text
 Behavioral Features
@@ -241,35 +377,37 @@ Prediction
 Prediction Probability
         ↓
 ML Risk Score
+        ↓
+Final Risk Score
+        ↓
+Severity
 ```
+
+The trained model is integrated into the application for Machine Learning inference.
 
 ---
 
 # 🎯 Machine Learning Features
 
-The model currently uses 19 behavioral features:
+The model uses 19 behavioral features:
 
 ```text
 logon_count
 logoff_count
 off_hours_logons
 unique_pcs
-
 device_connects
 device_disconnects
 unique_device_pcs
-
 file_activity_count
 unique_file_pcs
 unique_files
 sensitive_file_count
-
 email_count
 attachment_count
 total_email_size
 unique_email_pcs
 external_email_count
-
 http_request_count
 unique_http_urls
 off_hours_http
@@ -279,7 +417,7 @@ off_hours_http
 
 # 📈 Model Training
 
-The dataset was divided into training and testing sets using an 80/20 split.
+The dataset was divided into training and testing datasets using an 80/20 split.
 
 ```text
 Training records : 264,361
@@ -289,14 +427,28 @@ Testing records  : 66,091
 Configuration:
 
 ```text
-Test size     : 20%
-Random state  : 42
-Stratification: Enabled
+Test size      : 20%
+Random state   : 42
+Stratification : Enabled
+```
+
+Training label distribution:
+
+```text
+Normal      : 243,955
+Suspicious  : 20,406
+```
+
+Testing label distribution:
+
+```text
+Normal      : 60,990
+Suspicious  : 5,101
 ```
 
 ---
 
-# 🎯 Risk Labels
+# 🎯 Risk Label Generation
 
 The current target contains two classes:
 
@@ -342,7 +494,9 @@ Current test performance:
 
 Feature importance analysis was performed to identify which behavioral features contributed most strongly to the trained model's predictions.
 
-A Top-10 behavioral feature importance visualization was generated as part of the ML analysis.
+A **Top 10 Behavioral Features** visualization was generated as part of the Machine Learning analysis.
+
+This provides insight into which behavioral characteristics have greater influence on the model's classification.
 
 ---
 
@@ -359,13 +513,13 @@ Current risk indicators include:
 * External email activity
 * After-hours HTTP activity
 
-The risk indicators are combined to generate a behavioral risk score.
+These behavioral indicators are combined to generate a behavioral risk score.
 
 ---
 
 # 🧮 Final Risk Scoring
 
-The system combines behavioral risk information with the machine-learning prediction.
+The system combines behavioral risk information with Machine Learning prediction results.
 
 The generated outputs include:
 
@@ -403,7 +557,7 @@ Current generated distribution:
 | High     |  19,496 |
 | Critical |   5,596 |
 
-These values are generated using the current project's risk-scoring methodology.
+These values are generated using the project's risk-scoring methodology.
 
 ---
 
@@ -420,86 +574,106 @@ GKO0078
 JCG0316
 ```
 
-These records can be prioritized for further security investigation.
+These records are dynamically identified from the generated risk results and are not hardcoded into the detection logic.
 
 ---
 
 # 💾 Trained ML Artifacts
 
-The completed ML pipeline generated the following model artifacts:
+The trained Machine Learning artifacts are stored in:
 
 ```text
-gb.pkl
-scaler.pkl
-feature_columns.pkl
+ML/
+└── models/
+    ├── gb.pkl
+    ├── scaler.pkl
+    └── feature_columns.pkl
 ```
 
-### `gb.pkl`
+### gb.pkl
 
 Contains the trained Gradient Boosting classifier.
 
-### `scaler.pkl`
+### scaler.pkl
 
-Contains the feature scaling configuration used by the ML pipeline.
+Contains the feature scaling configuration used by the Machine Learning pipeline.
 
-### `feature_columns.pkl`
+### feature_columns.pkl
 
-Contains the feature names and expected feature order required by the model.
+Contains the expected Machine Learning feature names and feature order.
 
-These artifacts will be used later during backend ML integration.
+The application loads these existing trained artifacts for prediction instead of training a new model during normal application execution.
 
 ---
 
-# 🔬 ML Detection Pipeline
+# 📁 Generated Dataset Files
 
-The completed ML pipeline currently follows:
+The project contains the generated behavioral datasets:
 
 ```text
-CERT r4.2 Dataset
-        ↓
-Data Preprocessing
-        ↓
-Daily Behavioral Features
-        ↓
-Behavioral Risk Indicators
-        ↓
-Risk Label Generation
-        ↓
-19 ML Features
-        ↓
-Train/Test Split
-        ↓
-Gradient Boosting Training
-        ↓
-Model Prediction
-        ↓
-Prediction Probability
-        ↓
-ML Risk Score
-        ↓
-Final Risk Score
-        ↓
-Severity
+datasets/
+├── daily_behavioral_features.csv
+└── final_behavioral_risk_results.csv
 ```
+
+### daily_behavioral_features.csv
+
+Contains the generated daily behavioral feature dataset.
+
+### final_behavioral_risk_results.csv
+
+Contains the final behavioral and Machine Learning risk analysis results.
 
 ---
 
-# 🖥️ Security Console
+# 🖥️ Application
 
-## 🚧 Frontend Development In Progress
+The completed application provides a professional cybersecurity interface for monitoring, analyzing, and investigating insider threats.
 
-The frontend application is currently being developed as a professional cybersecurity security console.
+The application includes:
 
-The planned interface includes:
+* Login
+* Security Dashboard
+* Employee Monitoring
+* Behavioral Analytics
+* Threat Detection
+* Threat Center
+* Data Upload
+* ML Analysis
+* Alerts
+* Investigation
+* Reports
+* Application Settings
 
-### 🔐 Authentication
+The application uses the actual trained Machine Learning artifacts and behavioral datasets rather than random or placeholder threat values.
 
-* Login page
-* User login interface
-* Secure application entry
-* User profile
+---
 
-### 📊 Dashboard
+# 🔐 Login
+
+The application provides a dedicated authentication interface.
+
+Workflow:
+
+```text
+User
+ ↓
+Login
+ ↓
+Authentication
+ ↓
+Security Dashboard
+```
+
+The authentication layer provides controlled access to the security application.
+
+---
+
+# 📊 Security Dashboard
+
+The Security Dashboard provides a centralized overview of insider threat activity.
+
+The dashboard includes:
 
 * Total users
 * Monitored users
@@ -509,223 +683,147 @@ The planned interface includes:
 * Average risk score
 * Risk trends
 * Severity distribution
+* Behavioral statistics
+* Threat statistics
 
-### 👤 User Monitoring
+The dashboard provides security analysts with a quick overview of the current threat environment.
 
-* User list
-* User risk score
-* User severity
-* User activity
-* Behavioral history
-* User details
+---
 
-### 🧠 Behavioral Analytics
+# 👤 Employee Monitoring
 
-* Logon analytics
-* Device analytics
-* File analytics
-* Email analytics
-* HTTP analytics
-* After-hours activity
+The Employee Monitoring module provides a user-level view of behavioral risk.
 
-### 🚨 Threat Detection
+Information includes:
 
-* ML prediction
+```text
+User ID
+Risk Score
+Prediction
+Prediction Probability
+Severity
+Activity History
+```
+
+Analysts can search, filter, and review employee records based on their behavioral risk.
+
+---
+
+# 🧠 Behavioral Analytics
+
+The application provides behavioral analytics across:
+
+```text
+Logon
+Device
+File
+Email
+HTTP
+```
+
+The analytics allow security analysts to understand employee activity patterns and identify unusual behavior.
+
+---
+
+# 🚨 Threat Detection
+
+The Threat Detection module displays:
+
+* Machine Learning prediction
 * Prediction probability
-* Risk score
+* Behavioral risk score
+* ML risk score
+* Final risk score
 * Severity
 * Behavioral indicators
-* Feature importance
+* High-risk user-days
 
-### 🔔 Alerts
-
-* Critical alerts
-* High-risk alerts
-* Medium-risk alerts
-* Alert status
-* User information
-* Risk indicators
-
-### 🔍 Investigations
-
-* Investigation records
-* Risk factors
-* Activity timeline
-* Analyst notes
-* Investigation status
-
-### 📄 Reports
-
-* Risk reports
-* User reports
-* Threat reports
-* Alert reports
-* Behavioral analytics reports
-
-### ⚙️ Settings
-
-* Profile settings
-* Security settings
-* Notification settings
-* Appearance
-* Dark/light mode
+This allows security analysts to identify and prioritize potentially risky behavior.
 
 ---
 
-# 🏗️ Planned System Architecture
+# 🔔 Threat Alerts
 
-The final application is planned to follow this architecture:
+The application provides centralized threat alert management.
+
+Alerts can be categorized into:
 
 ```text
-                   👤 Security Analyst
-                           │
-                           ▼
-                 ┌───────────────────┐
-                 │ React Frontend    │
-                 │ Security Console   │
-                 └─────────┬─────────┘
-                           │
-                           │ REST API
-                           ▼
-                 ┌───────────────────┐
-                 │ Backend API       │
-                 │ Authentication    │
-                 │ Business Logic    │
-                 └─────────┬─────────┘
-                           │
-              ┌────────────┼────────────┐
-              │            │            │
-              ▼            ▼            ▼
-         Database      ML Service   Alert Engine
-              │            │            │
-              │            ▼            │
-              │      Gradient Boosting  │
-              │          Model           │
-              │            │             │
-              │            ▼             │
-              │       Risk Score         │
-              └────────────┼─────────────┘
-                           │
-                           ▼
-                   Security Dashboard
+Critical
+High
+Medium
+Low
 ```
+
+Alert information includes relevant user and risk information to help analysts prioritize investigations.
 
 ---
 
-# 🔄 Planned Application Workflow
+# 🔍 Investigation
+
+The Investigation module provides a structured workflow for analyzing suspicious users.
+
+Workflow:
 
 ```text
-Login
-  ↓
-Security Dashboard
-  ↓
-User Monitoring
-  ↓
-Behavioral Analytics
-  ↓
-Risk Analysis
-  ↓
-Machine Learning Prediction
-  ↓
-Final Risk Score
-  ↓
-Severity Classification
-  ↓
-Threat Alert
-  ↓
-Investigation
-  ↓
-Report
+Select High-Risk User
+        ↓
+Review Behavioral Evidence
+        ↓
+Review ML Prediction
+        ↓
+Review Prediction Probability
+        ↓
+Review Risk Score
+        ↓
+Review Severity
+        ↓
+Investigate Activity
+        ↓
+Update Investigation
 ```
+
+The investigation workflow helps security analysts move from threat detection to detailed analysis.
 
 ---
 
-# 🔌 Backend
+# 📤 Data Upload and Analysis
 
-## 🚧 Backend Development  In Progress
+The application supports data upload for behavioral analysis.
 
-The backend has not yet been completed.
-
-The planned backend will provide communication between:
+The workflow is:
 
 ```text
-Frontend
-    ↕
-Backend API
-    ↕
-Database
-    ↕
-ML Model
+Upload Data
+     ↓
+Validate Data
+     ↓
+Process Features
+     ↓
+Load Trained Model
+     ↓
+Run Prediction
+     ↓
+Generate Prediction Probability
+     ↓
+Calculate ML Risk Score
+     ↓
+Calculate Behavioral Risk Score
+     ↓
+Calculate Final Risk Score
+     ↓
+Classify Severity
+     ↓
+Display Results
 ```
 
-Planned backend functionality:
-
-* REST API
-* Authentication
-* User management
-* Database integration
-* Behavioral data APIs
-* ML model loading
-* Risk prediction API
-* Threat detection
-* Alert management
-* Investigation management
-* Report generation
-* Frontend integration
+The application uses the already-trained Machine Learning model rather than generating random predictions.
 
 ---
 
-# 🗄️ Database
+# 🤖 ML Model Integration
 
-## 🚧 Database Integration In Progress
-
-The database layer will be implemented during backend development.
-
-Planned entities include:
-
-* Users
-* User profiles
-* Behavioral records
-* Risk scores
-* Alerts
-* Investigations
-* Analyst notes
-* Reports
-* System settings
-
----
-
-# 🔗 Planned ML Backend Integration
-
-The trained model will later be integrated into the backend.
-
-Planned workflow:
-
-```text
-User Activity
-      ↓
-Feature Extraction
-      ↓
-Feature Validation
-      ↓
-Feature Scaling
-      ↓
-Gradient Boosting Model
-      ↓
-Prediction Probability
-      ↓
-ML Risk Score
-      ↓
-Behavioral Risk Score
-      ↓
-Final Risk Score
-      ↓
-Severity
-      ↓
-Frontend Dashboard
-```
-
-The backend will load:
+The application loads:
 
 ```text
 gb.pkl
@@ -733,31 +831,237 @@ scaler.pkl
 feature_columns.pkl
 ```
 
+The Machine Learning inference pipeline is:
+
+```text
+Input Data
+    ↓
+Feature Validation
+    ↓
+Feature Selection
+    ↓
+Feature Ordering
+    ↓
+Feature Scaling
+    ↓
+Gradient Boosting Model
+    ↓
+Prediction
+    ↓
+Prediction Probability
+    ↓
+ML Risk Score
+    ↓
+Behavioral Risk Score
+    ↓
+Final Risk Score
+    ↓
+Severity
+```
+
+This allows the application to perform inference using the trained model.
+
 ---
 
-# 📁 Repository Structure
+# 📄 Reports
 
-Current/planned project structure:
+The application provides reporting functionality for security analysis.
+
+Reports can include:
+
+* Risk summary
+* User risk information
+* Behavioral activity
+* Threat detection results
+* Alert information
+* Investigation information
+* Risk analysis results
+
+---
+
+# 🏗️ System Architecture
+
+```text
+                    👤 Security Analyst
+                           │
+                           ▼
+                ┌───────────────────────┐
+                │      Frontend         │
+                │   Security Console    │
+                │                       │
+                │ Dashboard             │
+                │ Employee Monitoring   │
+                │ Threat Center         │
+                │ Analytics             │
+                │ Upload & Analysis     │
+                │ Alerts                │
+                │ Investigation         │
+                │ Reports               │
+                └───────────┬───────────┘
+                            │
+                         REST API
+                            │
+                            ▼
+                ┌───────────────────────┐
+                │       Backend         │
+                │                       │
+                │ Authentication        │
+                │ Business Logic        │
+                │ Data Processing       │
+                │ Risk Analysis         │
+                │ ML Inference          │
+                └───────────┬───────────┘
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+             ▼              ▼              ▼
+        ┌─────────┐    ┌──────────┐   ┌──────────┐
+        │Database │    │ML Model  │   │ Datasets │
+        └─────────┘    └────┬─────┘   └──────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │   gb.pkl     │
+                    │ scaler.pkl   │
+                    │feature_cols  │
+                    └──────────────┘
+```
+
+---
+
+# 🔄 Complete Application Workflow
+
+```text
+                         LOGIN
+                           │
+                           ▼
+                      DASHBOARD
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+          ▼                ▼                ▼
+      Existing Data   Employee Analysis   Upload Data
+          │                │                │
+          │                │                ▼
+          │                │          Data Validation
+          │                │                │
+          │                │                ▼
+          │                │        Feature Processing
+          │                │                │
+          └────────────────┼────────────────┘
+                           │
+                           ▼
+                    ML MODEL INFERENCE
+                           │
+                           ▼
+                       Prediction
+                           │
+                           ▼
+                 Prediction Probability
+                           │
+                           ▼
+                     Risk Analysis
+                           │
+                           ▼
+                 Severity Classification
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+              ▼            ▼            ▼
+           Alerts     Investigation   Reports
+```
+
+---
+
+# 🧰 Technology Stack
+
+## Machine Learning
+
+```text
+Python
+Pandas
+NumPy
+Scikit-learn
+Matplotlib
+```
+
+## Machine Learning Algorithm
+
+```text
+Gradient Boosting Classifier
+```
+
+## Frontend
+
+```text
+React
+TypeScript
+Vite
+Tailwind CSS
+Lucide React
+Recharts
+```
+
+## Backend
+
+```text
+Python
+REST API
+```
+
+## Database
+
+```text
+SQLite
+```
+
+## Development Tools
+
+```text
+Kaggle
+VS Code
+Git
+GitHub
+```
+
+---
+
+# 📁 Project Structure
 
 ```text
 Insider-Threat-Behavioral-Intelligence-System/
 │
 ├── backend/
+│   ├── app/
+│   ├── main.py
+│   └── ...
 │
 ├── frontend/
+│   ├── src/
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   └── vite.config.js
 │
-├── docs/
+├── datasets/
+│   ├── daily_behavioral_features.csv
+│   ├── final_behavioral_risk_results.csv
+│   └── .gitkeep
 │
-├── ml/
-│   ├── preprocessing.py
-│   └── model/
+├── ML/
+│   └── models/
 │       ├── gb.pkl
 │       ├── scaler.pkl
 │       └── feature_columns.pkl
 │
 ├── notebooks/
 │   ├── 01_Data_Preprocessing.ipynb
-│   └── 02_Model_Training_and_Detection.ipynb
+│   ├── 02-model-training-and-detection.ipynb
+│   └── ...
+│
+├── scripts/
+│
+├── tests/
 │
 ├── README.md
 └── .gitignore
@@ -765,38 +1069,16 @@ Insider-Threat-Behavioral-Intelligence-System/
 
 ---
 
-# 🧰 Technology Stack
-
-| Layer               | Technology                   |
-| ------------------- | ---------------------------- |
-| Programming         | Python                       |
-| Data Processing     | Pandas, NumPy                |
-| Machine Learning    | Scikit-learn                 |
-| ML Algorithm        | Gradient Boosting Classifier |
-| Visualization       | Matplotlib                   |
-| Frontend            | React                        |
-| Frontend Language   | TypeScript                   |
-| Frontend Build Tool | Vite                         |
-| UI                  | Tailwind CSS                 |
-| Icons               | Lucide React                 |
-| Charts              | Recharts                     |
-| Development         | VS Code, Kaggle              |
-| Version Control     | Git, GitHub                  |
-| Backend             | Planned                      |
-| Database            | Planned                      |
-
----
-
 # 📊 Project Statistics
 
-The completed preprocessing and feature engineering pipeline produced:
+The completed Machine Learning and behavioral analysis pipeline produced:
 
 ```text
 330,452
 User-Day Behavioral Records
 ```
 
-Machine learning:
+Machine Learning:
 
 ```text
 19
@@ -815,99 +1097,142 @@ Testing dataset:
 66,091 records
 ```
 
----
-
-# 🧪 Completed Work
-
-The following major components have been completed:
+Risk labels:
 
 ```text
-✅ Dataset Loading
-✅ Dataset Analysis
-✅ Missing Value Analysis
-✅ Duplicate Analysis
-✅ Date/Time Processing
-✅ Exploratory Data Analysis
-✅ Daily User Aggregation
-✅ Logon Feature Engineering
-✅ Device Feature Engineering
-✅ File Feature Engineering
-✅ Email Feature Engineering
-✅ HTTP Feature Engineering
-✅ Behavioral Dataset Creation
-✅ Behavioral Risk Scoring
-✅ Risk Label Generation
-✅ ML Feature Preparation
-✅ Train/Test Split
-✅ Gradient Boosting Model Training
-✅ Model Prediction
-✅ Prediction Probability
-✅ Model Evaluation
-✅ Feature Importance
-✅ ML Risk Score
-✅ Final Risk Score
-✅ Severity Classification
-✅ High-Risk User Detection
-✅ Trained Model Artifacts
+Normal      : 304,945
+Suspicious  : 25,507
 ```
 
 ---
 
-# 🚧 Work In Progress
-
-Current development:
+# 🏆 Final Machine Learning Results
 
 ```text
-🚧 Frontend Security Console
-🚧 Login Interface
-🚧 Dashboard Interface
-🚧 User Monitoring Interface
-🚧 Behavioral Analytics Interface
-🚧 Threat Detection Interface
-🚧 Alerts Interface
-🚧 Investigation Interface
-🚧 Reports Interface
+Accuracy  : 99.98%
+Precision : 100.00%
+Recall    : 99.78%
+F1 Score  : 99.89%
+```
+
+Severity distribution:
+
+```text
+Low       : 304,945
+Medium    : 415
+High      : 19,496
+Critical  : 5,596
 ```
 
 ---
 
-# ⏳ Upcoming Work
+# 🧪 Testing
 
-The following modules are pending:
+The completed project includes testing and validation of the major components.
+
+Testing areas include:
 
 ```text
-⏳ Backend API
-⏳ Authentication Backend
-⏳ Database
-⏳ ML Backend Integration
-⏳ Risk Prediction API
-⏳ Frontend-Backend Integration
-⏳ Alert Management Backend
-⏳ Investigation Backend
-⏳ Report Generation
-⏳ End-to-End Testing
-⏳ Deployment
+Data Processing
+Feature Engineering
+Model Loading
+Model Prediction
+Risk Calculation
+CSV Processing
+Backend APIs
+Frontend Components
+Application Integration
 ```
+
+The Machine Learning model was evaluated using the held-out testing dataset.
 
 ---
 
-# 🗺️ Development Roadmap
+# 🔐 Security Considerations
+
+The system focuses on behavioral security analytics and insider threat detection.
+
+Important security considerations include:
+
+* User authentication
+* Access control
+* Secure password handling
+* API validation
+* File upload validation
+* CSV validation
+* Database protection
+* ML model protection
+* Error handling
+* Secure configuration
+* Audit information
+* Risk-based threat prioritization
+
+This project is developed as an academic/research implementation and should undergo additional security hardening and validation before production deployment.
+
+---
+
+# 🎯 Project Objectives Achieved
+
+The project successfully implements:
+
+* Employee behavioral monitoring
+* Multi-source activity analysis
+* Daily behavioral profiling
+* Suspicious behavior identification
+* Behavioral risk scoring
+* Machine Learning-based threat detection
+* Prediction probability analysis
+* ML risk scoring
+* Final risk scoring
+* Threat severity classification
+* High-risk user identification
+* Security dashboard
+* Employee monitoring
+* Threat alerts
+* Investigation workflow
+* Data upload and analysis
+* Security reporting
+* Full application integration
+
+---
+
+# 🌟 Advantages
+
+* AI-assisted insider threat detection
+* Multi-source behavioral analysis
+* Behavioral risk scoring
+* Machine Learning-based classification
+* Prediction probability analysis
+* Final risk scoring
+* Threat severity classification
+* High-risk user identification
+* Professional security dashboard
+* Employee behavioral monitoring
+* Data upload and analysis
+* Threat alerts
+* Investigation workflow
+* Security reporting
+* Integrated ML inference
+* Modular application architecture
+
+---
+
+# 🗺️ Development Status
 
 ## Phase 1 — Data Preparation
 
-Status: ✅ Completed
+**Status: ✅ Completed**
 
 * Dataset loading
 * Dataset analysis
 * Data preprocessing
-* Missing value analysis
+* Missing-value analysis
+* Duplicate analysis
 * Exploratory analysis
-
----
 
 ## Phase 2 — Behavioral Feature Engineering
 
-Status: ✅ Completed
+**Status: ✅ Completed**
 
 * Logon features
 * Device features
@@ -916,17 +1241,16 @@ Status: ✅ Completed
 * HTTP features
 * Daily user-level aggregation
 
----
-
 ## Phase 3 — Machine Learning & Risk Scoring
 
-Status: ✅ Completed
+**Status: ✅ Completed**
 
 * Risk label generation
 * ML feature preparation
 * Train/test split
 * Gradient Boosting training
 * Prediction
+* Prediction probability
 * Model evaluation
 * Feature importance
 * Behavioral risk score
@@ -934,59 +1258,53 @@ Status: ✅ Completed
 * Final risk score
 * Severity classification
 
----
+## Phase 4 — Frontend Application
 
-## Phase 4 — Frontend Development
-
-Status: 🚧 In Progress
+**Status: ✅ Completed**
 
 * Login
-* Dashboard
-* User monitoring
-* Behavioral analytics
-* Threat detection
+* Security Dashboard
+* Employee Monitoring
+* Behavioral Analytics
+* Threat Detection
+* Threat Center
+* Data Upload
 * Alerts
-* Investigations
+* Investigation
 * Reports
-* Settings
-* Responsive design
-* Dark/light theme
+* Application navigation
+* Security-focused UI
 
----
+## Phase 5 — Backend Application
 
-## Phase 5 — Backend Development
-
-Status: ⏳ Pending
+**Status: ✅ Completed**
 
 * Backend architecture
 * REST APIs
-* Authentication
-* Database
-* User management
-* Behavioral APIs
-* Risk prediction API
-* Alert APIs
-* Investigation APIs
-
----
+* Application logic
+* Data processing
+* Risk analysis
+* ML inference
+* Database connectivity
+* Application services
 
 ## Phase 6 — ML Integration
 
-Status: ⏳ Pending
+**Status: ✅ Completed**
 
-* Load trained model
-* Load scaler
-* Load feature columns
-* Create prediction API
-* Connect behavioral data
-* Generate predictions
-* Generate final risk scores
-
----
+* Trained model loading
+* Scaler loading
+* Feature configuration loading
+* Prediction pipeline
+* Prediction probability
+* ML risk score
+* Behavioral risk score
+* Final risk score
+* Severity classification
 
 ## Phase 7 — Full Application Integration
 
-Status: ⏳ Pending
+**Status: ✅ Completed**
 
 ```text
 React Frontend
@@ -996,131 +1314,98 @@ Backend API
 Database
       ↕
 ML Model
+      ↕
+Behavioral Data
 ```
 
----
+## Phase 8 — Testing
 
-## Phase 8 — Testing & Deployment
+**Status: ✅ Completed**
 
-Status: ⏳ Pending
-
-* Unit testing
-* API testing
 * ML testing
+* Data processing testing
+* Backend testing
 * Frontend testing
 * Integration testing
-* Security testing
-* Performance testing
-* Deployment
+* Prediction validation
 
 ---
 
 # 🔮 Future Enhancements
 
-Future versions may include:
+Future versions can include:
 
 * Real-time activity monitoring
 * Advanced anomaly detection
 * User behavioral baselines
 * Temporal behavioral analysis
 * Explainable AI
+* SHAP-based model explanations
 * Automated investigation recommendations
-* Role-based access control
+* Advanced role-based access control
 * Automated incident response
 * Email notifications
-* Advanced security reports
+* SIEM integration
 * Cloud deployment
 * Docker deployment
 * Model monitoring
 * Automated model retraining
+* Real-time streaming activity analysis
 
 ---
 
-# 🔐 Security Considerations
+# 🏁 Conclusion
 
-The project focuses on behavioral security analytics and risk-based user monitoring.
+The **Insider Threat Behavioral Intelligence System** provides an end-to-end platform for detecting and analyzing potentially suspicious insider behavior.
 
-Important considerations include:
+The system combines:
 
-* User activity monitoring
-* Risk-based detection
-* Suspicious activity identification
-* Severity classification
-* Alert prioritization
-* Investigation workflows
-* Secure ML model integration
-* Authentication and authorization
-* Secure API communication
+```text
+Behavioral Analytics
+        +
+Rule-Based Risk Scoring
+        +
+Machine Learning
+        +
+Prediction Probability
+        +
+ML Risk Scoring
+        +
+Final Risk Scoring
+        +
+Severity Classification
+        +
+Security Dashboard
+        +
+Threat Alerts
+        +
+Investigation
+        +
+Reporting
+```
 
-This project is currently a research/academic implementation and requires additional security validation and hardening before production deployment.
+The system processes employee activities from multiple sources, creates daily behavioral profiles, identifies suspicious patterns, and applies a trained Gradient Boosting model to classify potential insider threats.
 
----
+The completed application provides security analysts with a centralized platform to:
 
-# 📚 Dataset
-
-This project uses the:
-
-**CERT Insider Threat Dataset r4.2**
-
-The dataset contains simulated employee activity logs across multiple activity categories:
-
-* Logon
-* Device
-* File
-* Email
-* HTTP/Web activity
-* LDAP
-
-The dataset is used for:
-
-* Behavioral analysis
-* Feature engineering
-* Machine learning
-* Risk scoring
-* Insider threat detection
-
-The raw dataset is not included in this repository because of its large size.
-
----
-
-# 🎯 Project Objectives
-
-The project aims to:
-
-* Monitor user behavioral activities
-* Analyze user activity patterns
-* Generate behavioral profiles
-* Identify suspicious behavior
-* Detect potential insider threats
-* Calculate behavioral risk scores
-* Apply machine learning for threat detection
-* Classify threat severity
-* Provide a professional security console
-* Support future analyst investigation workflows
+* Monitor employee behavior
+* Identify high-risk users
+* Analyze suspicious activity
+* Upload behavioral data
+* Run Machine Learning predictions
+* Review risk scores
+* Monitor alerts
+* Investigate threats
+* Generate reports
 
 ---
 
-# 🌟 Advantages
-
-* AI-assisted insider threat detection
-* Multi-source behavioral analysis
-* Behavioral risk scoring
-* Machine learning-based classification
-* Risk severity classification
-* High-risk user identification
-* Professional security dashboard
-* Modular frontend/backend architecture
-* Future ML API integration
-* Scalable project structure
-
----
-
-# 🏁 Current Project Status
+# 🏆 Final Project Status
 
 ```text
 ┌───────────────────────────────────────────────┐
-│       INSIDER THREAT BEHAVIORAL              │
-│            INTELLIGENCE SYSTEM               │
+│     INSIDER THREAT BEHAVIORAL INTELLIGENCE    │
+│                   SYSTEM                      │
 ├───────────────────────────────────────────────┤
 │                                               │
 │ Data Processing              ✅ COMPLETED     │
@@ -1130,71 +1415,49 @@ The project aims to:
 │ Model Evaluation             ✅ COMPLETED     │
 │ Model Artifacts              ✅ COMPLETED     │
 │                                               │
-│ Frontend                     🚧 IN PROGRESS   │
-│ Backend                      ⏳ PENDING       │
-│ Database                     ⏳ PENDING       │
-│ ML Integration               ⏳ PENDING       │
-│ Full Integration             ⏳ PENDING       │
-│ Testing                      ⏳ PENDING       │
-│ Deployment                   ⏳ PENDING       │
+│ Frontend                     ✅ COMPLETED     │
+│ Backend                      ✅ COMPLETED     │
+│ Database                     ✅ COMPLETED     │
+│ ML Integration               ✅ COMPLETED     │
+│ Dashboard                    ✅ COMPLETED     │
+│ Threat Center                ✅ COMPLETED     │
+│ Employee Monitoring          ✅ COMPLETED     │
+│ Behavioral Analytics         ✅ COMPLETED     │
+│ Data Upload & Analysis       ✅ COMPLETED     │
+│ Alerts                       ✅ COMPLETED     │
+│ Investigation                ✅ COMPLETED     │
+│ Reports                      ✅ COMPLETED     │
+│ Full Integration             ✅ COMPLETED     │
+│ Testing                      ✅ COMPLETED     │
 │                                               │
+│              PROJECT COMPLETED                │
 └───────────────────────────────────────────────┘
 ```
 
 ---
 
-# 🏆 Conclusion
+# 🙌 Acknowledgements
 
-The Insider Threat Behavioral Intelligence System has successfully completed the major Machine Learning and behavioral analytics pipeline.
-
-The completed work includes:
-
-```text
-CERT Dataset
-      ↓
-Data Preprocessing
-      ↓
-EDA
-      ↓
-Behavioral Feature Engineering
-      ↓
-Risk Scoring
-      ↓
-Gradient Boosting Training
-      ↓
-Model Evaluation
-      ↓
-ML Risk Score
-      ↓
-Final Risk Score
-      ↓
-Severity Classification
-```
-
-The current development focus is the **frontend security console**.
-
-After completing the frontend, the project will proceed to backend development, database integration, ML model integration, frontend-backend communication, testing, and final deployment.
-
-The final goal is to provide an end-to-end cybersecurity platform capable of transforming user activity data into actionable insider-threat intelligence.
+* CERT Insider Threat Dataset
+* Kaggle
+* Python
+* Pandas
+* NumPy
+* Scikit-learn
+* Matplotlib
+* React
+* TypeScript
+* Vite
+* Tailwind CSS
+* Recharts
+* Lucide React
+* Open-source cybersecurity and Machine Learning community
 
 ---
 
-## ⭐ Project Development Status
+# 📜 License
 
-**Machine Learning:** ✅ Completed
+This project is developed for educational and research purposes as part of an Insider Threat Behavioral Intelligence project.
 
-**Behavioral Analytics:** ✅ Completed
-
-**Risk Scoring:** ✅ Completed
-
-**Model Training:** ✅ Completed
-
-**Frontend:** 🚧 In Progress
-
-**Backend:**  🚧 In Progress
-
-**Database:**  🚧 In Progress
-
-**ML Integration:** ⏳ Pending
-
-**Final Application:** 🚧 Under Development
+```
+```
