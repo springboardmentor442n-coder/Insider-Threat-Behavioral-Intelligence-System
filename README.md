@@ -26,7 +26,7 @@ The platform provides an end-to-end security solution that unifies data ingestio
 
 ## Problem Statement
 
-Traditional enterprise security monitoring relies heavily on fixed, signature-based rules and threshold alerts (e.g., failed login counters or known malicious IP blocks). However, insider threats—such as data exfiltration, privilege misuse, and unauthorized resource hoarding—are committed by authorized internal users operating within legitimate permission boundaries. Consequently, insider threat activities manifest as subtle behavioral deviations rather than explicit rule violations.
+Traditional enterprise security monitoring relies heavily on fixed, signature-based rules and threshold alerts (e.g., failed login counters or known malicious IP blocks). However, insider threats—such as data exfiltration, privilege misuse, and unauthorized resource hoarding are committed by authorized internal users operating within legitimate permission boundaries. Consequently, insider threat activities manifest as subtle behavioral deviations rather than explicit rule violations.
 
 Detecting these threats requires analyzing complex, high-volume activity logs across multiple dimensions (logon times, file system access, USB removable media usage, email communication, and web browsing). SentinelAI addresses this challenge by establishing population-level statistical baselines, applying multi-model unsupervised anomaly detection to identify statistical outliers, deriving model consensus, computing transparent risk scores, and delivering explainable behavioral metrics to security analysts.
 
@@ -38,7 +38,7 @@ The system implements the following core engineering and security objectives:
 - **Multi-Source Activity Ingestion**: Ingest and structure log telemetry across logon, file, email, HTTP web, and USB device streams.
 - **Behavioral Profile Extraction**: Engineer statistical feature vectors capturing temporal patterns, off-hours activity, and event volumes.
 - **Unsupervised Anomaly Ensemble**: Train and execute 7 distinct unsupervised ML models to detect anomalous behavior without reliance on ground-truth attack labels.
-- **Insider Risk Scoring & Consensus**: Calculate normalized 0–100 risk scores combining model outputs, anomaly severity, and consensus voting.
+- **Insider Risk Scoring & Consensus**: Calculate normalized 0-100 risk scores combining model outputs, anomaly severity, and consensus voting.
 - **Behavioral Explainability**: Generate SHAP-based feature contribution breakdowns explaining the key factors behind employee risk scores.
 - **CERT Layer 2 Verification**: Validate ML anomaly alerts against population-level P90 statistical baseline thresholds.
 - **Incident Investigation Workflows**: Provide case file creation, timeline tracking, evidence collection, and status escalation for security analysts.
