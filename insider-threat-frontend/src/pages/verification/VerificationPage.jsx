@@ -21,10 +21,12 @@ import {
   TrendingUp,
   FileSpreadsheet,
   Users,
+  UserPlus,
 } from "lucide-react";
 import verificationService from "../../services/api/verificationService";
 import investigationService from "../../features/investigation/api/investigationService";
 import PageHeader from "../../components/shared/PageHeader";
+import CustomEmployeeAnalyzerModal from "../../features/employees/components/CustomEmployeeAnalyzerModal";
 
 const VECTOR_ICONS = {
   temporal: Clock,
@@ -46,6 +48,7 @@ export default function VerificationPage() {
   const [employeeDetail, setEmployeeDetail] = useState(null);
   const navigate = useNavigate();
   const [creatingCase, setCreatingCase] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   useEffect(() => {
     fetchSummary();
@@ -147,7 +150,16 @@ export default function VerificationPage() {
             <UserCheck className="h-3.5 w-3.5" /> Unsupervised ML Verified
           </span>
         }
-      />
+      >
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3.5 py-1.5 text-xs font-bold text-cyan-400 shadow-md transition hover:border-cyan-500/60 hover:bg-cyan-500/20"
+        >
+          <UserPlus className="h-3.5 w-3.5" />
+          + Live Feature Simulator & Add Employee
+        </button>
+      </PageHeader>
 
       {/* =====================================================
           METHODOLOGY DISCLAIMER BANNER
@@ -542,6 +554,12 @@ export default function VerificationPage() {
           </div>
         )}
       </AnimatePresence>
+
+      <CustomEmployeeAnalyzerModal
+        open={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onEmployeeAdded={() => fetchSummary()}
+      />
     </div>
   );
 }

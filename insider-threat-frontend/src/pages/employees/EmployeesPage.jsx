@@ -17,6 +17,7 @@ import {
   Brain,
   CheckCircle2,
   CircleAlert,
+  UserPlus,
 } from "lucide-react";
 
 import {
@@ -24,6 +25,7 @@ import {
   useEmployeeIntelligenceSummary,
   useEmployeeIntelligence,
 } from "../../hooks/queries/useEmployees";
+import CustomEmployeeAnalyzerModal from "../../features/employees/components/CustomEmployeeAnalyzerModal";
 
 // ============================================================
 // HELPERS
@@ -855,6 +857,11 @@ export default function EmployeesPage() {
     setSelectedUser,
   ] = useState(null);
 
+  const [
+    isAddModalOpen,
+    setIsAddModalOpen,
+  ] = useState(false);
+
   // ==========================================================
   // NORMALIZE DATA
   // ==========================================================
@@ -1305,6 +1312,15 @@ export default function EmployeesPage() {
           </div>
         }
       >
+        <button
+          type="button"
+          onClick={() => setIsAddModalOpen(true)}
+          className="flex items-center gap-1.5 rounded-xl border border-cyan-500/40 bg-cyan-500/10 px-3.5 py-1.5 text-xs font-bold text-cyan-400 shadow-md transition hover:border-cyan-500/60 hover:bg-cyan-500/20"
+        >
+          <UserPlus className="h-3.5 w-3.5" />
+          + Add & Analyze Employee
+        </button>
+
         <button
           type="button"
           onClick={exportEmployees}
@@ -2266,6 +2282,12 @@ export default function EmployeesPage() {
           }
         />
       )}
+
+      <CustomEmployeeAnalyzerModal
+        open={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onEmployeeAdded={() => refetch()}
+      />
 
     </div>
   );

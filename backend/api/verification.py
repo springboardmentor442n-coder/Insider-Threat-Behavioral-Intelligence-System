@@ -19,9 +19,15 @@ Description   :
 from fastapi import APIRouter, HTTPException, status
 from typing import Dict, Any
 
+from backend.schemas.verification import (
+    CustomEmployeeEvaluationRequest,
+    CustomEmployeeEvaluationResponse,
+)
 from backend.services.verification_service import (
     get_behavioral_validation_summary,
     get_individual_employee_behavioral_validation,
+    evaluate_custom_employee_features,
+    add_custom_employee_to_system,
     DISCLAIMER_TEXT,
 )
 
@@ -89,3 +95,44 @@ def get_employee_behavioral_evidence(user_id: str):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error evaluating employee behavioral validation for '{user_id}': {str(err)}",
         )
+
+
+@router.post(
+    "/evaluate-custom",
+    response_model=CustomEmployeeEvaluationResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Evaluate Live Threat for Custom Employee Feature Inputs",
+    description="Evaluates custom feature values against trained ML models and CERT behavioral vector baselines.",
+)
+def evaluate_custom_employee(payload: Dict[str, Any]):
+    """
+    Live threat evaluation for custom employee input features.
+    """
+    try:
+        return evaluate_custom_employee_features(payload)
+    except Exception as err:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error performing custom feature evaluation: {str(err)}",
+        )
+
+
+@router.post(
+    "/add-custom",
+    response_model=CustomEmployeeEvaluationResponse,
+    status_code=status.HTTP_201_CREATED,
+    summary="Add and Register Custom Employee into Active System Dataset",
+    description="Evaluates custom features and registers the employee into the active behavioral intelligence system.",
+)
+def add_custom_employee(payload: Dict[str, Any]):
+    """
+    Add custom employee to active system dataset.
+    """
+    try:
+        return add_custom_employee_to_system(payload)
+    except Exception as err:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error registering custom employee: {str(err)}",
+        )
+
