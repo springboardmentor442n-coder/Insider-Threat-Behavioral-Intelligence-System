@@ -104,7 +104,7 @@ Navigate to **Prediction Lab** (`/predict`):
 ## Synthetic CSV Dataset & API Endpoints
 
 Sample synthetic CSVs are generated in `data/synthetic_csvs/`:
-- `synthetic_features_50.csv`: 50 rows of feature vectors containing Low, Medium, High, and Critical criteria.
+- `synthetic_features_50.csv`: 50 rows of feature vectors containing employee activity data.'-
 
 ### ML & Prediction Endpoints
 | Method | Endpoint | Description |
