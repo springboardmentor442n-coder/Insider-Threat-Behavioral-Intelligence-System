@@ -11,10 +11,11 @@ import {
   FileText,
   ShieldCheck,
   Settings,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 
 import { useAuth } from "../../providers/AuthProvider";
-import { UserCheck } from "lucide-react";
 
 const allMenuItems = [
   {
@@ -36,22 +37,10 @@ const allMenuItems = [
     roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
-    name: "Analytics",
-    path: "/analytics",
-    icon: BarChart3,
+    name: "Employee Evaluation",
+    path: "/employee-evaluation",
+    icon: UserPlus,
     roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
-  },
-  {
-    name: "Models",
-    path: "/models",
-    icon: BrainCircuit,
-    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
-  },
-  {
-    name: "Explainability",
-    path: "/explainability",
-    icon: Sparkles,
-    roles: ["Security Analyst", "SOC Engineer", "Administrator", "analyst", "soc", "admin"],
   },
   {
     name: "Investigation",
@@ -63,24 +52,6 @@ const allMenuItems = [
     name: "Reports",
     path: "/reports",
     icon: FileText,
-    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
-  },
-  {
-    name: "Verification",
-    path: "/verification",
-    icon: ShieldCheck,
-    roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
-  },
-  {
-    name: "User Management",
-    path: "/users",
-    icon: UserCheck,
-    roles: ["Administrator", "admin"],
-  },
-  {
-    name: "Settings",
-    path: "/settings",
-    icon: Settings,
     roles: ["Security Analyst", "SOC Engineer", "Security Manager", "Administrator", "analyst", "soc", "manager", "admin"],
   },
 ];

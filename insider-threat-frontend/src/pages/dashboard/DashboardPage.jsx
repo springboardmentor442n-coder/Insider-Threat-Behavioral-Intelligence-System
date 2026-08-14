@@ -11,6 +11,12 @@ import {
   useDashboard,
   useTopSuspicious,
 } from "../../hooks/queries/useDashboard";
+import useAnalytics from "../../features/analytics/hooks/useAnalytics";
+import useModels from "../../features/models/hooks/useModels";
+
+import RiskDistributionChart from "../../features/analytics/charts/RiskDistributionChart";
+import MonthlyTrendChart from "../../features/analytics/charts/MonthlyTrendChart";
+import ModelsOverviewCards from "../../features/models/components/ModelsOverviewCards";
 
 export default function DashboardPage() {
   const {
@@ -24,6 +30,17 @@ export default function DashboardPage() {
     data: suspiciousEmployees = [],
     isLoading: suspiciousLoading,
   } = useTopSuspicious();
+
+  const {
+    riskDistribution,
+    trainingTimes,
+    loading: analyticsLoading,
+  } = useAnalytics();
+
+  const {
+    summary: modelsSummary,
+    loading: modelsLoading,
+  } = useModels();
 
   // ============================================================
   // LOADING STATE
@@ -102,19 +119,34 @@ export default function DashboardPage() {
       </section>
 
       {/* ======================================================
+          MODEL INTELLIGENCE OVERVIEW
+      ====================================================== */}
+      <section className="w-full min-w-0">
+        <div className="mb-4">
+          <h2 className="text-xl font-bold tracking-tight text-white">Model Intelligence</h2>
+          <p className="text-sm text-slate-400">7-Model Unsupervised Ensemble Performance</p>
+        </div>
+        {!modelsLoading && <ModelsOverviewCards summary={modelsSummary} />}
+      </section>
+
+      {/* ======================================================
           THREAT ANALYTICS + AI INSIGHTS
       ====================================================== */}
 
       <section className="grid min-w-0 grid-cols-1 gap-6 xl:grid-cols-3">
-
-        <div className="min-w-0 xl:col-span-2">
+        <div className="min-w-0 xl:col-span-2 space-y-6">
           <ThreatTrendChart />
+          {!analyticsLoading && (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <RiskDistributionChart data={riskDistribution} />
+              <MonthlyTrendChart data={trainingTimes} />
+            </div>
+          )}
         </div>
 
         <div className="min-w-0">
           <AIInsightsPanel />
         </div>
-
       </section>
 
       {/* ======================================================

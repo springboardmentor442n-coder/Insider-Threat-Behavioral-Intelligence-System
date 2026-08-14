@@ -19,6 +19,7 @@ from backend.api.investigation import router as investigation_router
 from backend.api.notifications import router as notifications_router
 from backend.api.verification import router as verification_router
 from backend.api.threat_analysis import router as threat_analysis_router
+from backend.api.employee_evaluation import router as employee_evaluation_router
 from backend.api import activity
 from backend.api import risk
 
@@ -231,3 +232,7 @@ app.include_router(
     threat_analysis_router,
 )
 
+# Employee Evaluation -> prefix="/employee-evaluation" defined inside employee_evaluation.py
+app.include_router(
+    employee_evaluation_router,
+)

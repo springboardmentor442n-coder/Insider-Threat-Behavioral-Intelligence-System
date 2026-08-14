@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ShieldCheck,
@@ -38,10 +38,13 @@ const VECTOR_ICONS = {
 };
 
 export default function VerificationPage() {
+  const [searchParams] = useSearchParams();
+  const queryEmployee = searchParams.get("employee");
+
   const [summaryData, setSummaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(queryEmployee || "");
   const [selectedRiskFilter, setSelectedRiskFilter] = useState("ALL");
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -53,6 +56,12 @@ export default function VerificationPage() {
   useEffect(() => {
     fetchSummary();
   }, []);
+
+  useEffect(() => {
+    if (queryEmployee && queryEmployee !== selectedEmployee && !selectedEmployee) {
+      handleInspectEmployee(queryEmployee);
+    }
+  }, [queryEmployee]);
 
   const handleCreateInvestigation = async (userId) => {
     if (!userId) return;

@@ -1,32 +1,11 @@
 import {
   Users,
   ShieldAlert,
-  TriangleAlert,
-  AlertCircle,
+  AlertTriangle,
+  Activity,
   ShieldCheck,
 } from "lucide-react";
-
-function Card({ title, value, icon: Icon, color }) {
-  return (
-    <div className="rounded-xl border border-slate-800 bg-slate-900 p-5 shadow-sm">
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            {title}
-          </p>
-
-          <h2 className="mt-2 text-3xl font-bold text-white">
-            {value}
-          </h2>
-        </div>
-
-        <div className={`rounded-lg p-3 ${color}`}>
-          <Icon className="h-6 w-6 text-white" />
-        </div>
-      </div>
-    </div>
-  );
-}
+import MetricCard from "../../../components/shared/MetricCard";
 
 export default function EmployeeOverviewCards({ employees = [] }) {
   const total = employees.length;
@@ -48,40 +27,50 @@ export default function EmployeeOverviewCards({ employees = [] }) {
   ).length;
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-      <Card
+    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <MetricCard
         title="Employees"
         value={total}
         icon={Users}
-        color="bg-cyan-600"
+        color="text-cyan-400"
+        bgColor="bg-cyan-500/10"
+        borderColor="border-cyan-500/20"
       />
 
-      <Card
+      <MetricCard
         title="Critical"
         value={critical}
         icon={ShieldAlert}
-        color="bg-red-600"
+        color="text-red-400"
+        bgColor="bg-red-500/10"
+        borderColor="border-red-500/20"
       />
 
-      <Card
+      <MetricCard
         title="High"
         value={high}
-        icon={TriangleAlert}
-        color="bg-orange-600"
+        icon={AlertTriangle}
+        color="text-orange-400"
+        bgColor="bg-orange-500/10"
+        borderColor="border-orange-500/20"
       />
 
-      <Card
+      <MetricCard
         title="Medium"
         value={medium}
-        icon={AlertCircle}
-        color="bg-yellow-600"
+        icon={Activity}
+        color="text-yellow-300"
+        bgColor="bg-yellow-500/10"
+        borderColor="border-yellow-500/20"
       />
 
-      <Card
+      <MetricCard
         title="Low"
         value={low}
         icon={ShieldCheck}
-        color="bg-green-600"
+        color="text-emerald-400"
+        bgColor="bg-emerald-500/10"
+        borderColor="border-emerald-500/20"
       />
     </div>
   );

@@ -18,6 +18,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 // The old feature-based EmployeesPage contains the CRUD
 // employee interface and is not the ML intelligence page.
 import EmployeesPage from "../pages/employees/EmployeesPage";
+import EmployeeEvaluationPage from "../pages/employee-evaluation/EmployeeEvaluationPage";
 
 import ThreatCenterPage from "../features/threats/pages/ThreatCenterPage";
 import AnalyticsPage from "../features/analytics/pages/AnalyticsPage";
@@ -123,6 +124,25 @@ export default function AppRoutes() {
         <Route
           index
           element={<EmployeesPage />}
+        />
+      </Route>
+
+
+      {/* ======================================================
+          EMPLOYEE EVALUATION (NEW EMPLOYEE EVALUATION + CERT COMPARISON)
+          ====================================================== */}
+
+      <Route
+        path="/employee-evaluation"
+        element={
+          <ProtectedRoute>
+            <AppShell />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          index
+          element={<EmployeeEvaluationPage />}
         />
       </Route>
 

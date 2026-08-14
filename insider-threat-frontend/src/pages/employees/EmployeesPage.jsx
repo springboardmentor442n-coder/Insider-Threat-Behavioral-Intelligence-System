@@ -1,6 +1,8 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { formatPercent, formatScore } from "../../utils/formatters";
 import PageHeader from "../../components/shared/PageHeader";
+import MetricCard from "../../components/shared/MetricCard";
 
 import {
   Search,
@@ -18,6 +20,7 @@ import {
   CheckCircle2,
   CircleAlert,
   UserPlus,
+  Sparkles,
 } from "lucide-react";
 
 import {
@@ -259,22 +262,72 @@ function EmployeeDetails({
 
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="
-              rounded-xl
-              border
-              border-slate-700
-              p-2
-              text-slate-400
-              transition
-              hover:bg-slate-800
-              hover:text-white
-            "
-          >
-            <X className="h-5 w-5" />
-          </button>
+          <div className="flex items-center gap-3">
+            <Link
+              to={`/explainability?employee=${user}`}
+              className="
+                flex
+                items-center
+                gap-1.5
+                rounded-xl
+                border
+                border-purple-500/30
+                bg-purple-500/10
+                px-3
+                py-1.5
+                text-xs
+                font-semibold
+                text-purple-400
+                transition
+                hover:border-purple-500/50
+                hover:bg-purple-500/20
+              "
+            >
+              <Sparkles className="h-4 w-4" />
+              Explainability
+            </Link>
+
+            <Link
+              to={`/verification?employee=${user}`}
+              className="
+                flex
+                items-center
+                gap-1.5
+                rounded-xl
+                border
+                border-emerald-500/30
+                bg-emerald-500/10
+                px-3
+                py-1.5
+                text-xs
+                font-semibold
+                text-emerald-400
+                transition
+                hover:border-emerald-500/50
+                hover:bg-emerald-500/20
+              "
+            >
+              <ShieldCheck className="h-4 w-4" />
+              Verification
+            </Link>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="
+                rounded-xl
+                border
+                border-slate-700
+                p-2
+                text-slate-400
+                transition
+                hover:bg-slate-800
+                hover:text-white
+              "
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
 
         </div>
 
@@ -1355,54 +1408,49 @@ export default function EmployeesPage() {
         "
       >
 
-        <SummaryCard
+        <MetricCard
           title="Employees"
           value={totalEmployees}
           icon={Users}
-          iconClass="
-            bg-cyan-500/10
-            text-cyan-400
-          "
+          color="text-cyan-400"
+          bgColor="bg-cyan-500/10"
+          borderColor="border-cyan-500/20"
         />
 
-        <SummaryCard
+        <MetricCard
           title="Critical"
           value={criticalCount}
           icon={ShieldAlert}
-          iconClass="
-            bg-red-500/10
-            text-red-400
-          "
+          color="text-red-400"
+          bgColor="bg-red-500/10"
+          borderColor="border-red-500/20"
         />
 
-        <SummaryCard
+        <MetricCard
           title="High"
           value={highCount}
           icon={AlertTriangle}
-          iconClass="
-            bg-orange-500/10
-            text-orange-400
-          "
+          color="text-orange-400"
+          bgColor="bg-orange-500/10"
+          borderColor="border-orange-500/20"
         />
 
-        <SummaryCard
+        <MetricCard
           title="Medium"
           value={mediumCount}
           icon={Activity}
-          iconClass="
-            bg-yellow-500/10
-            text-yellow-400
-          "
+          color="text-yellow-300"
+          bgColor="bg-yellow-500/10"
+          borderColor="border-yellow-500/20"
         />
 
-        <SummaryCard
+        <MetricCard
           title="Low"
           value={lowCount}
           icon={ShieldCheck}
-          iconClass="
-            bg-emerald-500/10
-            text-emerald-400
-          "
+          color="text-emerald-400"
+          bgColor="bg-emerald-500/10"
+          borderColor="border-emerald-500/20"
         />
 
       </div>

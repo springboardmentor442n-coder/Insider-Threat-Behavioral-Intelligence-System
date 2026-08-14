@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   BrainCircuit,
@@ -16,11 +17,18 @@ import ExplainabilityToolbar from "../components/ExplainabilityToolbar";
 import PageHeader from "../../../components/shared/PageHeader";
 
 export default function ExplainabilityPage() {
-  const [employeeInput, setEmployeeInput] =
-    useState("");
+  const [searchParams] = useSearchParams();
+  const queryEmployee = searchParams.get("employee") || "";
 
-  const [selectedEmployee, setSelectedEmployee] =
-    useState("");
+  const [employeeInput, setEmployeeInput] = useState(queryEmployee);
+  const [selectedEmployee, setSelectedEmployee] = useState(queryEmployee);
+
+  useEffect(() => {
+    if (queryEmployee && queryEmployee !== selectedEmployee) {
+      setSelectedEmployee(queryEmployee);
+      setEmployeeInput(queryEmployee);
+    }
+  }, [queryEmployee]);
 
   const {
     featureImportance,
