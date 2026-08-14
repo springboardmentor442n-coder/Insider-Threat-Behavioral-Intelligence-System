@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { predictUser } from "../services/api";
+import allEmployees from '../employees.json';
 
-function PredictionForm({ setPredictionResult, setIsLoading, isLoading }) {
-    const [formData, setFormData] = useState({
+function PredictionForm({ setPredictionResult, setIsLoading, isLoading, addRecentAnalysis }) {
+    const defaultState = {
         device_connections: "",
         emails_sent: "",
         files_accessed: "",
@@ -13,23 +14,69 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading }) {
         E: "",
         A: "",
         N: "",
-    });
+    };
+
+    const [formData, setFormData] = useState(defaultState);
+    const [validationError, setValidationError] = useState("");
 
     function handleChange(event) {
         setFormData({
             ...formData,
             [event.target.name]: event.target.value === "" ? "" : Number(event.target.value),
         });
+        setValidationError("");
     }
+
+    const preventInvalidChars = (e) => {
+        if (["e", "E", "+", "-"].includes(e.key)) {
+            e.preventDefault();
+        }
+    };
 
     async function handleSubmit(event) {
         event.preventDefault();
+        setValidationError("");
+
+        // Validation for negative numbers
+        const metrics = ["device_connections", "emails_sent", "files_accessed", "websites_visited", "logon_count"];
+        for (let metric of metrics) {
+            if (formData[metric] !== "" && formData[metric] < 0) {
+                setValidationError("Value cannot be negative.");
+                return;
+            }
+        }
+
         setIsLoading(true);
         setPredictionResult(null);
 
         try {
             const result = await predictUser(formData);
             setPredictionResult(result.prediction);
+            
+            if (addRecentAnalysis) {
+                addRecentAnalysis({
+                    id: Math.random().toString(36).substring(7).toUpperCase(),
+                    employeeId: "Unknown",
+                    timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                    prediction: result.prediction,
+                    riskLevel: result.prediction === "INSIDER" || result.prediction === "Threat" ? "HIGH" : "LOW",
+                    activity: {
+                        deviceConnections: formData.device_connections,
+                        emailsSent: formData.emails_sent,
+                        filesAccessed: formData.files_accessed,
+                        websitesVisited: formData.websites_visited,
+                        logonCount: formData.logon_count
+                    },
+                    ocean: {
+                        openness: formData.O,
+                        conscientiousness: formData.C,
+                        extraversion: formData.E,
+                        agreeableness: formData.A,
+                        neuroticism: formData.N
+                    },
+                    status: "COMPLETED"
+                });
+            }
         } catch (error) {
             setPredictionResult("ERROR");
             console.error(error);
@@ -38,124 +85,156 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading }) {
         }
     }
 
+    function handleClear() {
+        setFormData(defaultState);
+        setPredictionResult(null);
+        setValidationError("");
+    }
+
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="section-title">Activity Metrics</div>
-            <div className="form-section">
-                <div className="form-group">
-                    <label>Device Connections</label>
+        <form onSubmit={handleSubmit} noValidate>
+            {validationError && (
+                <div className="login-error" style={{ marginBottom: '1rem' }}>
+                    {validationError}
+                </div>
+            )}
+            
+            <div className="section-title" style={{ marginTop: 0 }}>BEHAVIORAL ACTIVITY</div>
+            <div className="form-section-2col">
+                <div className="form-group-detailed">
+                    <label>DEVICE CONNECTIONS</label>
+                    <span className="field-desc">Number of device connection events</span>
                     <input
                         type="number"
+                        min="0"
                         name="device_connections"
-                        placeholder="e.g. 5"
+                        placeholder="e.g. 750"
                         value={formData.device_connections}
                         onChange={handleChange}
+                        onKeyDown={preventInvalidChars}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Emails Sent</label>
+                <div className="form-group-detailed">
+                    <label>EMAILS SENT</label>
+                    <span className="field-desc">Number of emails sent</span>
                     <input
                         type="number"
+                        min="0"
                         name="emails_sent"
-                        placeholder="e.g. 120"
+                        placeholder="e.g. 300"
                         value={formData.emails_sent}
                         onChange={handleChange}
+                        onKeyDown={preventInvalidChars}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Files Accessed</label>
+                <div className="form-group-detailed">
+                    <label>FILES ACCESSED</label>
+                    <span className="field-desc">Number of files accessed</span>
                     <input
                         type="number"
+                        min="0"
                         name="files_accessed"
-                        placeholder="e.g. 45"
+                        placeholder="e.g. 1000"
                         value={formData.files_accessed}
                         onChange={handleChange}
+                        onKeyDown={preventInvalidChars}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Websites Visited</label>
+                <div className="form-group-detailed">
+                    <label>WEBSITES VISITED</label>
+                    <span className="field-desc">Number of websites visited</span>
                     <input
                         type="number"
+                        min="0"
                         name="websites_visited"
-                        placeholder="e.g. 30"
+                        placeholder="e.g. 30000"
                         value={formData.websites_visited}
                         onChange={handleChange}
+                        onKeyDown={preventInvalidChars}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Logon Count</label>
+                <div className="form-group-detailed">
+                    <label>LOGON COUNT</label>
+                    <span className="field-desc">Number of login events</span>
                     <input
                         type="number"
+                        min="0"
                         name="logon_count"
-                        placeholder="e.g. 3"
+                        placeholder="e.g. 900"
                         value={formData.logon_count}
                         onChange={handleChange}
+                        onKeyDown={preventInvalidChars}
                         required
                     />
                 </div>
             </div>
 
-            <div className="section-title">Psychometric Profile (OCEAN)</div>
-            <div className="form-section">
-                <div className="form-group">
-                    <label>Openness (O)</label>
+            <div className="section-title">PSYCHOMETRIC PROFILE (OCEAN)</div>
+            <div className="form-section-2col">
+                <div className="form-group-detailed">
+                    <label>OPENNESS (O)</label>
+                    <span className="field-desc">Score 10 to 50</span>
                     <input
                         type="number"
-                        step="0.1"
+                        min="0"
                         name="O"
-                        placeholder="Score 0-5"
+                        placeholder="e.g. 35"
                         value={formData.O}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Conscientiousness (C)</label>
+                <div className="form-group-detailed">
+                    <label>CONSCIENTIOUSNESS (C)</label>
+                    <span className="field-desc">Score 10 to 50</span>
                     <input
                         type="number"
-                        step="0.1"
+                        min="0"
                         name="C"
-                        placeholder="Score 0-5"
+                        placeholder="e.g. 35"
                         value={formData.C}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Extraversion (E)</label>
+                <div className="form-group-detailed">
+                    <label>EXTRAVERSION (E)</label>
+                    <span className="field-desc">Score 10 to 50</span>
                     <input
                         type="number"
-                        step="0.1"
+                        min="0"
                         name="E"
-                        placeholder="Score 0-5"
+                        placeholder="e.g. 25"
                         value={formData.E}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Agreeableness (A)</label>
+                <div className="form-group-detailed">
+                    <label>AGREEABLENESS (A)</label>
+                    <span className="field-desc">Score 10 to 50</span>
                     <input
                         type="number"
-                        step="0.1"
+                        min="0"
                         name="A"
-                        placeholder="Score 0-5"
+                        placeholder="e.g. 30"
                         value={formData.A}
                         onChange={handleChange}
                         required
                     />
                 </div>
-                <div className="form-group">
-                    <label>Neuroticism (N)</label>
+                <div className="form-group-detailed">
+                    <label>NEUROTICISM (N)</label>
+                    <span className="field-desc">Score 10 to 50</span>
                     <input
                         type="number"
-                        step="0.1"
+                        min="0"
                         name="N"
-                        placeholder="Score 0-5"
+                        placeholder="e.g. 30"
                         value={formData.N}
                         onChange={handleChange}
                         required
@@ -163,9 +242,14 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading }) {
                 </div>
             </div>
 
-            <button type="submit" className="submit-btn" disabled={isLoading}>
-                {isLoading ? "Analyzing Profile..." : "Run Behavioral Analysis"}
-            </button>
+            <div className="form-actions-group">
+                <button type="submit" className="submit-btn" disabled={isLoading}>
+                    {isLoading ? "ANALYZING..." : "ANALYZE BEHAVIOR"}
+                </button>
+                <button type="button" className="clear-btn" onClick={handleClear} disabled={isLoading}>
+                    CLEAR FORM
+                </button>
+            </div>
         </form>
     );
 }

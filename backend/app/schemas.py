@@ -7,8 +7,8 @@ class UserFeatures(BaseModel):
     files_accessed: int
     websites_visited: int
     logon_count: int
-    O: int
-    C: int
-    E: int
-    A: int
-    N: int
+    O: float
+    C: float
+    E: float
+    A: float
+    N: float
