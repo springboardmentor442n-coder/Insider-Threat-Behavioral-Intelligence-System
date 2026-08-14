@@ -88,7 +88,6 @@ flowchart TD
         Services --> Models["ML Models & Scaler (scaler.pkl)"]
     end
 ```
-
 ---
 
 ## Machine Learning Pipeline & DBSCAN Handling
