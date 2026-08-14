@@ -115,11 +115,10 @@ def seed_insider_threat_data():
                 anom = Anomaly(
                     employee_id=emp.id,
                     anomaly_type=anom_type,
-                    severity=AlertSeverity.critical if category == "critical" else AlertSeverity.high,
-                    score=random.uniform(75.0, 95.0) if category == "critical" else random.uniform(55.0, 74.0),
+                    anomaly_score=random.uniform(75.0, 95.0) if category == "critical" else random.uniform(55.0, 74.0),
                     detected_at=log_time,
                     description=f"Behavioral anomaly detected for {emp.full_name}: {category.upper()} risk pattern identified.",
-                    details={"category": category, "employee_code": emp.employee_id}
+                    features={"category": category, "employee_code": emp.employee_id}
                 )
                 db.add(anom)
 

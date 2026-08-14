@@ -18,8 +18,86 @@ from app.ml.feature_engineering import encode_location, encode_department, encod
 from app.ml import inference as inf_service
 from app.services import ml_service
 
-# Initialize Redis client using settings url
-r_client = redis.Redis.from_url(settings.REDIS_URL, decode_responses=True)
+# Initialize Redis client with fallback to in-memory dictionary
+class SafeRedisWrapper:
+    def __init__(self):
+        self.mem_hash = {}
+        self.mem_set = {}
+        try:
+            self.redis = redis.Redis.from_url(settings.REDIS_URL, decode_responses=True)
+            self.redis.ping()
+            self.use_redis = True
+        except Exception as e:
+            logger.warning(f"Redis unavailable ({e}); using stateful in-memory cache for live streaming.")
+            self.use_redis = False
+
+    def exists(self, name: str) -> bool:
+        if self.use_redis:
+            try: return bool(self.redis.exists(name))
+            except Exception: pass
+        return name in self.mem_hash
+
+    def hgetall(self, name: str) -> Dict[str, str]:
+        if self.use_redis:
+            try: return self.redis.hgetall(name)
+            except Exception: pass
+        return self.mem_hash.get(name, {})
+
+    def hmset(self, name: str, mapping: dict) -> bool:
+        if self.use_redis:
+            try: return self.redis.hmset(name, mapping)
+            except Exception: pass
+        if name not in self.mem_hash: self.mem_hash[name] = {}
+        self.mem_hash[name].update({k: str(v) for k, v in mapping.items()})
+        return True
+
+    def hincrby(self, name: str, key: str, amount: int = 1) -> int:
+        if self.use_redis:
+            try: return self.redis.hincrby(name, key, amount)
+            except Exception: pass
+        if name not in self.mem_hash: self.mem_hash[name] = {}
+        curr = int(self.mem_hash[name].get(key, 0)) + amount
+        self.mem_hash[name][key] = str(curr)
+        return curr
+
+    def hincrbyfloat(self, name: str, key: str, amount: float = 1.0) -> float:
+        if self.use_redis:
+            try: return self.redis.hincrbyfloat(name, key, amount)
+            except Exception: pass
+        if name not in self.mem_hash: self.mem_hash[name] = {}
+        curr = float(self.mem_hash[name].get(key, 0.0)) + amount
+        self.mem_hash[name][key] = str(curr)
+        return curr
+
+    def sadd(self, name: str, value: str) -> int:
+        if self.use_redis:
+            try: return self.redis.sadd(name, value)
+            except Exception: pass
+        if name not in self.mem_set: self.mem_set[name] = set()
+        self.mem_set[name].add(value)
+        return len(self.mem_set[name])
+
+    def scard(self, name: str) -> int:
+        if self.use_redis:
+            try: return self.redis.scard(name)
+            except Exception: pass
+        return len(self.mem_set.get(name, set()))
+
+    def delete(self, name: str) -> int:
+        if self.use_redis:
+            try: return self.redis.delete(name)
+            except Exception: pass
+        self.mem_hash.pop(name, None)
+        self.mem_set.pop(name, None)
+        return 1
+
+    def expire(self, name: str, time: int) -> bool:
+        if self.use_redis:
+            try: return self.redis.expire(name, time)
+            except Exception: pass
+        return True
+
+r_client = SafeRedisWrapper()
 
 class StreamingRiskEngine:
     @staticmethod
@@ -366,9 +444,9 @@ class StreamingRiskEngine:
                 .first())
         if prev:
             delta = total - prev.total_score
-            trend = "increasing" if delta > 5 else "decreasing" if delta < -5 else "stable"
+            trend = "increasing" if delta > 0.1 else ("decreasing" if delta < -0.1 else "stable")
         else:
-            trend = "stable"
+            trend = "increasing" if total >= 50.0 else "stable"
 
         explanation = {
             "top_factors": [

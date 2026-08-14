@@ -364,6 +364,8 @@ def predict_employee(db, employee_id: int, days: int = 30, sync_risk_score: bool
 
             rs = db.query(RiskScore).filter(RiskScore.employee_id == employee_id).order_by(RiskScore.score_date.desc()).first()
             if rs:
+                delta = result["threat_score"] - rs.total_score
+                rs.trend = "increasing" if delta > 0.1 else ("decreasing" if delta < -0.1 else "stable")
                 rs.total_score = result["threat_score"]
                 rs.risk_category = category
                 rs.explanation = explanation
@@ -371,6 +373,7 @@ def predict_employee(db, employee_id: int, days: int = 30, sync_risk_score: bool
                 rs.xgboost_probability = result["confidence"] / 100.0
                 rs.score_date = datetime.now(timezone.utc)
             else:
+                trend = "increasing" if result["threat_score"] >= 50.0 else "stable"
                 rs = RiskScore(
                     employee_id=employee_id,
                     behavioral_anomaly_score=result["isolation_forest_score"],

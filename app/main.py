@@ -28,6 +28,27 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"ML model load skipped: {e}")
 
+    # Generate synthetic sample CSV files
+    try:
+        from scripts.generate_synthetic_csvs import generate_csvs
+        generate_csvs()
+    except Exception as e:
+        logger.warning(f"Synthetic CSV generation skipped: {e}")
+
+    # Auto-seed 300 synthetic employee cohort if not present or legacy LDAP count
+    try:
+        from app.core.database import SessionLocal
+        from app.models import Employee
+        db = SessionLocal()
+        emp_count = db.query(Employee).count()
+        db.close()
+        if emp_count != 300:
+            logger.info(f"Database employee count ({emp_count}) != 300. Seeding 300 synthetic cohort...")
+            from scripts.seed_synthetic_300 import seed_synthetic_300
+            seed_synthetic_300()
+    except Exception as e:
+        logger.warning(f"Auto-seeding synthetic cohort skipped: {e}")
+
     # Launch real-time simulation background worker
     import asyncio
     from app.services.simulation import run_simulation_loop

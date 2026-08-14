@@ -1,7 +1,7 @@
 # Insider Threat Behavioral Intelligence System
 
 AI-powered platform for continuous employee activity monitoring, behavioral anomaly
-detection, insider risk scoring, and threat investigation — built with FastAPI + MySQL.
+detection, insider risk scoring, real-time enterprise simulation, and ML threat prediction — built with FastAPI, PyTorch/RandomForest, React, and MySQL.
 
 ---
 
@@ -9,46 +9,66 @@ detection, insider risk scoring, and threat investigation — built with FastAPI
 
 | Layer | Technology |
 |---|---|
-| Backend API | Python 3.11 + FastAPI |
+| Frontend App | React 18 + Tailwind CSS + Lucide Icons + Recharts |
+| Backend API | Python 3.11 + FastAPI + WebSockets |
 | Database | MySQL 8.0 (primary) |
-| Cache | Redis 7 |
-| ML Models | Isolation Forest, XGBoost, Z-score |
-| Auth | JWT (access + refresh tokens) + OAuth2 |
+| Cache & Streaming | Redis 7 |
+| ML Models | RandomForestClassifier (200 trees, 5-class), Isolation Forest, SHAP Explainable AI |
+| Auth | JWT (access + refresh tokens) + OAuth2 + RBAC |
 | Deployment | Docker + Docker Compose |
 
 ---
 
-## Quick Start
+## Quick Start (How to Run)
 
-### 1. Clone & configure
+### Option 1: Run Locally (Recommended for Development)
+
+#### 1. Setup Backend (FastAPI)
 
 ```bash
-git clone <repo>
-cd insider-threat-system
+# 1. Clone repository & configure environment
 cp .env.example .env
-# Edit .env with your MySQL password and secret key
-```
+# Edit .env with your MySQL credentials (DATABASE_URL)
 
-### 2. Start with Docker
-
-```bash
-docker-compose up -d
-# API: http://localhost:8000
-# Docs: http://localhost:8000/docs
-```
-
-### 3. Or run locally
-
-```bash
-# MySQL must be running and configured in .env
+# 2. Install Python dependencies
 pip install -r requirements.txt
-python scripts/seed.py          # create tables + demo data
-uvicorn app.main:app --reload
+
+# 3. Seed 300 Synthetic Employees & Generate 50-Row Test CSVs
+python scripts/seed_synthetic_300.py
+python scripts/generate_synthetic_csvs.py
+
+# 4. Start Backend API Server
+uvicorn app.main:app --reload --port 8000
+```
+- **Backend API**: http://localhost:8000
+- **Swagger Docs**: http://localhost:8000/docs
+- **Health Check**: http://localhost:8000/health
+
+#### 2. Setup Frontend (React)
+
+```bash
+# 1. Open a new terminal and navigate to frontend
+cd frontend
+
+# 2. Install dependencies & start dev server
+npm install
+npm start
+```
+- **Web App**: http://localhost:3000
+
+---
+
+### Option 2: Run with Docker Compose
+
+```bash
+docker-compose up -d --build
+# Backend API: http://localhost:8000
+# Web Interface: http://localhost:3000
 ```
 
 ---
 
-## Default Login Credentials (after seeding)
+## Default Login Credentials
 
 | Role | Email | Password |
 |---|---|---|
@@ -59,107 +79,43 @@ uvicorn app.main:app --reload
 
 ---
 
-## Dataset Setup (CERT Insider Threat Dataset)
+## Key Features & How to Use
 
-> **Recommended over LANL** — CERT r4.2 has pre-labeled insider/benign activities
-> across logon, file, device, email, and HTTP logs, matching all 13 system modules.
+### 1. 300 Synthetic Employee Dataset
+- Database is cleanly populated with **300 synthetic employees** (`SYN-001` through `SYN-300`).
+- Balanced risk distribution across all 4 criteria:
+  - **Low Risk**: ~110 employees (~37%)
+  - **Medium Risk**: ~90 employees (~30%)
+  - **High Risk**: ~60 employees (~20%)
+  - **Critical Risk**: ~40 employees (~13%)
 
-**Download**: https://kilthub.cmu.edu/articles/dataset/Insider_Threat_Test_Dataset/12841247
+### 2. Live Simulation & Dynamic Risk Ticker
+- Toggle **SIMULATION: RUNNING** on the SOC Dashboard or via API (`POST /api/v1/simulation/toggle`).
+- Background worker continuously streams employee activities and updates risk scores **one by one** over WebSockets with audio & voice alerts.
 
-**Files needed**: `logon.csv`, `file.csv`, `device.csv`, `email.csv`, `http.csv`
-
-**Upload via API** (after seeding employees):
-
-```bash
-# Get a JWT token first
-TOKEN=$(curl -s -X POST http://localhost:8000/api/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{"email":"analyst@company.com","password":"Analyst123!"}' \
-  | python3 -c "import sys,json; print(json.load(sys.stdin)['access_token'])")
-
-# Upload each CERT log file
-for log_type in logon file device email http; do
-  curl -X POST "http://localhost:8000/api/v1/activities/cert/upload/${log_type}" \
-    -H "Authorization: Bearer $TOKEN" \
-    -F "file=@./data/cert/${log_type}.csv"
-done
-```
-
-**Note**: CERT user IDs (e.g. `AAA0001`) must match `employee_id` in the `employees` table.
-Run the seed script first, then map CERT user IDs to your seeded employees.
+### 3. Prediction Lab (ML Pipeline & CSV Upload)
+Navigate to **Prediction Lab** (`/predict`):
+- **ML Pipeline Scan**: Run a live threat sweep across the 300 synthetic cohort.
+- **CSV Upload Predict**: Drag & drop a 50-row synthetic CSV file (`data/synthetic_csvs/synthetic_features_50.csv`) to predict risk levels, class probabilities, and SHAP explanations for all 50 rows instantly. Click **Download Sample 50-Row CSV** inside the UI for a ready-to-test CSV.
+- **Manual Vector Test**: Interactive feature sliders to test custom behavioral scenarios.
 
 ---
 
-## API Overview
+## Synthetic CSV Dataset & API Endpoints
 
-Base URL: `http://localhost:8000/api/v1`
+Sample synthetic CSVs are generated in `data/synthetic_csvs/`:
+- `synthetic_features_50.csv`: 50 rows of feature vectors containing Low, Medium, High, and Critical criteria.
 
-### Authentication
+### ML & Prediction Endpoints
 | Method | Endpoint | Description |
 |---|---|---|
-| POST | /auth/register | Create new analyst account |
-| POST | /auth/login | Login → access + refresh tokens |
-| POST | /auth/refresh | Refresh access token |
-| GET  | /auth/me | Current user profile |
-| PUT  | /auth/change-password | Change password |
-
-### Employees
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /employees | Onboard new employee |
-| GET  | /employees | List all employees (paginated) |
-| GET  | /employees/{id} | Employee detail + risk summary |
-| PUT  | /employees/{id} | Update employee |
-| DELETE | /employees/{id} | Terminate employee |
-| GET  | /employees/departments | List departments |
-| POST | /employees/{id}/devices | Register device |
-
-### Activity Monitoring
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /activities | Log single activity |
-| POST | /activities/bulk | Bulk JSON ingest |
-| POST | /activities/cert/upload/{type} | Upload CERT CSV file |
-| GET  | /activities | Query activity logs |
-| GET  | /activities/stats/summary | Activity statistics |
-
-### Anomaly Detection
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /anomalies/detect/{employee_id} | Run detection for employee |
-| POST | /anomalies/train-model | Train Isolation Forest |
-| GET  | /anomalies | List anomalies (filtered) |
-| PUT  | /anomalies/{id}/review | Mark confirmed/false positive |
-
-### Risk Scoring
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /risk/score/{employee_id} | Calculate risk score |
-| POST | /risk/score-all | Batch score all employees |
-| GET  | /risk/leaderboard | Top risk employees |
-| GET  | /risk/{employee_id}/history | Risk score history |
-
-### Alerts
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /alerts | Create alert |
-| GET  | /alerts | List alerts (filtered) |
-| PUT  | /alerts/{id} | Update status / assign |
-
-### Incidents
-| Method | Endpoint | Description |
-|---|---|---|
-| POST | /incidents | Create investigation |
-| GET  | /incidents | List incidents |
-| GET  | /incidents/{id}/timeline | Activity timeline reconstruction |
-| PUT  | /incidents/{id} | Update investigation |
-
-### Dashboards
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /dashboard/security-analyst | Analyst view |
-| GET | /dashboard/soc | SOC operations view |
-| GET | /dashboard/manager | Manager/executive view |
+| GET | `/api/v1/ml/status` | ML Model status & feature architecture |
+| GET | `/api/v1/ml/pipeline/scan` | Live ML scan across 300 synthetic employees |
+| POST | `/api/v1/ml/predict/csv` | Upload 50-row synthetic CSV for batch predictions |
+| GET | `/api/v1/ml/download-sample-csv` | Download 50-row sample synthetic CSV file |
+| POST | `/api/v1/ml/seed-synthetic-300` | Re-seed database with 300 synthetic employees |
+| POST | `/api/v1/ml/predict/manual` | Run single feature vector inference |
+| POST | `/api/v1/ml/predict/{employee_id}` | Single employee behavioral threat prediction |
 
 ---
 
@@ -176,20 +132,10 @@ Insider Risk Score =
 
 | Score Range | Risk Category |
 |---|---|
-| 0–24 | Low |
-| 25–49 | Medium |
-| 50–74 | High |
-| 75–100 | Critical |
-
----
-
-## ML Models
-
-| Model | Purpose | Training |
-|---|---|---|
-| Isolation Forest | Unsupervised peer deviation detection | `POST /anomalies/train-model` |
-| Z-score analysis | Personal baseline deviation | Auto (on profile build) |
-| Rule-based | Off-hours, USB, data volume rules | Always-on |
+| 0–24 | Low Risk |
+| 25–49 | Medium Risk |
+| 50–74 | High Risk |
+| 75–100 | Critical Risk |
 
 ---
 
@@ -198,44 +144,38 @@ Insider Risk Score =
 ```
 insider-threat-system/
 ├── app/
-│   ├── main.py                    # FastAPI app entry point
+│   ├── main.py                    # FastAPI app entry point (auto-seeds 300 cohort)
 │   ├── core/
-│   │   ├── config.py              # Settings (pydantic-settings)
-│   │   ├── database.py            # MySQL engine + session
-│   │   └── security.py            # JWT + RBAC
+│   │   ├── config.py              # System settings & configuration
+│   │   ├── database.py            # MySQL engine & session
+│   │   └── security.py            # JWT + RBAC authorization
 │   ├── models/
-│   │   └── __init__.py            # All SQLAlchemy ORM models
-│   ├── schemas/
-│   │   └── __init__.py            # All Pydantic v2 schemas
+│   │   └── __init__.py            # SQLAlchemy ORM data models
 │   ├── api/v1/
-│   │   ├── __init__.py            # Router aggregation
 │   │   └── endpoints/
-│   │       ├── auth.py            # Module 1: Authentication
-│   │       ├── employees.py       # Module 2: Employee Management
-│   │       ├── activities.py      # Module 3: Activity Monitoring + CERT ingest
-│   │       └── security.py        # Modules 5–10: Anomaly / Risk / Alerts / Dashboard
+│   │       ├── ml_endpoints.py    # ML inference, CSV upload & pipeline scan
+│   │       ├── simulation.py      # Real-time WebSocket simulation controller
+│   │       ├── employees.py       # Employee management
+│   │       └── security.py        # Anomalies, Risk, Alerts & Dashboards
 │   ├── services/
-│   │   └── ml_service.py          # Modules 4–6: Profiling / Detection / Scoring
-│   └── ml/models/                 # Trained model files (.pkl)
+│   │   ├── simulation.py          # Background worker streaming live risk ticks
+│   │   └── streaming_service.py   # Dynamic Redis feature state prediction engine
+│   └── ml/
+│       ├── feature_engineering.py # 20-feature vector extraction
+│       ├── inference.py          # ML Inference & SHAP Explainable AI
+│       └── models/                # Trained .pkl & .pth model weights
+├── frontend/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── ml/PredictionPlaygroundPage.js # ML Pipeline, CSV Upload & Manual Test
+│   │   │   └── dashboard/DashboardPage.js     # Real-time SOC dashboard
+│   │   └── utils/store.js         # Zustand store & WebSocket live feed
 ├── scripts/
-│   ├── seed.py                    # Demo data seeder
-│   └── init.sql                   # MySQL init script
-├── data/cert/                     # Place CERT CSV files here
+│   ├── seed_synthetic_300.py      # 300 synthetic cohort employee dataset seeder
+│   └── generate_synthetic_csvs.py # 50-row synthetic test CSV generator
+├── data/synthetic_csvs/           # Pre-generated 50-row test CSV files
 ├── docker-compose.yml
 ├── Dockerfile
 ├── requirements.txt
 └── .env.example
-```
-
----
-
-## Environment Variables
-
-See `.env.example` for all options. Key variables:
-
-```
-DATABASE_URL=mysql+pymysql://user:pass@localhost:3306/insider_threat_db
-SECRET_KEY=your-32-char-secret
-WEIGHT_BEHAVIORAL_ANOMALIES=0.35
-RISK_THRESHOLD_CRITICAL=90
 ```

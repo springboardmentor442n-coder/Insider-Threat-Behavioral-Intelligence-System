@@ -14,7 +14,7 @@ from sqlalchemy.orm import Session
 from app.core.database import SessionLocal
 from app.core.websockets import manager
 from app.models import (
-    Employee, ActivityLog, ActivityType, RiskScore, RiskCategory, Alert, AlertSeverity, AlertStatus
+    Employee, ActivityLog, ActivityType, RiskScore, RiskCategory, Alert, AlertSeverity, AlertStatus, Anomaly, AnomalyType
 )
 from app.services import ml_service
 from app.ml import inference as inf_service
@@ -81,40 +81,36 @@ async def run_simulation_loop():
                 # 2. Pick a random employee
                 emp = random.choice(employees)
 
-                # Determine if we should generate normal or suspicious scenario
-                # Let's seed threat scenarios specifically:
-                # EMP001 (Alice) -> IP Theft / Large downloads
-                # EMP002 (Bob) -> IT Sabotage / deletes
-                # EMP003 (Carol) -> Unusual logins / Failed logins
-                # EMP004 (David) -> Data exfil / USB connection
-                is_threat_actor = emp.employee_id in ["EMP001", "EMP002", "EMP003", "EMP004"]
-                
-                # 30% chance of threat actor doing a malicious action, otherwise standard activities
+                # Determine if we should generate normal or suspicious scenario for synthetic cohort
+                is_threat_actor = emp.access_level == "privileged" or (emp.id % 5 == 0)
+
+                # 35% chance of threat actor performing a suspicious action
                 if is_threat_actor and random.random() < 0.35:
-                    if emp.employee_id == "EMP001":
-                        act_name, act_type, act_desc = "Large File Download", ActivityType.file_download, "Downloaded source code blueprint repository zip"
-                        resource = "/vault/blueprint_v2.zip"
-                        bytes_transferred = random.randint(50_000_000, 200_000_000) # 50-200MB
+                    scenario_choice = emp.id % 4
+                    if scenario_choice == 0:
+                        act_name, act_type, act_desc = "Large File Download", ActivityType.file_download, "Downloaded confidential blueprint repository zip"
+                        resource = "/vault/confidential_blueprints.zip"
+                        bytes_transferred = random.randint(50_000_000, 300_000_000)
                         is_suspicious = True
-                    elif emp.employee_id == "EMP002":
-                        act_name, act_type, act_desc = "Privilege Escalation", ActivityType.privilege_change, "Administrator privilege change registered"
-                        resource = "system_root/root_access"
+                    elif scenario_choice == 1:
+                        act_name, act_type, act_desc = "Privilege Escalation", ActivityType.privilege_change, "Workstation local administrator rights granted"
+                        resource = "system_root/admin_grant"
                         bytes_transferred = 0
                         is_suspicious = True
-                    elif emp.employee_id == "EMP003":
-                        act_name, act_type, act_desc = "Failed Login", ActivityType.failed_login, "Multiple failed login attempts detected"
+                    elif scenario_choice == 2:
+                        act_name, act_type, act_desc = "Failed Login", ActivityType.failed_login, "Multiple failed login attempts on core server"
                         resource = "payroll_prod_db"
                         bytes_transferred = 0
                         is_suspicious = True
                     else:
-                        act_name, act_type, act_desc = "Cloud Upload", ActivityType.file_upload, "Uploaded compressed files to personal backup drive"
-                        resource = "drive.google.com/exfil_archive.rar"
-                        bytes_transferred = random.randint(30_000_000, 100_000_000)
+                        act_name, act_type, act_desc = "Cloud Upload", ActivityType.file_upload, "Uploaded archive to external cloud host"
+                        resource = "s3.amazonaws.com/backup_exfil.zip"
+                        bytes_transferred = random.randint(100_000_000, 500_000_000)
                         is_suspicious = True
                 else:
                     # Pick a random activity
                     act_name, act_type, act_desc = random.choice(SIMULATED_ACTIVITIES)
-                    resource = random.choice(["workstation-01", "internal_portal", "email_exchange", "shared_storage/report.xlsx", "www.github.com"])
+                    resource = random.choice(["workstation-01", "internal_portal.corp", "email_exchange", "shared_storage/report.xlsx", "www.github.com"])
                     bytes_transferred = random.randint(1_000, 50_000) if act_type in (ActivityType.file_download, ActivityType.file_upload, ActivityType.data_transfer) else 0
                     is_suspicious = random.random() < 0.05  # 5% baseline anomaly rate
 
@@ -157,22 +153,52 @@ async def run_simulation_loop():
                 # Fetch risk score db object
                 rs = db.query(RiskScore).filter(RiskScore.id == stream_res["risk_score_id"]).first()
 
-                # Trigger alert if risk is High or Critical
+                # Trigger and record Anomaly & Alert in DB if risk is High or Critical or suspicious
                 new_alert = None
-                if rs.risk_category in (RiskCategory.high, RiskCategory.critical):
-                    # Fetch that alert
-                    latest_alert = db.query(Alert).filter(Alert.employee_id == emp.id).order_by(Alert.triggered_at.desc()).first()
-                    if latest_alert:
-                        new_alert = {
-                            "alert_id": latest_alert.alert_id,
-                            "title": latest_alert.title,
-                            "severity": latest_alert.severity.value,
-                            "status": latest_alert.status.value,
-                            "description": latest_alert.description,
-                            "triggered_at": latest_alert.triggered_at.isoformat(),
-                            "employee_name": emp.full_name,
-                            "department": emp.department.name if emp.department else "N/A"
-                        }
+                if rs.risk_category in (RiskCategory.high, RiskCategory.critical) or log.is_suspicious:
+                    # 1. Record Anomaly entry in database
+                    anom_type = (
+                        AnomalyType.data_exfiltration if log.activity_type in (ActivityType.file_upload, ActivityType.file_download)
+                        else AnomalyType.privilege_abuse if log.activity_type == ActivityType.privilege_change
+                        else AnomalyType.unusual_login_time if log.is_outside_hours
+                        else AnomalyType.unauthorized_access
+                    )
+                    new_anom = Anomaly(
+                        employee_id=emp.id,
+                        anomaly_type=anom_type,
+                        anomaly_score=float(rs.total_score),
+                        detected_at=log.timestamp,
+                        description=f"Simulation anomaly detected for {emp.full_name} ({emp.employee_id}): {act_desc}",
+                        features={"activity_type": log.activity_type.value, "resource": log.resource, "simulated": True}
+                    )
+                    db.add(new_anom)
+
+                    # 2. Record Alert entry in database
+                    alert_code = f"ALT-SIM-{log.id:06d}"
+                    alert_obj = Alert(
+                        alert_id=alert_code,
+                        employee_id=emp.id,
+                        title=f"⚠️ [{rs.risk_category.value.upper()}] Insider Threat Alert: {emp.full_name}",
+                        description=f"{act_desc} | Resource: {log.resource or 'N/A'} | Threat Score: {rs.total_score:.1f}",
+                        severity=AlertSeverity.critical if rs.risk_category == RiskCategory.critical else AlertSeverity.high,
+                        status=AlertStatus.open,
+                        triggered_at=log.timestamp,
+                        risk_score_id=rs.id
+                    )
+                    db.add(alert_obj)
+                    db.commit()
+                    db.refresh(alert_obj)
+
+                    new_alert = {
+                        "alert_id": alert_obj.alert_id,
+                        "title": alert_obj.title,
+                        "severity": alert_obj.severity.value,
+                        "status": alert_obj.status.value,
+                        "description": alert_obj.description,
+                        "triggered_at": alert_obj.triggered_at.isoformat(),
+                        "employee_name": emp.full_name,
+                        "department": emp.department.name if emp.department else "N/A"
+                    }
 
                 # 5. Build broadcast payload
                 payload = {
