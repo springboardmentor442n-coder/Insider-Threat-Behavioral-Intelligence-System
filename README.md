@@ -9,7 +9,13 @@
 # Add env example
 # Add trained ML model files
 # Add dashboard frontend
-
+# Add employees.html template for employee monitoring
+# Add login.html template for user authentication
+# Refactor pipeline page layout and content
+# Add predictions.html for threat prediction engine
+# Add employee profile template
+# Implement AI analysis endpoint for insider-threat detection
+# 
 
 kaggle notebook link:
 https://www.kaggle.com/code/srinidhigolla/insider-threat-real-labels
