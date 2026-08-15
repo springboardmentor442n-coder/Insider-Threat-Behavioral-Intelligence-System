@@ -8,6 +8,8 @@ from functools import wraps
 import pandas as pd
 import shap
 
+from openai import OpenAI
+
 from flask import (
     Flask,
     request,
@@ -46,6 +48,20 @@ PORT = int(os.getenv("FLASK_PORT", "5000"))
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "").strip()
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-secret-key")
+
+
+# ============================================================
+# OPENAI
+# ============================================================
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
+
+if OPENAI_API_KEY:
+    openai_client = OpenAI(api_key=OPENAI_API_KEY)
+    print("OpenAI API configured")
+else:
+    openai_client = None
+    print("OpenAI API key not configured")
 
 
 # ============================================================
