@@ -15,7 +15,8 @@
 # Add predictions.html for threat prediction engine
 # Add employee profile template
 # Implement AI analysis endpoint for insider-threat detection
-# 
+# Add OPENAI_API_KEY to .env.example
+# Added employees.json file for accurate predictions 
 
 kaggle notebook link:
 https://www.kaggle.com/code/srinidhigolla/insider-threat-real-labels
