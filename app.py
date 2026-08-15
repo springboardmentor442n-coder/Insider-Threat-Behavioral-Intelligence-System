@@ -577,6 +577,76 @@ def predict_api():
         return jsonify({"error": str(e)}), 500
 
 
+
+# ============================================================
+# AI ANALYSIS
+# ============================================================
+
+@app.route("/ai-analysis", methods=["POST"])
+@login_required
+def ai_analysis():
+
+    try:
+        data = request.get_json(silent=True) or {}
+
+        prediction = data.get("prediction", "N/A")
+        risk_score = data.get("risk_score_100", 0)
+        severity = data.get("severity", "N/A")
+        top_factors = data.get("top_factors", [])
+
+        if openai_client is None:
+            return jsonify({
+                "error": "OpenAI API is not configured"
+            }), 500
+
+        prompt = f"""
+You are a cybersecurity analyst.
+
+Analyze this insider-threat detection result.
+
+Prediction: {prediction}
+Risk Score: {risk_score}/100
+Severity: {severity}
+
+Important behavioral factors:
+{json.dumps(top_factors, indent=2)}
+
+Provide:
+
+1. Threat explanation
+2. Main behavioral indicators
+3. Why the behavior may be risky
+4. Recommended investigation actions
+5. Security recommendations
+
+Do not claim the employee is definitely malicious.
+The ML prediction is only a risk indicator requiring investigation.
+"""
+
+        response = openai_client.responses.create(
+            model="gpt-4.1-mini",
+            input=prompt
+        )
+
+        analysis = response.output_text
+
+        return jsonify({
+            "success": True,
+            "analysis": analysis
+        })
+
+    except Exception as e:
+
+        print("AI analysis error:", e)
+
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
+
+
+
+
 # ============================================================
 # PREDICTION HISTORY API
 # ============================================================
