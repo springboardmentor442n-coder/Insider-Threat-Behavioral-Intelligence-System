@@ -583,7 +583,6 @@ def predict_api():
 # ============================================================
 
 @app.route("/ai-analysis", methods=["POST"])
-@login_required
 def ai_analysis():
 
     try:
