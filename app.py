@@ -577,13 +577,14 @@ def predict_api():
         return jsonify({"error": str(e)}), 500
 
 
-
 # ============================================================
 # AI ANALYSIS
 # ============================================================
+
 @app.route("/ai-analysis", methods=["POST"])
 @login_required
 def ai_analysis():
+
     try:
         data = request.get_json(silent=True) or {}
 
@@ -594,6 +595,7 @@ def ai_analysis():
 
         if openai_client is None:
             return jsonify({
+                "success": False,
                 "error": "OpenAI API is not configured"
             }), 500
 
@@ -610,6 +612,7 @@ Important behavioral factors:
 {json.dumps(top_factors, indent=2)}
 
 Provide:
+
 1. Threat explanation
 2. Main behavioral indicators
 3. Why the behavior may be risky
@@ -631,7 +634,9 @@ The ML prediction is only a risk indicator requiring investigation.
         })
 
     except Exception as e:
+
         print("AI analysis error:", e)
+
         return jsonify({
             "success": False,
             "error": str(e)
