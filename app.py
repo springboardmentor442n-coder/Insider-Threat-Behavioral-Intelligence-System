@@ -581,10 +581,9 @@ def predict_api():
 # ============================================================
 # AI ANALYSIS
 # ============================================================
-
 @app.route("/ai-analysis", methods=["POST"])
+@login_required
 def ai_analysis():
-
     try:
         data = request.get_json(silent=True) or {}
 
@@ -611,7 +610,6 @@ Important behavioral factors:
 {json.dumps(top_factors, indent=2)}
 
 Provide:
-
 1. Threat explanation
 2. Main behavioral indicators
 3. Why the behavior may be risky
@@ -627,24 +625,17 @@ The ML prediction is only a risk indicator requiring investigation.
             input=prompt
         )
 
-        analysis = response.output_text
-
         return jsonify({
             "success": True,
-            "analysis": analysis
+            "analysis": response.output_text
         })
 
     except Exception as e:
-
         print("AI analysis error:", e)
-
         return jsonify({
             "success": False,
             "error": str(e)
         }), 500
-
-
-
 
 # ============================================================
 # PREDICTION HISTORY API
