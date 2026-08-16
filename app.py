@@ -8,8 +8,6 @@ from functools import wraps
 import pandas as pd
 import shap
 
-from openai import OpenAI
-
 from flask import (
     Flask,
     request,
@@ -49,19 +47,6 @@ ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "").strip()
 ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "dev-secret-key")
 
-
-# ============================================================
-# OPENAI
-# ============================================================
-
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "").strip()
-
-if OPENAI_API_KEY:
-    openai_client = OpenAI(api_key=OPENAI_API_KEY)
-    print("OpenAI API configured")
-else:
-    openai_client = None
-    print("OpenAI API key not configured")
 
 
 # ============================================================
@@ -578,7 +563,7 @@ def predict_api():
 
 
 # ============================================================
-# AI ANALYSIS
+# LOCAL AI SECURITY ANALYSIS
 # ============================================================
 
 @app.route("/ai-analysis", methods=["POST"])
@@ -589,58 +574,250 @@ def ai_analysis():
         data = request.get_json(silent=True) or {}
 
         prediction = data.get("prediction", "N/A")
-        risk_score = data.get("risk_score_100", 0)
+        risk_score = float(data.get("risk_score_100", 0))
         severity = data.get("severity", "N/A")
         top_factors = data.get("top_factors", [])
 
-        if openai_client is None:
-            return jsonify({
-                "success": False,
-                "error": "OpenAI API is not configured"
-            }), 500
+        # ----------------------------------------------------
+        # Determine threat level
+        # ----------------------------------------------------
 
-        prompt = f"""
-You are a cybersecurity analyst.
+        if risk_score >= 75:
+            threat_level = "Critical"
+        elif risk_score >= 50:
+            threat_level = "High"
+        elif risk_score >= 25:
+            threat_level = "Medium"
+        else:
+            threat_level = "Low"
 
-Analyze this insider-threat detection result.
+        # ----------------------------------------------------
+        # Analyze SHAP factors
+        # ----------------------------------------------------
 
-Prediction: {prediction}
-Risk Score: {risk_score}/100
-Severity: {severity}
+        positive_factors = []
+        negative_factors = []
 
-Important behavioral factors:
-{json.dumps(top_factors, indent=2)}
+        for factor in top_factors:
 
-Provide:
+            feature = factor.get(
+                "feature",
+                "Unknown"
+            )
 
-1. Threat explanation
-2. Main behavioral indicators
-3. Why the behavior may be risky
-4. Recommended investigation actions
-5. Security recommendations
+            shap_value = float(
+                factor.get(
+                    "shap_value",
+                    0
+                )
+            )
 
-Do not claim the employee is definitely malicious.
-The ML prediction is only a risk indicator requiring investigation.
+            if shap_value > 0:
+                positive_factors.append(
+                    f"{feature} (+{shap_value:.4f})"
+                )
+
+            elif shap_value < 0:
+                negative_factors.append(
+                    f"{feature} ({shap_value:.4f})"
+                )
+
+        # ----------------------------------------------------
+        # Threat explanation
+        # ----------------------------------------------------
+
+        if prediction == "INSIDER":
+
+            threat_explanation = (
+                f"The XGBoost model classified this behaviour "
+                f"as a potential insider threat with a risk score "
+                f"of {risk_score}/100. The result should be treated "
+                f"as a security risk indicator rather than proof "
+                f"of malicious activity."
+            )
+
+        else:
+
+            threat_explanation = (
+                f"The XGBoost model classified this behaviour "
+                f"as NORMAL with a risk score of "
+                f"{risk_score}/100. No strong evidence of "
+                f"insider-threat behaviour was identified by "
+                f"the current model."
+            )
+
+        # ----------------------------------------------------
+        # Main behavioural indicators
+        # ----------------------------------------------------
+
+        if positive_factors:
+
+            indicators = (
+                "The behavioural indicators increasing the "
+                "risk score are:\n\n"
+                + "\n".join(
+                    "• " + factor
+                    for factor in positive_factors[:5]
+                )
+            )
+
+        else:
+
+            indicators = (
+                "No significant positive SHAP contributors "
+                "were available for this prediction."
+            )
+
+        # ----------------------------------------------------
+        # Risk reasoning
+        # ----------------------------------------------------
+
+        if risk_score >= 75:
+
+            risk_reason = (
+                "The combination of behavioural indicators "
+                "produced a critical risk score. The employee "
+                "activity should be reviewed promptly, especially "
+                "for unusual access, data movement, removable "
+                "media usage, external communication, or "
+                "off-hours activity."
+            )
+
+        elif risk_score >= 50:
+
+            risk_reason = (
+                "The detected behaviour contains several "
+                "indicators associated with elevated insider "
+                "risk. Further investigation is recommended "
+                "before drawing any conclusion."
+            )
+
+        elif risk_score >= 25:
+
+            risk_reason = (
+                "The behaviour shows some unusual characteristics, "
+                "but the available evidence is not strong enough "
+                "to classify the activity as a high-risk event."
+            )
+
+        else:
+
+            risk_reason = (
+                "The observed behaviour does not currently show "
+                "strong indicators of insider-threat activity."
+            )
+
+        # ----------------------------------------------------
+        # Investigation actions
+        # ----------------------------------------------------
+
+        if prediction == "INSIDER":
+
+            investigation_actions = [
+                "Review the employee's recent login activity.",
+                "Check off-hours system access.",
+                "Review USB and removable-device activity.",
+                "Inspect unusual file transfers or sensitive-file access.",
+                "Review external email activity and attachments.",
+                "Check suspicious cloud-storage or job-search website activity.",
+                "Compare the behaviour with the employee's normal baseline."
+            ]
+
+        else:
+
+            investigation_actions = [
+                "Continue monitoring the employee's behavioural baseline.",
+                "Check for significant changes in future activity.",
+                "Review alerts if the risk score increases.",
+                "No immediate escalation is recommended based only on this result."
+            ]
+
+        # ----------------------------------------------------
+        # Security recommendations
+        # ----------------------------------------------------
+
+        recommendations = [
+            "Use least-privilege access controls.",
+            "Monitor unusual off-hours activity.",
+            "Monitor removable-device usage.",
+            "Apply data-loss-prevention controls to sensitive files.",
+            "Monitor unusual external communication.",
+            "Maintain behavioural baselines for employees.",
+            "Require human security review before taking disciplinary action."
+        ]
+
+        # ----------------------------------------------------
+        # Build final analysis
+        # ----------------------------------------------------
+
+        analysis = f"""
+LOCAL AI SECURITY ANALYSIS
+==========================
+
+Threat Level:
+{threat_level}
+
+Prediction:
+{prediction}
+
+Risk Score:
+{risk_score}/100
+
+Severity:
+{severity}
+
+
+1. THREAT EXPLANATION
+---------------------
+{threat_explanation}
+
+
+2. MAIN BEHAVIOURAL INDICATORS
+------------------------------
+{indicators}
+
+
+3. WHY THE BEHAVIOUR MAY BE RISKY
+----------------------------------
+{risk_reason}
+
+
+4. RECOMMENDED INVESTIGATION ACTIONS
+-------------------------------------
+{"".join("• " + action + chr(10) for action in investigation_actions)}
+
+
+5. SECURITY RECOMMENDATIONS
+----------------------------
+{"".join("• " + recommendation + chr(10) for recommendation in recommendations)}
+
+
+IMPORTANT:
+This analysis is generated from the machine-learning prediction
+and behavioural indicators. It does not prove that an employee
+is malicious. A qualified security analyst should review the
+available evidence before taking action.
 """
-
-        response = openai_client.responses.create(
-            model="gpt-4.1-mini",
-            input=prompt
-        )
 
         return jsonify({
             "success": True,
-            "analysis": response.output_text
+            "analysis": analysis,
+            "threat_level": threat_level
         })
 
     except Exception as e:
 
-        print("AI analysis error:", e)
+        print(
+            "Local AI analysis error:",
+            e
+        )
 
         return jsonify({
             "success": False,
             "error": str(e)
         }), 500
+
+
 
 # ============================================================
 # PREDICTION HISTORY API
