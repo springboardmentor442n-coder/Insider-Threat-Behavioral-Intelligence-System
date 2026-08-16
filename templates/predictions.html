@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% block title %}Predictions · InsightGuard{% endblock %}
 
 {% block extra_style %}
@@ -111,35 +112,43 @@
 .ai-card{
   margin-top:1.5rem;
   padding:1.5rem;
-  border-radius:14px;
   border:1px solid var(--accent);
+  border-radius:14px;
   background:var(--surface)
 }
 
 .ai-analysis{
-  margin-top:1rem;
+  white-space:pre-wrap;
   line-height:1.7;
   font-size:.9rem;
-  white-space:pre-wrap
+  margin-top:1rem
 }
 
-.ai-loading{
-  color:var(--muted);
-  font-family:'DM Mono',monospace;
-  font-size:.8rem
+.ai-btn{
+  margin-top:1.2rem;
+  background:var(--accent);
+  color:white;
+  border:none;
+  padding:.75rem 1.2rem;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:700
+}
+
+.ai-btn:disabled{
+  opacity:.6;
+  cursor:not-allowed
 }
 </style>
 {% endblock %}
-
 
 {% block content %}
 
 <h1>Threat Prediction Engine</h1>
 
 <p class="subtitle">
-  Enter employee behavioural metrics for real-time SHAP-explained risk analysis
+Enter employee behavioural metrics for real-time SHAP-explained risk analysis
 </p>
-
 
 <div class="card">
 
@@ -153,14 +162,11 @@
 
 </div>
 
-
 <div id="resultContainer"></div>
-
 
 <script>
 
 const FIELDS = {{ fields | tojson }};
-
 
 document.getElementById('fieldGrid').innerHTML =
   FIELDS.map(f =>
@@ -170,24 +176,16 @@ document.getElementById('fieldGrid').innerHTML =
         type="number"
         id="f_${f.key}"
         value="0"
-        step="any"
-      >
+        step="any">
     </div>`
   ).join('');
 
 
-
-/* ============================================================
-   RUN XGBOOST + SHAP ANALYSIS
-   ============================================================ */
-
 async function runAnalysis() {
 
-  const btn =
-    document.getElementById('runBtn');
+  const btn = document.getElementById('runBtn');
 
-  const status =
-    document.getElementById('status');
+  const status = document.getElementById('status');
 
   const payload = {};
 
@@ -195,19 +193,15 @@ async function runAnalysis() {
 
     payload[f.key] =
       parseFloat(
-        document.getElementById(
-          'f_' + f.key
-        ).value
+        document.getElementById('f_' + f.key).value
       ) || 0;
 
   });
 
-
   btn.disabled = true;
 
   status.textContent =
-    'Running XGBoost + SHAP analysis...';
-
+    'Running XGBoost prediction...';
 
   try {
 
@@ -222,10 +216,7 @@ async function runAnalysis() {
       }
     );
 
-
-    const data =
-      await res.json();
-
+    const data = await res.json();
 
     if (data.error) {
 
@@ -236,7 +227,6 @@ async function runAnalysis() {
 
       return;
     }
-
 
     status.textContent = '';
 
@@ -251,21 +241,16 @@ async function runAnalysis() {
 
   }
 
-
   btn.disabled = false;
-
 }
 
 
-
-/* ============================================================
-   DISPLAY RESULT
-   ============================================================ */
-
 function renderResult(data) {
 
+  const factors = data.top_factors || [];
+
   const factorsHtml =
-    data.top_factors.map(f => {
+    factors.map(f => {
 
       const isPositive =
         f.shap_value > 0;
@@ -278,9 +263,8 @@ function renderResult(data) {
 
       const side =
         isPositive
-          ? 'left:50%'
-          : 'right:50%';
-
+        ? 'left:50%'
+        : 'right:50%';
 
       return `
         <div class="factor-row">
@@ -295,25 +279,22 @@ function renderResult(data) {
               class="factor-bar"
               style="
                 width:${width}%;
-                background:${isPositive
-                  ? '#f87171'
-                  : '#4ade80'};
+                background:${isPositive ? '#f87171' : '#4ade80'};
                 ${side}
-              "
-            ></div>
+              ">
+            </div>
 
           </div>
 
           <div
             class="factor-val"
             style="
-              color:${isPositive
-                ? '#f87171'
-                : '#4ade80'}
-            "
-          >
+              color:${isPositive ? '#f87171' : '#4ade80'}
+            ">
+
             ${f.shap_value > 0 ? '+' : ''}
             ${f.shap_value}
+
           </div>
 
         </div>
@@ -328,8 +309,9 @@ function renderResult(data) {
 
     <div
       class="card result-card"
-      style="border-color:${data.severity_color}"
-    >
+      style="
+        border-color:${data.severity_color}
+      ">
 
       <span
         class="severity-badge"
@@ -337,25 +319,26 @@ function renderResult(data) {
           background:${data.severity_color}22;
           color:${data.severity_color};
           border:1px solid ${data.severity_color}
-        "
-      >
+        ">
 
-        ${data.prediction === 'INSIDER'
+        ${
+          data.prediction === 'INSIDER'
           ? '🚨'
-          : '✅'}
+          : '✅'
+        }
 
         ${data.prediction}
         —
-        ${data.severity}
-        Severity
+        ${data.severity} Severity
 
       </span>
 
 
       <div
         class="score-big"
-        style="color:${data.severity_color}"
-      >
+        style="
+          color:${data.severity_color}
+        ">
 
         ${data.risk_score_100}
 
@@ -363,9 +346,10 @@ function renderResult(data) {
           style="
             font-size:1.2rem;
             color:var(--muted)
-          "
-        >
+          ">
+
           /100
+
         </span>
 
       </div>
@@ -378,8 +362,8 @@ function renderResult(data) {
           style="
             width:${data.risk_score_100}%;
             background:${data.severity_color}
-          "
-        ></div>
+          ">
+        </div>
 
       </div>
 
@@ -390,9 +374,10 @@ function renderResult(data) {
           font-family:'Syne',sans-serif;
           font-size:1rem;
           color:var(--accent)
-        "
-      >
+        ">
+
         SHAP Factor Contributions
+
       </h2>
 
 
@@ -401,95 +386,91 @@ function renderResult(data) {
           font-size:.78rem;
           color:var(--muted);
           margin:.5rem 0 1rem
-        "
-      >
+        ">
+
         Red = increases risk · Green = decreases risk
+
       </p>
 
 
       ${factorsHtml}
 
 
+      <!-- AI BUTTON -->
+
+      <button
+        class="ai-btn"
+        id="aiButton"
+        onclick="getAIAnalysis()">
+
+        🤖 AI Security Analysis
+
+      </button>
+
+
+      <button
+        class="btn secondary"
+        style="margin-top:1.2rem"
+        onclick="downloadReport()">
+
+        📄 Export PDF Report
+
+      </button>
+
+
+      <!-- AI RESULT -->
+
       <div
-        style="
-          display:flex;
-          gap:.7rem;
-          flex-wrap:wrap;
-          margin-top:1.2rem
-        "
-      >
-
-        <button
-          class="btn secondary"
-          onclick="downloadReport()"
-        >
-          📄 Export PDF Report
-        </button>
-
-
-        <button
-          class="btn"
-          id="aiBtn"
-          onclick="getAIAnalysis()"
-        >
-          🤖 AI Security Analysis
-        </button>
+        id="aiResult"
+        style="display:none">
 
       </div>
 
-
-      <div
-        id="aiContainer"
-        style="display:none"
-      ></div>
-
     </div>
+
   `;
 
-
   window.lastResult = data;
-
 }
 
-
-
-/* ============================================================
-   OPENAI AI SECURITY ANALYSIS
-   ============================================================ */
 
 async function getAIAnalysis() {
 
   if (!window.lastResult) {
-
     return;
-
   }
 
+  const button =
+    document.getElementById('aiButton');
 
-  const btn =
-    document.getElementById('aiBtn');
+  const aiResult =
+    document.getElementById('aiResult');
 
-  const container =
-    document.getElementById('aiContainer');
+  button.disabled = true;
 
+  button.textContent =
+    '🤖 Analyzing with AI...';
 
-  btn.disabled = true;
+  aiResult.style.display = 'block';
 
-  btn.textContent =
-    '🤖 Generating AI Analysis...';
-
-
-  container.style.display =
-    'block';
-
-
-  container.innerHTML = `
+  aiResult.innerHTML = `
 
     <div class="ai-card">
 
-      <div class="ai-loading">
-        Analyzing XGBoost prediction and SHAP factors...
-      </div>
+      <h2
+        style="
+          color:var(--accent);
+          font-family:'Syne',sans-serif;
+          font-size:1rem
+        ">
+
+        🤖 AI Security Analysis
+
+      </h2>
+
+      <p>
+        OpenAI is analyzing the ML prediction...
+      </p>
 
     </div>
 
@@ -498,91 +479,62 @@ async function getAIAnalysis() {
 
   try {
 
-    const res =
-      await fetch(
-        '/ai-analysis',
-        {
-          method:'POST',
+    const res = await fetch(
+      '/ai-analysis',
+      {
+        method:'POST',
 
-          headers:{
-            'Content-Type':
-              'application/json'
-          },
+        headers:{
+          'Content-Type':'application/json'
+        },
 
-          body:JSON.stringify({
-
-            prediction:
-              window.lastResult.prediction,
-
-            risk_score_100:
-              window.lastResult.risk_score_100,
-
-            severity:
-              window.lastResult.severity,
-
-            top_factors:
-              window.lastResult.top_factors
-
-          })
-        }
-      );
+        body:JSON.stringify(
+          window.lastResult
+        )
+      }
+    );
 
 
-    const data =
-      await res.json();
+    const data = await res.json();
 
 
     if (!res.ok || data.error) {
 
-      container.innerHTML = `
+      aiResult.innerHTML = `
 
-        <div
-          class="ai-card"
-          style="border-color:#f87171"
-        >
+        <div class="ai-card">
 
-          <strong>AI Analysis Error</strong>
+          <h2>❌ AI Analysis Error</h2>
 
-          <p>
-            ${data.error || 'Unable to generate analysis.'}
-          </p>
+          <p>${data.error || 'AI analysis failed'}</p>
 
         </div>
 
       `;
 
       return;
-
     }
 
 
-    container.innerHTML = `
+    aiResult.innerHTML = `
 
       <div class="ai-card">
 
         <h2
           style="
-            font-family:'Syne',sans-serif;
-            font-size:1.1rem;
             color:var(--accent);
-            margin-bottom:.5rem
-          "
-        >
+            font-family:'Syne',sans-serif;
+            font-size:1rem
+          ">
+
           🤖 AI Security Analysis
+
         </h2>
 
-        <p
-          style="
-            color:var(--muted);
-            font-size:.78rem
-          "
-        >
-          Generated from the XGBoost prediction and SHAP
-          behavioral indicators.
-        </p>
-
         <div class="ai-analysis">
+
           ${escapeHtml(data.analysis)}
+
         </div>
 
       </div>
@@ -593,18 +545,13 @@ async function getAIAnalysis() {
 
   catch(err) {
 
-    container.innerHTML = `
+    aiResult.innerHTML = `
 
-      <div
-        class="ai-card"
-        style="border-color:#f87171"
-      >
+      <div class="ai-card">
 
-        <strong>AI Analysis Failed</strong>
+        <h2>❌ AI Analysis Failed</h2>
 
-        <p>
-          ${escapeHtml(err.message)}
-        </p>
+        <p>${escapeHtml(err.message)}</p>
 
       </div>
 
@@ -614,9 +561,9 @@ async function getAIAnalysis() {
 
   finally {
 
-    btn.disabled = false;
+    button.disabled = false;
 
-    btn.textContent =
+    button.textContent =
       '🤖 AI Security Analysis';
 
   }
@@ -624,67 +571,47 @@ async function getAIAnalysis() {
 }
 
 
-
-/* ============================================================
-   ESCAPE HTML
-   ============================================================ */
-
 function escapeHtml(text) {
 
   const div =
     document.createElement('div');
 
   div.textContent =
-    text || '';
+    text;
 
   return div.innerHTML;
-
 }
 
 
-
-/* ============================================================
-   PDF REPORT
-   ============================================================ */
-
 async function downloadReport() {
 
-  if (!window.lastResult)
+  if (!window.lastResult) {
     return;
+  }
 
+  const res = await fetch(
+    '/export/pdf',
+    {
+      method:'POST',
 
-  const res =
-    await fetch(
-      '/export/pdf',
-      {
-        method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
 
-        headers:{
-          'Content-Type':
-            'application/json'
-        },
-
-        body:
-          JSON.stringify(
-            window.lastResult
-          )
-      }
-    );
-
+      body:JSON.stringify(
+        window.lastResult
+      )
+    }
+  );
 
   const blob =
     await res.blob();
 
-
   const url =
-    window.URL.createObjectURL(
-      blob
-    );
-
+    window.URL.createObjectURL(blob);
 
   const a =
     document.createElement('a');
-
 
   a.href = url;
 
@@ -692,6 +619,8 @@ async function downloadReport() {
     'investigation_report.pdf';
 
   a.click();
+
+  window.URL.revokeObjectURL(url);
 
 }
 
