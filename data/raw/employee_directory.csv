@@ -1,0 +1,161 @@
+user,name,role,department,team
+ADB8311,Rosa Vargas,Salesman,1 - Engineering,Team 9
+ADG1145,Wade Lopez,Production Line Worker,1 - Engineering,Team 9
+ASC7389,Umar Hayes,HR Specialist,2 - Sales,Team 5
+ATM7194,Lena Meyer,Electrical Engineer,2 - Sales,Team 10
+AUI6616,Yusuf Ulrich,Accountant,6 - Finance,Team 5
+AYY2409,Marco Patel,Software Engineer,6 - Finance,Team 1
+AZE5960,Fiona Tanaka,Software Engineer,6 - Finance,Team 11
+BFH3103,Omar Meyer,Mechanical Engineer,5 - Information Technology,Team 3
+BMU1894,Tara Patel,Accountant,4 - Research,Team 2
+BZL8931,Beth Gupta,ITAdmin,5 - Information Technology,Team 8
+CCL9026,Evan Reyes,Mechanical Engineer,3 - Human Resources,Team 3
+COU3039,Alan Ellis,Director,5 - Information Technology,Team 11
+COX0638,Petra Quinn,Director,6 - Finance,Team 6
+CQZ8674,Nina Ulrich,Director,6 - Finance,Team 1
+CUR4388,Xena Diaz,Salesman,5 - Information Technology,Team 12
+CVC0519,Yusuf Owens,Electrical Engineer,1 - Engineering,Team 7
+DHG6594,Quinn Chen,Salesman,6 - Finance,Team 4
+DJY4258,Quinn Reyes,Technical Writer,3 - Human Resources,Team 9
+DLS2023,Petra Chen,Production Line Worker,6 - Finance,Team 7
+DNM3159,Nina Walsh,Technical Writer,4 - Research,Team 1
+DON7838,Sami Diaz,Software Engineer,7 - Operations,Team 10
+DOO3709,Yusuf Yates,Computer Scientist,3 - Human Resources,Team 5
+DPC6498,Evan Tanaka,Technical Writer,7 - Operations,Team 9
+DQV1058,Kyle Owens,Software Engineer,6 - Finance,Team 11
+DXC7486,Lena Singh,Software Engineer,3 - Human Resources,Team 8
+DYK4823,Zara Tanaka,Software Engineer,4 - Research,Team 9
+EEN0449,Yusuf Walsh,Software Engineer,4 - Research,Team 4
+EHP1536,Carl Gupta,Mechanical Engineer,6 - Finance,Team 3
+EIR1445,Sami Owens,Electrical Engineer,5 - Information Technology,Team 5
+ETS3545,Beth Chen,Security Analyst,6 - Finance,Team 11
+EYT8043,Nina Owens,Production Line Worker,3 - Human Resources,Team 7
+FCN9756,Evan Ellis,Technical Writer,4 - Research,Team 5
+GGB1397,Dana Novak,Electrical Engineer,4 - Research,Team 10
+GGZ7460,Alan Novak,Director,7 - Operations,Team 11
+GHR6302,Marco Lopez,Technical Writer,3 - Human Resources,Team 11
+GHU9488,Rosa Meyer,Software Engineer,5 - Information Technology,Team 4
+GRQ1397,Sami Singh,Technical Writer,1 - Engineering,Team 9
+GUG7168,Xena Tanaka,Production Line Worker,6 - Finance,Team 8
+GZI8020,Nina Lopez,Accountant,3 - Human Resources,Team 6
+HBA3736,Gary Owens,Technical Writer,3 - Human Resources,Team 5
+HDA6776,Dana Walsh,Security Analyst,5 - Information Technology,Team 2
+HLN2478,Vera Chen,Computer Scientist,4 - Research,Team 4
+HLZ9923,Umar Chen,Technical Writer,6 - Finance,Team 7
+HMR4907,Sami Chen,HR Specialist,4 - Research,Team 11
+HVG7968,Marco Patel,Salesman,4 - Research,Team 11
+IAC0900,Sami Khan,Accountant,1 - Engineering,Team 3
+ICP9160,Xena Singh,HR Specialist,1 - Engineering,Team 9
+ICR6722,Fiona Quinn,Technical Writer,3 - Human Resources,Team 2
+IDI9618,Sami Ito,Computer Scientist,7 - Operations,Team 9
+IFO6698,Tara Vargas,Technical Writer,7 - Operations,Team 5
+IIY1438,Vera Singh,Mechanical Engineer,5 - Information Technology,Team 6
+IVL8082,Quinn Gupta,Security Analyst,5 - Information Technology,Team 9
+JDE8246,Umar Ito,Electrical Engineer,3 - Human Resources,Team 6
+JMM0438,Nina Hayes,Mechanical Engineer,2 - Sales,Team 10
+JPS8745,Ivan Diaz,Technical Writer,1 - Engineering,Team 7
+JVA8961,Yusuf Diaz,HR Specialist,3 - Human Resources,Team 12
+JXM6997,Carl Walsh,Production Line Worker,3 - Human Resources,Team 8
+KFW8041,Omar Khan,Director,2 - Sales,Team 4
+KIX3704,Tara Jensen,ITAdmin,2 - Sales,Team 10
+KJX0944,Dana Reyes,Salesman,1 - Engineering,Team 5
+KVI1669,Evan Novak,ITAdmin,5 - Information Technology,Team 7
+KYR0991,Yusuf Walsh,ITAdmin,7 - Operations,Team 2
+LDO0211,Julia Singh,HR Specialist,5 - Information Technology,Team 2
+LGT9691,Petra Lopez,HR Specialist,4 - Research,Team 7
+LJE6857,Dana Jensen,Security Analyst,3 - Human Resources,Team 3
+LME4168,Quinn Yates,ITAdmin,3 - Human Resources,Team 12
+LMQ7847,Alan Reyes,ITAdmin,1 - Engineering,Team 11
+LRR4710,Wade Walsh,Mechanical Engineer,5 - Information Technology,Team 9
+LWC6973,Lena Chen,Technical Writer,4 - Research,Team 9
+LYE5717,Hana Ulrich,Production Line Worker,1 - Engineering,Team 8
+MAP5551,Wade Patel,Director,3 - Human Resources,Team 1
+MDR4757,Dana Chen,Electrical Engineer,2 - Sales,Team 5
+MGI5307,Marco Owens,Computer Scientist,2 - Sales,Team 6
+MLE3810,Alan Quinn,Mechanical Engineer,5 - Information Technology,Team 11
+MNL1438,Omar Adams,ITAdmin,4 - Research,Team 3
+MSH7807,Carl Khan,Computer Scientist,5 - Information Technology,Team 6
+MUB0827,Sami Tanaka,HR Specialist,5 - Information Technology,Team 5
+NBM1814,Lena Hayes,ITAdmin,7 - Operations,Team 2
+NDV4503,Zara Lopez,Director,6 - Finance,Team 2
+NHY9248,Ivan Khan,Security Analyst,5 - Information Technology,Team 5
+NJE9267,Alan Hayes,Computer Scientist,7 - Operations,Team 1
+NJT3274,Nina Walsh,HR Specialist,4 - Research,Team 1
+NRI9556,Tara Singh,Production Line Worker,7 - Operations,Team 5
+NRU3936,Omar Chen,Production Line Worker,6 - Finance,Team 3
+ODH5540,Kyle Yates,Computer Scientist,5 - Information Technology,Team 7
+OEM8566,Beth Vargas,Salesman,7 - Operations,Team 1
+OET6830,Rosa Gupta,Electrical Engineer,4 - Research,Team 4
+OLL2272,Umar Ulrich,Software Engineer,6 - Finance,Team 6
+OLN5687,Beth Chen,Computer Scientist,2 - Sales,Team 12
+OMU2669,Rosa Yates,Salesman,7 - Operations,Team 8
+OQO5535,Alan Patel,Technical Writer,5 - Information Technology,Team 11
+OYC3975,Dana Patel,Production Line Worker,6 - Finance,Team 5
+PAJ4367,Quinn Chen,Technical Writer,4 - Research,Team 6
+PGI3675,Rosa Vargas,Accountant,7 - Operations,Team 6
+PJY0876,Wade Adams,ITAdmin,1 - Engineering,Team 11
+PPH0228,Gary Foster,Accountant,1 - Engineering,Team 12
+PUQ6424,Lena Diaz,Director,4 - Research,Team 12
+QCT4158,Wade Singh,Security Analyst,6 - Finance,Team 10
+QHQ5150,Vera Ellis,Director,6 - Finance,Team 7
+QOY4162,Alan Vargas,Mechanical Engineer,4 - Research,Team 7
+QSC3123,Hana Patel,Security Analyst,5 - Information Technology,Team 12
+QUT1345,Xena Adams,Computer Scientist,4 - Research,Team 4
+RCE5876,Alan Adams,Salesman,7 - Operations,Team 5
+RLI6273,Evan Barnes,Computer Scientist,5 - Information Technology,Team 11
+RUT1946,Vera Owens,Security Analyst,3 - Human Resources,Team 5
+SBF1746,Zara Tanaka,Production Line Worker,7 - Operations,Team 3
+SDT4191,Zara Foster,Accountant,1 - Engineering,Team 7
+SEX5010,Hana Ulrich,Software Engineer,7 - Operations,Team 4
+SHV5792,Gary Barnes,Production Line Worker,2 - Sales,Team 11
+SSY7686,Rosa Tanaka,ITAdmin,3 - Human Resources,Team 11
+TPH4125,Zara Walsh,Computer Scientist,6 - Finance,Team 4
+TPY8677,Dana Singh,Electrical Engineer,6 - Finance,Team 7
+TTJ2624,Vera Quinn,Security Analyst,7 - Operations,Team 12
+TTS7860,Vera Ulrich,Technical Writer,6 - Finance,Team 9
+TVL8047,Lena Adams,Director,5 - Information Technology,Team 3
+TWU8511,Lena Ellis,Salesman,3 - Human Resources,Team 8
+UBE4939,Carl Chen,Computer Scientist,1 - Engineering,Team 8
+UEH9251,Sami Meyer,Salesman,1 - Engineering,Team 8
+UKR6395,Omar Reyes,Director,3 - Human Resources,Team 1
+ULT2722,Omar Patel,HR Specialist,1 - Engineering,Team 4
+UQK8227,Carl Ulrich,Accountant,4 - Research,Team 11
+USS4618,Lena Diaz,Accountant,6 - Finance,Team 3
+UUU6648,Vera Reyes,Accountant,7 - Operations,Team 4
+VBL5911,Beth Ellis,Technical Writer,4 - Research,Team 4
+VBW2813,Alan Gupta,Electrical Engineer,7 - Operations,Team 3
+VDL1237,Carl Reyes,HR Specialist,7 - Operations,Team 2
+VFU0073,Nina Yates,Security Analyst,7 - Operations,Team 5
+VIZ5045,Tara Owens,Accountant,4 - Research,Team 11
+VKX2883,Nina Barnes,Software Engineer,3 - Human Resources,Team 1
+VNI5142,Beth Owens,Salesman,7 - Operations,Team 4
+VVU9026,Alan Barnes,Technical Writer,2 - Sales,Team 1
+VVY1052,Fiona Vargas,Director,3 - Human Resources,Team 7
+VXF8934,Lena Reyes,HR Specialist,1 - Engineering,Team 4
+WAR1091,Kyle Ellis,Production Line Worker,6 - Finance,Team 10
+WBM5944,Julia Chen,Mechanical Engineer,5 - Information Technology,Team 8
+WLH0216,Umar Ellis,ITAdmin,1 - Engineering,Team 10
+WOC7649,Julia Yates,HR Specialist,2 - Sales,Team 8
+WVH6316,Petra Lopez,Security Analyst,4 - Research,Team 6
+XDT1792,Omar Singh,ITAdmin,4 - Research,Team 11
+XGF2493,Gary Patel,Director,6 - Finance,Team 6
+XGZ9360,Wade Novak,Director,2 - Sales,Team 12
+XHL6619,Lena Diaz,Director,7 - Operations,Team 12
+XTJ9675,Gary Walsh,Accountant,4 - Research,Team 8
+XXP1655,Omar Hayes,Salesman,6 - Finance,Team 9
+YAE2296,Kyle Novak,Mechanical Engineer,2 - Sales,Team 4
+YDM6963,Nina Quinn,Electrical Engineer,1 - Engineering,Team 10
+YIO5206,Gary Patel,Electrical Engineer,1 - Engineering,Team 9
+YLE8326,Lena Walsh,HR Specialist,3 - Human Resources,Team 11
+YNX1016,Evan Diaz,Accountant,7 - Operations,Team 4
+YST5811,Marco Meyer,ITAdmin,1 - Engineering,Team 10
+ZDH5063,Rosa Jensen,Software Engineer,3 - Human Resources,Team 6
+ZFG0374,Xena Lopez,Electrical Engineer,1 - Engineering,Team 3
+ZFH4085,Dana Chen,Electrical Engineer,7 - Operations,Team 3
+ZHD4885,Zara Diaz,Mechanical Engineer,5 - Information Technology,Team 7
+ZIF9528,Yusuf Gupta,Electrical Engineer,6 - Finance,Team 4
+ZPL3468,Carl Hayes,Director,5 - Information Technology,Team 2
+ZRK4063,Petra Khan,Accountant,5 - Information Technology,Team 6
+ZUI9718,Umar Owens,Software Engineer,6 - Finance,Team 8
+ZWA2339,Kyle Patel,Computer Scientist,1 - Engineering,Team 4
+ZWV4627,Zara Jensen,Director,7 - Operations,Team 12
