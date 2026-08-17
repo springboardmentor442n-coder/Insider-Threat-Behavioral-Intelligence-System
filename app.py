@@ -8,6 +8,8 @@ from functools import wraps
 import pandas as pd
 import shap
 
+from openai import OpenAI
+
 from flask import (
     Flask,
     request,
@@ -172,16 +174,15 @@ def save_prediction_history(history):
 prediction_history = load_prediction_history()
 
 
+
 # ============================================================
 # SHAP
 # ============================================================
 
-try:
-    explainer = shap.TreeExplainer(model)
-    print("SHAP loaded")
-except Exception as e:
-    explainer = None
-    print("SHAP unavailable:", e)
+explainer = None
+
+print("Native XGBoost SHAP enabled")
+
 
 
 # ============================================================
@@ -292,36 +293,54 @@ def get_severity(risk_score):
 # ============================================================
 
 def calculate_shap(dataframe):
-    if explainer is None:
-        return []
 
     try:
-        values = explainer.shap_values(dataframe)
+        import xgboost as xgb
 
-        if isinstance(values, list):
-            values = values[-1]
+        dmatrix = xgb.DMatrix(
+            dataframe,
+            feature_names=feature_columns
+        )
 
-        values = values[0]
+        contributions = model.get_booster().predict(
+            dmatrix,
+            pred_contribs=True
+        )
+
+        values = contributions[0]
 
         factors = []
 
-        for feature, value in zip(feature_columns, values):
-            try:
-                shap_value = float(value)
-            except Exception:
-                continue
+        for feature, value in zip(
+            feature_columns,
+            values[:-1]
+        ):
 
             factors.append({
-                "feature": FEATURE_LABELS.get(feature, feature),
-                "shap_value": round(shap_value, 4)
+                "feature": FEATURE_LABELS.get(
+                    feature,
+                    feature
+                ),
+                "shap_value": round(
+                    float(value),
+                    4
+                )
             })
 
-        factors.sort(key=lambda x: abs(x["shap_value"]), reverse=True)
+        factors.sort(
+            key=lambda x: abs(x["shap_value"]),
+            reverse=True
+        )
 
         return factors[:8]
 
     except Exception as e:
-        print("SHAP error:", e)
+
+        print(
+            "Native XGBoost SHAP error:",
+            e
+        )
+
         return []
 
 
@@ -561,7 +580,6 @@ def predict_api():
         print("Prediction error:", e)
         return jsonify({"error": str(e)}), 500
 
-
 # ============================================================
 # LOCAL AI SECURITY ANALYSIS
 # ============================================================
@@ -794,10 +812,7 @@ Severity:
 
 IMPORTANT:
 This analysis is generated from the machine-learning prediction
-and behavioural indicators. It does not prove that an employee
-is malicious. A qualified security analyst should review the
-available evidence before taking action.
-"""
+and behavioural indicators."""
 
         return jsonify({
             "success": True,
