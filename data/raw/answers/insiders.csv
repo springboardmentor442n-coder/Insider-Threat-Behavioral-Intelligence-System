@@ -1,0 +1,12 @@
+dataset,scenario,user,start,end,details
+4.2,3,CCL9026,06/22/2010 00:00:00,07/19/2010 00:00:00,Disgruntled admin — credential misuse and sabotage
+4.2,1,CQZ8674,07/13/2010 00:00:00,08/02/2010 00:00:00,Removable-media exfiltration after hours
+4.2,3,DXC7486,06/08/2010 00:00:00,07/08/2010 00:00:00,Disgruntled admin — credential misuse and sabotage
+4.2,3,HMR4907,04/29/2010 00:00:00,05/28/2010 00:00:00,Disgruntled admin — credential misuse and sabotage
+4.2,2,JDE8246,03/10/2010 00:00:00,03/23/2010 00:00:00,Job-hunting followed by bulk upload to cloud storage
+4.2,3,OQO5535,07/21/2010 00:00:00,08/13/2010 00:00:00,Disgruntled admin — credential misuse and sabotage
+4.2,1,QSC3123,01/29/2010 00:00:00,02/22/2010 00:00:00,Removable-media exfiltration after hours
+4.2,1,RUT1946,02/16/2010 00:00:00,03/22/2010 00:00:00,Removable-media exfiltration after hours
+4.2,3,TTJ2624,04/07/2010 00:00:00,04/22/2010 00:00:00,Disgruntled admin — credential misuse and sabotage
+4.2,1,VBW2813,05/17/2010 00:00:00,06/18/2010 00:00:00,Removable-media exfiltration after hours
+4.2,1,WBM5944,03/24/2010 00:00:00,04/27/2010 00:00:00,Removable-media exfiltration after hours

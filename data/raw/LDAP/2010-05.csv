@@ -1,0 +1,161 @@
+employee_name,user_id,email,role,business_unit,functional_unit,department,team,supervisor
+Rosa Vargas,ADB8311,adb8311@dtaa.com,Salesman,1,1,1 - Engineering,Team 9,Lena Adams
+Wade Lopez,ADG1145,adg1145@dtaa.com,Production Line Worker,1,1,1 - Engineering,Team 9,Zara Lopez
+Umar Hayes,ASC7389,asc7389@dtaa.com,HR Specialist,1,1,2 - Sales,Team 5,Yusuf Walsh
+Lena Meyer,ATM7194,atm7194@dtaa.com,Electrical Engineer,1,1,2 - Sales,Team 10,Lena Adams
+Yusuf Ulrich,AUI6616,aui6616@dtaa.com,Accountant,1,1,6 - Finance,Team 5,Wade Novak
+Marco Patel,AYY2409,ayy2409@dtaa.com,Software Engineer,1,1,6 - Finance,Team 1,Gary Patel
+Fiona Tanaka,AZE5960,aze5960@dtaa.com,Software Engineer,1,1,6 - Finance,Team 11,Zara Jensen
+Omar Meyer,BFH3103,bfh3103@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 3,Zara Jensen
+Tara Patel,BMU1894,bmu1894@dtaa.com,Accountant,1,1,4 - Research,Team 2,Evan Novak
+Beth Gupta,BZL8931,bzl8931@dtaa.com,ITAdmin,1,1,5 - Information Technology,Team 8,Tara Jensen
+Evan Reyes,CCL9026,ccl9026@dtaa.com,Mechanical Engineer,1,1,3 - Human Resources,Team 3,Zara Jensen
+Alan Ellis,COU3039,cou3039@dtaa.com,Director,1,1,5 - Information Technology,Team 11,Marco Meyer
+Petra Quinn,COX0638,cox0638@dtaa.com,Director,1,1,6 - Finance,Team 6,Alan Novak
+Nina Ulrich,CQZ8674,cqz8674@dtaa.com,Director,1,1,6 - Finance,Team 1,Omar Reyes
+Xena Diaz,CUR4388,cur4388@dtaa.com,Salesman,1,1,5 - Information Technology,Team 12,Lena Diaz
+Yusuf Owens,CVC0519,cvc0519@dtaa.com,Electrical Engineer,1,1,1 - Engineering,Team 7,Nina Ulrich
+Quinn Chen,DHG6594,dhg6594@dtaa.com,Salesman,1,1,6 - Finance,Team 4,Tara Jensen
+Quinn Reyes,DJY4258,djy4258@dtaa.com,Technical Writer,1,1,3 - Human Resources,Team 9,Zara Jensen
+Petra Chen,DLS2023,dls2023@dtaa.com,Production Line Worker,1,1,6 - Finance,Team 7,Alan Ellis
+Nina Walsh,DNM3159,dnm3159@dtaa.com,Technical Writer,1,1,4 - Research,Team 1,Omar Reyes
+Sami Diaz,DON7838,don7838@dtaa.com,Software Engineer,1,1,7 - Operations,Team 10,Wade Patel
+Yusuf Yates,DOO3709,doo3709@dtaa.com,Computer Scientist,1,1,3 - Human Resources,Team 5,Marco Meyer
+Evan Tanaka,DPC6498,dpc6498@dtaa.com,Technical Writer,1,1,7 - Operations,Team 9,Zara Jensen
+Kyle Owens,DQV1058,dqv1058@dtaa.com,Software Engineer,1,1,6 - Finance,Team 11,Quinn Yates
+Lena Singh,DXC7486,dxc7486@dtaa.com,Software Engineer,1,1,3 - Human Resources,Team 8,Vera Ellis
+Zara Tanaka,DYK4823,dyk4823@dtaa.com,Software Engineer,1,1,4 - Research,Team 9,Marco Meyer
+Yusuf Walsh,EEN0449,een0449@dtaa.com,Software Engineer,1,1,4 - Research,Team 4,Beth Gupta
+Carl Gupta,EHP1536,ehp1536@dtaa.com,Mechanical Engineer,1,1,6 - Finance,Team 3,Lena Adams
+Sami Owens,EIR1445,eir1445@dtaa.com,Electrical Engineer,1,1,5 - Information Technology,Team 5,Marco Meyer
+Beth Chen,ETS3545,ets3545@dtaa.com,Security Analyst,1,1,6 - Finance,Team 11,Umar Ellis
+Nina Owens,EYT8043,eyt8043@dtaa.com,Production Line Worker,1,1,3 - Human Resources,Team 7,Alan Novak
+Evan Ellis,FCN9756,fcn9756@dtaa.com,Technical Writer,1,1,4 - Research,Team 5,Zara Jensen
+Dana Novak,GGB1397,ggb1397@dtaa.com,Electrical Engineer,1,1,4 - Research,Team 10,Carl Hayes
+Alan Novak,GGZ7460,ggz7460@dtaa.com,Director,1,1,7 - Operations,Team 11,Lena Diaz
+Marco Lopez,GHR6302,ghr6302@dtaa.com,Technical Writer,1,1,3 - Human Resources,Team 11,Lena Diaz
+Rosa Meyer,GHU9488,ghu9488@dtaa.com,Software Engineer,1,1,5 - Information Technology,Team 4,Zara Jensen
+Sami Singh,GRQ1397,grq1397@dtaa.com,Technical Writer,1,1,1 - Engineering,Team 9,Omar Reyes
+Xena Tanaka,GUG7168,gug7168@dtaa.com,Production Line Worker,1,1,6 - Finance,Team 8,Alan Novak
+Nina Lopez,GZI8020,gzi8020@dtaa.com,Accountant,1,1,3 - Human Resources,Team 6,Omar Singh
+Gary Owens,HBA3736,hba3736@dtaa.com,Technical Writer,1,1,3 - Human Resources,Team 5,Alan Novak
+Dana Walsh,HDA6776,hda6776@dtaa.com,Security Analyst,1,1,5 - Information Technology,Team 2,Gary Patel
+Vera Chen,HLN2478,hln2478@dtaa.com,Computer Scientist,1,1,4 - Research,Team 4,Nina Ulrich
+Umar Chen,HLZ9923,hlz9923@dtaa.com,Technical Writer,1,1,6 - Finance,Team 7,Carl Hayes
+Sami Chen,HMR4907,hmr4907@dtaa.com,HR Specialist,1,1,4 - Research,Team 11,Wade Novak
+Marco Patel,HVG7968,hvg7968@dtaa.com,Salesman,1,1,4 - Research,Team 11,Omar Reyes
+Sami Khan,IAC0900,iac0900@dtaa.com,Accountant,1,1,1 - Engineering,Team 3,Carl Hayes
+Xena Singh,ICP9160,icp9160@dtaa.com,HR Specialist,1,1,1 - Engineering,Team 9,Omar Singh
+Fiona Quinn,ICR6722,icr6722@dtaa.com,Technical Writer,1,1,3 - Human Resources,Team 2,Yusuf Walsh
+Sami Ito,IDI9618,idi9618@dtaa.com,Computer Scientist,1,1,7 - Operations,Team 9,Omar Adams
+Tara Vargas,IFO6698,ifo6698@dtaa.com,Technical Writer,1,1,7 - Operations,Team 5,Umar Ellis
+Vera Singh,IIY1438,iiy1438@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 6,Wade Novak
+Quinn Gupta,IVL8082,ivl8082@dtaa.com,Security Analyst,1,1,5 - Information Technology,Team 9,Nina Ulrich
+Umar Ito,JDE8246,jde8246@dtaa.com,Electrical Engineer,1,1,3 - Human Resources,Team 6,Wade Novak
+Nina Hayes,JMM0438,jmm0438@dtaa.com,Mechanical Engineer,1,1,2 - Sales,Team 10,Lena Adams
+Ivan Diaz,JPS8745,jps8745@dtaa.com,Technical Writer,1,1,1 - Engineering,Team 7,Nina Ulrich
+Yusuf Diaz,JVA8961,jva8961@dtaa.com,HR Specialist,1,1,3 - Human Resources,Team 12,Umar Ellis
+Carl Walsh,JXM6997,jxm6997@dtaa.com,Production Line Worker,1,1,3 - Human Resources,Team 8,Omar Reyes
+Omar Khan,KFW8041,kfw8041@dtaa.com,Director,1,1,2 - Sales,Team 4,Tara Jensen
+Tara Jensen,KIX3704,kix3704@dtaa.com,ITAdmin,1,1,2 - Sales,Team 10,Wade Patel
+Dana Reyes,KJX0944,kjx0944@dtaa.com,Salesman,1,1,1 - Engineering,Team 5,Lena Adams
+Evan Novak,KVI1669,kvi1669@dtaa.com,ITAdmin,1,1,5 - Information Technology,Team 7,Quinn Yates
+Yusuf Walsh,KYR0991,kyr0991@dtaa.com,ITAdmin,1,1,7 - Operations,Team 2,Lena Adams
+Julia Singh,LDO0211,ldo0211@dtaa.com,HR Specialist,1,1,5 - Information Technology,Team 2,Lena Adams
+Petra Lopez,LGT9691,lgt9691@dtaa.com,HR Specialist,1,1,4 - Research,Team 7,Vera Ellis
+Dana Jensen,LJE6857,lje6857@dtaa.com,Security Analyst,1,1,3 - Human Resources,Team 3,Vera Ellis
+Quinn Yates,LME4168,lme4168@dtaa.com,ITAdmin,1,1,3 - Human Resources,Team 12,Omar Khan
+Alan Reyes,LMQ7847,lmq7847@dtaa.com,ITAdmin,1,1,1 - Engineering,Team 11,Tara Jensen
+Wade Walsh,LRR4710,lrr4710@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 9,Beth Gupta
+Lena Chen,LWC6973,lwc6973@dtaa.com,Technical Writer,1,1,4 - Research,Team 9,Evan Novak
+Hana Ulrich,LYE5717,lye5717@dtaa.com,Production Line Worker,1,1,1 - Engineering,Team 8,Omar Reyes
+Wade Patel,MAP5551,map5551@dtaa.com,Director,1,1,3 - Human Resources,Team 1,Lena Hayes
+Dana Chen,MDR4757,mdr4757@dtaa.com,Electrical Engineer,1,1,2 - Sales,Team 5,Carl Hayes
+Marco Owens,MGI5307,mgi5307@dtaa.com,Computer Scientist,1,1,2 - Sales,Team 6,Quinn Yates
+Alan Quinn,MLE3810,mle3810@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 11,Tara Jensen
+Omar Adams,MNL1438,mnl1438@dtaa.com,ITAdmin,1,1,4 - Research,Team 3,Omar Reyes
+Carl Khan,MSH7807,msh7807@dtaa.com,Computer Scientist,1,1,5 - Information Technology,Team 6,Nina Ulrich
+Sami Tanaka,MUB0827,mub0827@dtaa.com,HR Specialist,1,1,5 - Information Technology,Team 5,Omar Reyes
+Lena Hayes,NBM1814,nbm1814@dtaa.com,ITAdmin,1,1,7 - Operations,Team 2,Zara Lopez
+Zara Lopez,NDV4503,ndv4503@dtaa.com,Director,1,1,6 - Finance,Team 2,Carl Hayes
+Ivan Khan,NHY9248,nhy9248@dtaa.com,Security Analyst,1,1,5 - Information Technology,Team 5,Quinn Yates
+Alan Hayes,NJE9267,nje9267@dtaa.com,Computer Scientist,1,1,7 - Operations,Team 1,Lena Diaz
+Nina Walsh,NJT3274,njt3274@dtaa.com,HR Specialist,1,1,4 - Research,Team 1,Lena Diaz
+Tara Singh,NRI9556,nri9556@dtaa.com,Production Line Worker,1,1,7 - Operations,Team 5,Beth Gupta
+Omar Chen,NRU3936,nru3936@dtaa.com,Production Line Worker,1,1,6 - Finance,Team 3,Carl Hayes
+Kyle Yates,ODH5540,odh5540@dtaa.com,Computer Scientist,1,1,5 - Information Technology,Team 7,Quinn Yates
+Beth Vargas,OEM8566,oem8566@dtaa.com,Salesman,1,1,7 - Operations,Team 1,Wade Novak
+Rosa Gupta,OET6830,oet6830@dtaa.com,Electrical Engineer,1,1,4 - Research,Team 4,Yusuf Walsh
+Umar Ulrich,OLL2272,oll2272@dtaa.com,Software Engineer,1,1,6 - Finance,Team 6,Beth Gupta
+Beth Chen,OLN5687,oln5687@dtaa.com,Computer Scientist,1,1,2 - Sales,Team 12,Quinn Yates
+Rosa Yates,OMU2669,omu2669@dtaa.com,Salesman,1,1,7 - Operations,Team 8,Zara Jensen
+Alan Patel,OQO5535,oqo5535@dtaa.com,Technical Writer,1,1,5 - Information Technology,Team 11,Yusuf Walsh
+Dana Patel,OYC3975,oyc3975@dtaa.com,Production Line Worker,1,1,6 - Finance,Team 5,Evan Novak
+Quinn Chen,PAJ4367,paj4367@dtaa.com,Technical Writer,1,1,4 - Research,Team 6,Carl Hayes
+Rosa Vargas,PGI3675,pgi3675@dtaa.com,Accountant,1,1,7 - Operations,Team 6,Zara Jensen
+Wade Adams,PJY0876,pjy0876@dtaa.com,ITAdmin,1,1,1 - Engineering,Team 11,Fiona Vargas
+Gary Foster,PPH0228,pph0228@dtaa.com,Accountant,1,1,1 - Engineering,Team 12,Omar Adams
+Lena Diaz,PUQ6424,puq6424@dtaa.com,Director,1,1,4 - Research,Team 12,Carl Hayes
+Wade Singh,QCT4158,qct4158@dtaa.com,Security Analyst,1,1,6 - Finance,Team 10,Omar Khan
+Vera Ellis,QHQ5150,qhq5150@dtaa.com,Director,1,1,6 - Finance,Team 7,Zara Lopez
+Alan Vargas,QOY4162,qoy4162@dtaa.com,Mechanical Engineer,1,1,4 - Research,Team 7,Rosa Tanaka
+Hana Patel,QSC3123,qsc3123@dtaa.com,Security Analyst,1,1,5 - Information Technology,Team 12,Yusuf Walsh
+Xena Adams,QUT1345,qut1345@dtaa.com,Computer Scientist,1,1,4 - Research,Team 4,Nina Ulrich
+Alan Adams,RCE5876,rce5876@dtaa.com,Salesman,1,1,7 - Operations,Team 5,Alan Novak
+Evan Barnes,RLI6273,rli6273@dtaa.com,Computer Scientist,1,1,5 - Information Technology,Team 11,Wade Adams
+Vera Owens,RUT1946,rut1946@dtaa.com,Security Analyst,1,1,3 - Human Resources,Team 5,Wade Novak
+Zara Tanaka,SBF1746,sbf1746@dtaa.com,Production Line Worker,1,1,7 - Operations,Team 3,Wade Adams
+Zara Foster,SDT4191,sdt4191@dtaa.com,Accountant,1,1,1 - Engineering,Team 7,Omar Khan
+Hana Ulrich,SEX5010,sex5010@dtaa.com,Software Engineer,1,1,7 - Operations,Team 4,Nina Ulrich
+Gary Barnes,SHV5792,shv5792@dtaa.com,Production Line Worker,1,1,2 - Sales,Team 11,Gary Patel
+Rosa Tanaka,SSY7686,ssy7686@dtaa.com,ITAdmin,1,1,3 - Human Resources,Team 11,Omar Adams
+Zara Walsh,TPH4125,tph4125@dtaa.com,Computer Scientist,1,1,6 - Finance,Team 4,Zara Lopez
+Dana Singh,TPY8677,tpy8677@dtaa.com,Electrical Engineer,1,1,6 - Finance,Team 7,Lena Adams
+Vera Quinn,TTJ2624,ttj2624@dtaa.com,Security Analyst,1,1,7 - Operations,Team 12,Wade Adams
+Vera Ulrich,TTS7860,tts7860@dtaa.com,Technical Writer,1,1,6 - Finance,Team 9,Lena Diaz
+Lena Adams,TVL8047,tvl8047@dtaa.com,Director,1,1,5 - Information Technology,Team 3,Nina Ulrich
+Lena Ellis,TWU8511,twu8511@dtaa.com,Salesman,1,1,3 - Human Resources,Team 8,Zara Jensen
+Carl Chen,UBE4939,ube4939@dtaa.com,Computer Scientist,1,1,1 - Engineering,Team 8,Rosa Tanaka
+Sami Meyer,UEH9251,ueh9251@dtaa.com,Salesman,1,1,1 - Engineering,Team 8,Lena Hayes
+Omar Reyes,UKR6395,ukr6395@dtaa.com,Director,1,1,3 - Human Resources,Team 1,Omar Adams
+Omar Patel,ULT2722,ult2722@dtaa.com,HR Specialist,1,1,1 - Engineering,Team 4,Yusuf Walsh
+Carl Ulrich,UQK8227,uqk8227@dtaa.com,Accountant,1,1,4 - Research,Team 11,Marco Meyer
+Lena Diaz,USS4618,uss4618@dtaa.com,Accountant,1,1,6 - Finance,Team 3,Marco Meyer
+Vera Reyes,UUU6648,uuu6648@dtaa.com,Accountant,1,1,7 - Operations,Team 4,Omar Singh
+Beth Ellis,VBL5911,vbl5911@dtaa.com,Technical Writer,1,1,4 - Research,Team 4,Omar Khan
+Alan Gupta,VBW2813,vbw2813@dtaa.com,Electrical Engineer,1,1,7 - Operations,Team 3,Omar Reyes
+Carl Reyes,VDL1237,vdl1237@dtaa.com,HR Specialist,1,1,7 - Operations,Team 2,Lena Hayes
+Nina Yates,VFU0073,vfu0073@dtaa.com,Security Analyst,1,1,7 - Operations,Team 5,Lena Adams
+Tara Owens,VIZ5045,viz5045@dtaa.com,Accountant,1,1,4 - Research,Team 11,Alan Novak
+Nina Barnes,VKX2883,vkx2883@dtaa.com,Software Engineer,1,1,3 - Human Resources,Team 1,Fiona Vargas
+Beth Owens,VNI5142,vni5142@dtaa.com,Salesman,1,1,7 - Operations,Team 4,Wade Adams
+Alan Barnes,VVU9026,vvu9026@dtaa.com,Technical Writer,1,1,2 - Sales,Team 1,Marco Meyer
+Fiona Vargas,VVY1052,vvy1052@dtaa.com,Director,1,1,3 - Human Resources,Team 7,Omar Reyes
+Lena Reyes,VXF8934,vxf8934@dtaa.com,HR Specialist,1,1,1 - Engineering,Team 4,Wade Adams
+Kyle Ellis,WAR1091,war1091@dtaa.com,Production Line Worker,1,1,6 - Finance,Team 10,Zara Lopez
+Julia Chen,WBM5944,wbm5944@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 8,Yusuf Walsh
+Umar Ellis,WLH0216,wlh0216@dtaa.com,ITAdmin,1,1,1 - Engineering,Team 10,Lena Adams
+Julia Yates,WOC7649,woc7649@dtaa.com,HR Specialist,1,1,2 - Sales,Team 8,Lena Adams
+Petra Lopez,WVH6316,wvh6316@dtaa.com,Security Analyst,1,1,4 - Research,Team 6,Omar Reyes
+Omar Singh,XDT1792,xdt1792@dtaa.com,ITAdmin,1,1,4 - Research,Team 11,Fiona Vargas
+Gary Patel,XGF2493,xgf2493@dtaa.com,Director,1,1,6 - Finance,Team 6,Wade Novak
+Wade Novak,XGZ9360,xgz9360@dtaa.com,Director,1,1,2 - Sales,Team 12,Alan Ellis
+Lena Diaz,XHL6619,xhl6619@dtaa.com,Director,1,1,7 - Operations,Team 12,Omar Adams
+Gary Walsh,XTJ9675,xtj9675@dtaa.com,Accountant,1,1,4 - Research,Team 8,Alan Reyes
+Omar Hayes,XXP1655,xxp1655@dtaa.com,Salesman,1,1,6 - Finance,Team 9,Yusuf Walsh
+Kyle Novak,YAE2296,yae2296@dtaa.com,Mechanical Engineer,1,1,2 - Sales,Team 4,Omar Singh
+Nina Quinn,YDM6963,ydm6963@dtaa.com,Electrical Engineer,1,1,1 - Engineering,Team 10,Gary Patel
+Gary Patel,YIO5206,yio5206@dtaa.com,Electrical Engineer,1,1,1 - Engineering,Team 9,Zara Jensen
+Lena Walsh,YLE8326,yle8326@dtaa.com,HR Specialist,1,1,3 - Human Resources,Team 11,Lena Diaz
+Evan Diaz,YNX1016,ynx1016@dtaa.com,Accountant,1,1,7 - Operations,Team 4,Zara Lopez
+Marco Meyer,YST5811,yst5811@dtaa.com,ITAdmin,1,1,1 - Engineering,Team 10,Alan Reyes
+Rosa Jensen,ZDH5063,zdh5063@dtaa.com,Software Engineer,1,1,3 - Human Resources,Team 6,Gary Patel
+Xena Lopez,ZFG0374,zfg0374@dtaa.com,Electrical Engineer,1,1,1 - Engineering,Team 3,Wade Patel
+Dana Chen,ZFH4085,zfh4085@dtaa.com,Electrical Engineer,1,1,7 - Operations,Team 3,Zara Jensen
+Zara Diaz,ZHD4885,zhd4885@dtaa.com,Mechanical Engineer,1,1,5 - Information Technology,Team 7,Tara Jensen
+Yusuf Gupta,ZIF9528,zif9528@dtaa.com,Electrical Engineer,1,1,6 - Finance,Team 4,Omar Singh
+Carl Hayes,ZPL3468,zpl3468@dtaa.com,Director,1,1,5 - Information Technology,Team 2,Evan Novak
+Petra Khan,ZRK4063,zrk4063@dtaa.com,Accountant,1,1,5 - Information Technology,Team 6,Zara Jensen
+Umar Owens,ZUI9718,zui9718@dtaa.com,Software Engineer,1,1,6 - Finance,Team 8,Zara Lopez
+Kyle Patel,ZWA2339,zwa2339@dtaa.com,Computer Scientist,1,1,1 - Engineering,Team 4,Zara Jensen
+Zara Jensen,ZWV4627,zwv4627@dtaa.com,Director,1,1,7 - Operations,Team 12,Tara Jensen
