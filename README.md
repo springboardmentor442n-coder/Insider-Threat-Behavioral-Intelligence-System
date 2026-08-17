@@ -15,11 +15,11 @@
 # Add predictions.html for threat prediction engine
 # Add employee profile template
 # Implement AI analysis endpoint for insider-threat detection
-# Add OPENAI_API_KEY to .env.example
+# Refactor SHAP calculation to use XGBoost
 # Added employees.json file for accurate predictions 
 
 kaggle notebook link:
 https://www.kaggle.com/code/srinidhigolla/insider-threat-real-labels
 
 link to run my app:
-http://192.168.43.239:5000/
+[[http://192.168.43.239:5000/](http://192.168.29.239:5000)
