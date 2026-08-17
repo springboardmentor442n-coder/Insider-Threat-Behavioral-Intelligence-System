@@ -1,0 +1,28 @@
+# Environment & virtual environments
+.env
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Data & models (large/binary files)
+DATA/
+MODELS/
+
+# Logs
+LOGS/
+
+# Streamlit cache
+STREAMLIT/__pycache__/
+
+# IDE/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python packaging
+*.egg-info/
+dist/
+build/

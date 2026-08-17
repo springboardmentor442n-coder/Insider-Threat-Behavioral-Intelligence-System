@@ -1,0 +1,82 @@
+# Insider Threat Detection — Web App Blank Page Fix Guide
+
+## The Problem
+Every time the web app was reopened, the browser showed a **blank page** (no
+dashboard content at all).
+
+## Root Cause
+The dashboard UI lives in `STREAMLIT/app.py`, but the app was being started
+from the project root with:
+
+```
+streamlit run app.py
+```
+
+That command makes Streamlit execute the **root** `app.py`, which was NOT the
+dashboard. The old root `app.py` was a plain console pipeline script. It only
+did this:
+
+1. Loaded a config.
+2. Set up a logger.
+3. Printed `"Starting Insider Threat Detection System"` and `"Pipeline complete"`.
+
+It produced **zero Streamlit UI elements** (no `st.title`, no `st.metric`, no
+layout at all). So the browser connected to the server, the script ran
+successfully with no errors, and displayed nothing — an empty/blank page.
+
+Because the run reported no exception, Streamlit showed no error message. The
+app "worked" from the server's point of view; it just had nothing to render.
+
+## Why It Seemed Inconsistent ("only when reopening")
+The first time the app was launched (e.g. from inside the `STREAMLIT/` folder,
+or with `streamlit run STREAMLIT/app.py`), the real dashboard loaded. Later
+reopens often used `streamlit run app.py` from the root folder, which executed
+the wrong file and rendered the blank page. A leftover server process on port
+8501 from an older blank run also made it look random.
+
+## The Fix (already applied)
+`app.py` (project root) is now a thin launcher that delegates to the real
+dashboard:
+
+```python
+runpy.run_path(
+    str(Path(__file__).resolve().parent / "STREAMLIT" / "app.py"),
+    run_name="__main__",
+)
+```
+
+So `streamlit run app.py` now loads `STREAMLIT/app.py`, and the dashboard
+renders correctly. The old blank-page server was stopped and restarted with
+the corrected entry point.
+
+## How to Run the Web App
+From the project root:
+
+```
+streamlit run app.py
+```
+
+or run the dashboard file directly:
+
+```
+streamlit run STREAMLIT/app.py
+```
+
+Then open http://localhost:8501 in the browser.
+
+## Tips to Avoid the Blank Page Again
+1. Always start the app with one of the two commands above (both now work).
+2. If a page looks stuck/blank, do a hard refresh (Ctrl+Shift+R) or fully
+   close and reopen the tab. Browsers sometimes keep a stale Streamlit
+   websocket connection from a previous session.
+3. Don't start a second `streamlit run` while one is already running on port
+   8501 — it will grab port 8502 and the old tab points to a dead server.
+4. If needed, stop the old server first, e.g.:
+   ```
+   netstat -ano | findstr :8501
+   taskkill /PID <PID> /F
+   ```
+
+## Summary
+- Issue: `streamlit run app.py` executed a console script with no UI → blank page.
+- Fix: root `app.py` now redirects to the real Streamlit dashboard in `STREAMLIT/app.py`.
