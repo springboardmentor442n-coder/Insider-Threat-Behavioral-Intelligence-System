@@ -1,33 +1,58 @@
-# Environment & virtual environments
+# Environment files
 .env
-.venv/
 
-# Python cache
+# Python
 __pycache__/
-*.pyc
-
-# Data & models (large/binary files)
-DATA/
-MODELS/
-
-# Logs
-LOGS/
-
-# Streamlit cache
-STREAMLIT/__pycache__/
-
-# Guide files
-guide.txt
-DOCS/guide.txt
-
-# IDE/OS
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# Python packaging
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
 *.egg-info/
 dist/
 build/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Models (too large for git)
+MODELS/*.pkl
+MODELS/*.joblib
+MODELS/*.h5
+MODELS/*.pt
+MODELS/*.onnx
+MODELS/*.joblib
+
+# Logs
+LOGS/*.log
+
+# Output files (generated)
+OUTPUT/reports/*
+OUTPUT/graphs/*
+OUTPUT/predictions/*
+!OUTPUT/reports/.gitkeep
+!OUTPUT/graphs/.gitkeep
+!OUTPUT/predictions/.gitkeep
+
+# Data files (too large for git)
+DATA/raw/*
+DATA/processed/*
+DATA/features/*
+DATA/*.db
+!DATA/raw/.gitkeep
+!DATA/processed/.gitkeep
+!DATA/features/.gitkeep
+
 guide.txt
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
