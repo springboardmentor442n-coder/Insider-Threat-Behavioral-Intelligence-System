@@ -16,6 +16,10 @@ LOGS/
 # Streamlit cache
 STREAMLIT/__pycache__/
 
+# Guide files
+guide.txt
+DOCS/guide.txt
+
 # IDE/OS
 .vscode/
 .idea/
