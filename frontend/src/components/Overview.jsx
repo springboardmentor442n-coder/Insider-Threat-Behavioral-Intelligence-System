@@ -1,6 +1,19 @@
-import allEmployees from '../employees.json';
+import { useState, useEffect } from 'react';
 
 function Overview({ setCurrentRoute, recentAnalyses = [] }) {
+  const [totalEmployees, setTotalEmployees] = useState(0);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/employees")
+      .then(res => res.json())
+      .then(data => {
+        if (data.employees) {
+          setTotalEmployees(data.employees.length);
+        }
+      })
+      .catch(err => console.error("Failed to fetch employees:", err));
+  }, []);
+
   return (
     <div className="overview-container">
       <div className="page-header">
@@ -168,7 +181,7 @@ function Overview({ setCurrentRoute, recentAnalyses = [] }) {
                 </div>
                 <div className="status-panel" style={{ justifyContent: 'space-between', width: '100%' }}>
                   <span className="status-panel-label">Total Employees</span>
-                  <span className="status-panel-value" style={{ color: 'var(--accent-secondary)' }}>{allEmployees.length}</span>
+                  <span className="status-panel-value" style={{ color: 'var(--accent-secondary)' }}>{totalEmployees}</span>
                 </div>
                 <div className="status-panel" style={{ justifyContent: 'space-between', width: '100%' }}>
                   <span className="status-panel-label">Total Analyses</span>
@@ -185,7 +198,7 @@ function Overview({ setCurrentRoute, recentAnalyses = [] }) {
               <div className="status-panel-group" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div className="status-panel" style={{ justifyContent: 'space-between', width: '100%' }}>
                   <span className="status-panel-label">Total Employees</span>
-                  <span className="status-panel-value" style={{ color: 'var(--accent-secondary)' }}>{allEmployees.length}</span>
+                  <span className="status-panel-value" style={{ color: 'var(--accent-secondary)' }}>{totalEmployees}</span>
                 </div>
                 <div style={{ color: "var(--text-muted)", fontSize: '0.9rem', padding: '0.5rem 0' }}>
                   Awaiting first analysis

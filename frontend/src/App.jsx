@@ -5,6 +5,7 @@ import Overview from "./components/Overview";
 import BehaviorAnalysis from "./components/BehaviorAnalysis";
 import Employees from "./components/Employees";
 import PredictionHistory from "./components/PredictionHistory";
+import BatchAnalysis from "./components/BatchAnalysis";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
@@ -61,9 +62,11 @@ function App() {
       case "Overview":
         return <Overview setCurrentRoute={setCurrentRoute} recentAnalyses={recentAnalyses} />;
       case "Employees":
-        return <Employees setCurrentRoute={setCurrentRoute} recentAnalyses={recentAnalyses} setSelectedEmployee={setSelectedEmployee} />;
+        return <Employees setCurrentRoute={setCurrentRoute} recentAnalyses={recentAnalyses} setRecentAnalyses={updateRecentAnalyses} setSelectedEmployee={setSelectedEmployee} />;
       case "BehaviorAnalysis":
         return <BehaviorAnalysis recentAnalyses={recentAnalyses} setRecentAnalyses={updateRecentAnalyses} selectedEmployee={selectedEmployee} setSelectedEmployee={setSelectedEmployee} />;
+      case "BatchAnalysis":
+        return <BatchAnalysis />;
       case "PredictionHistory":
         return <PredictionHistory recentAnalyses={recentAnalyses} setRecentAnalyses={updateRecentAnalyses} />;
       default:

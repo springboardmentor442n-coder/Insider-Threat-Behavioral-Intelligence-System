@@ -17,6 +17,10 @@ def predict(data):
     prediction = model.predict(df)[0]
 
     if prediction == -1:
-        return "INSIDER"
+        return "ANOMALY"
     else:
         return "NORMAL"
+
+def predict_batch(df):
+    predictions = model.predict(df)
+    return ["ANOMALY" if p == -1 else "NORMAL" for p in predictions]

@@ -25,8 +25,17 @@ def clean_dataset(df: pl.DataFrame) -> pl.DataFrame:
     # Remove duplicate rows
     df = df.unique()
 
-    # Remove rows containing null values
-    df = df.drop_nulls()
+    # Identify the user column to check for nulls
+    columns = df.collect_schema().names()
+    subset = []
+    if "user" in columns:
+        subset.append("user")
+    if "user_id" in columns:
+        subset.append("user_id")
+
+    # Remove rows containing null values only in critical columns
+    if subset:
+        df = df.drop_nulls(subset=subset)
 
     return df
 

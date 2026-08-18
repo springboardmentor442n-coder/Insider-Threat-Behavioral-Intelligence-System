@@ -47,7 +47,7 @@ function PredictionHistory({ recentAnalyses = [], setRecentAnalyses }) {
               </thead>
               <tbody>
                 {recentAnalyses.map((item, index) => {
-                  const isThreat = item.riskLevel === "HIGH";
+                  const isThreat = item.prediction === "ANOMALY" || item.riskLevel === "HIGH";
                   return (
                     <tr key={index}>
                       <td className="muted-cell">{item.timestamp}</td>

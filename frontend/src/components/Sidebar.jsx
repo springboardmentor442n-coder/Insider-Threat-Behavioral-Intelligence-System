@@ -26,6 +26,12 @@ function Sidebar({ currentRoute, setCurrentRoute }) {
           Behavior Analysis
         </a>
         <a 
+          className={`nav-item ${currentRoute === 'BatchAnalysis' ? 'active' : ''}`}
+          onClick={() => setCurrentRoute('BatchAnalysis')}
+        >
+          Batch Analysis
+        </a>
+        <a 
           className={`nav-item ${currentRoute === 'PredictionHistory' ? 'active' : ''}`}
           onClick={() => setCurrentRoute('PredictionHistory')}
         >

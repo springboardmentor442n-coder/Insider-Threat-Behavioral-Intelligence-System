@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { predictUser } from "../services/api";
-import allEmployees from '../employees.json';
 
 function PredictionForm({ setPredictionResult, setIsLoading, isLoading, addRecentAnalysis }) {
     const defaultState = {
+        employeeId: "",
         device_connections: "",
         emails_sent: "",
         files_accessed: "",
@@ -18,11 +18,26 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading, addRecen
 
     const [formData, setFormData] = useState(defaultState);
     const [validationError, setValidationError] = useState("");
+    const [employees, setEmployees] = useState([]);
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:8000/employees")
+            .then(res => res.json())
+            .then(data => setEmployees(data.employees || []))
+            .catch(err => console.error("Failed to fetch employees:", err));
+    }, []);
 
     function handleChange(event) {
+        const { name, value } = event.target;
+        
+        let parsedValue = value;
+        if (name !== "employeeId" && value !== "") {
+            parsedValue = Number(value);
+        }
+
         setFormData({
             ...formData,
-            [event.target.name]: event.target.value === "" ? "" : Number(event.target.value),
+            [name]: parsedValue,
         });
         setValidationError("");
     }
@@ -50,13 +65,14 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading, addRecen
         setPredictionResult(null);
 
         try {
-            const result = await predictUser(formData);
+            const { employeeId, ...predictData } = formData;
+            const result = await predictUser(predictData);
             setPredictionResult(result.prediction);
             
             if (addRecentAnalysis) {
                 addRecentAnalysis({
                     id: Math.random().toString(36).substring(7).toUpperCase(),
-                    employeeId: "Unknown",
+                    employeeId: employeeId || "Unknown",
                     timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
                     prediction: result.prediction,
                     riskLevel: result.prediction === "INSIDER" || result.prediction === "Threat" ? "HIGH" : "LOW",
@@ -101,6 +117,23 @@ function PredictionForm({ setPredictionResult, setIsLoading, isLoading, addRecen
             
             <div className="section-title" style={{ marginTop: 0 }}>BEHAVIORAL ACTIVITY</div>
             <div className="form-section-2col">
+                <div className="form-group-detailed" style={{ gridColumn: '1 / -1' }}>
+                    <label>EMPLOYEE ID</label>
+                    <span className="field-desc">Select an employee for manual analysis</span>
+                    <select
+                        name="employeeId"
+                        value={formData.employeeId}
+                        onChange={handleChange}
+                        required
+                        className="form-control"
+                        style={{ width: '100%', padding: '0.75rem', background: 'var(--bg-main)', color: 'var(--text-primary)', border: '1px solid var(--border-color)', borderRadius: '4px', fontSize: '1rem', marginTop: '0.5rem' }}
+                    >
+                        <option value="" disabled>Select Employee</option>
+                        {employees.map(emp => (
+                            <option key={emp} value={emp}>{emp}</option>
+                        ))}
+                    </select>
+                </div>
                 <div className="form-group-detailed">
                     <label>DEVICE CONNECTIONS</label>
                     <span className="field-desc">Number of device connection events</span>

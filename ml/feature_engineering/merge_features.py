@@ -67,11 +67,27 @@ psychometric_feature = (
 # Merge Feature Tables
 # ---------------------------------
 
-features = device_feature.join(
+# ---------------------------------
+# Merge Feature Tables
+# ---------------------------------
+
+# Use psychometric_feature as the population base to ensure no users are dropped
+features = psychometric_feature
+
+# Merge Device Feature
+features = features.join(
+    device_feature,
+    on="user",
+    how="left"
+)
+
+# Merge Email Feature
+features = features.join(
     email_feature,
     on="user",
     how="left"
 )
+
 # Merge File Feature
 features = features.join(
     file_feature,
@@ -93,13 +109,34 @@ features = features.join(
     how="left"
 )
 
-# Merge Psychometric Feature
-features = features.join(
-    psychometric_feature,
-    on="user",
-    how="left"
-)
-features = features.fill_null(0)
+# Fill nulls with 0 ONLY for activity count features (not psychometric data)
+activity_cols = [
+    "device_connections",
+    "emails_sent",
+    "files_accessed",
+    "websites_visited",
+    "logon_count"
+]
+
+features = features.with_columns([
+    pl.col(c).fill_null(0) for c in activity_cols
+])
+
+# Enforce exact column order required for the model
+final_cols = [
+    "user",
+    "device_connections",
+    "emails_sent",
+    "files_accessed",
+    "websites_visited",
+    "logon_count",
+    "O",
+    "C",
+    "E",
+    "A",
+    "N"
+]
+features = features.select(final_cols)
 
 print("Datasets Loaded Successfully\n")
 
@@ -109,23 +146,6 @@ print("File:", file.shape)
 print("HTTP:", http.shape)
 print("Logon:", logon.shape)
 print("Psychometric:", psychometric.shape)
-
-print(device_feature.head())
-print("\nEmail Feature")
-print(email_feature.head())
-print("\nFile Feature")
-print(file_feature.head())
-print("\nHTTP Feature")
-print(http_feature.head())
-print("\nLogon Feature")
-print(logon_feature.head())
-print("\nPsychometric Feature")
-print(psychometric_feature.head())
-print("\nMerged Device + Email")
-print(features.head())
-print("\n========== FINAL FEATURE DATASET ==========\n")
-print(features.shape)
-print(features.head())
 # ----------------------------------
 # Save Final Feature Dataset
 # ----------------------------------
