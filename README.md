@@ -16,7 +16,7 @@ The platform provides an end-to-end security solution unifying log telemetry ing
 | **ML Ensemble** | 7-Model Ensemble (Isolation Forest, One-Class SVM, LOF, Elliptic Envelope, PCA, DBSCAN, K-Means) |
 | **Live Evaluation** | 22 Behavioral Feature Vectors across 5 Categories (Volume, Temporal, Device, Web, Psychometrics) |
 | **Population Comparison** | Distinguishes `SOURCE = CERT R4.2` from `SOURCE = NEW_EVALUATION` with Baseline Isolation |
-| **Risk Scoring Engine** | 0–100 Normalized Weighted Score (Anomalies 35%, Misuse 25%, Violations 20%, Deviations 10%, History 10%) |
+| **Risk Scoring Engine** | 0-100 Normalized Weighted Score (Anomalies 35%, Misuse 25%, Violations 20%, Deviations 10%, History 10%) |
 | **Layer 2 Verification** | CERT Population-Level Statistical Baseline Validation (P90 Thresholds) |
 | **Primary Navigation** | 6 Workflow Views (Dashboard, Threat Center, Employees, Employee Evaluation, Investigation, Reports) |
 | **Contextual Deep Links** | Deep-linked Explainability & Verification drawers from Employee & Threat details |
