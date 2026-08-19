@@ -66,7 +66,7 @@ See **Getting Started → Docker** below to build and run it yourself.
 - ✅ Docker containerization — built, run, and verified end-to-end (see Docker Deployment above)
 - ✅ Automated test suite — 17 pytest tests covering auth, RBAC, employees, risk scores, prediction, incidents, UEBA
 
-## Known Gaps
+## Scope & Limitations
 
 Documented honestly rather than hidden:
 
