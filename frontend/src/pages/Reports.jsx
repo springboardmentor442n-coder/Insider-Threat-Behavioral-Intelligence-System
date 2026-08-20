@@ -1,6 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { reportsAPI } from '../services/api';
-import { FileText, Download, ShieldCheck, CheckCircle, AlertTriangle, Users, Filter, Printer, Eye, X } from 'lucide-react';
+import { FileText, Download, ShieldCheck, CheckCircle, AlertTriangle, Users, Filter, Printer, Eye, X, Bell, FileSearch, TrendingUp, BarChart3 } from 'lucide-react';
+import { Line, Bar } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+} from 'chart.js';
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const Reports = () => {
   const [summary, setSummary] = useState(null);
@@ -13,8 +38,9 @@ const Reports = () => {
     const fetchSummary = async () => {
       setLoading(true);
       try {
-        const data = await reportsAPI.getSummary();
+        const data = await reportsAPI.getSummary(timeRange);
         setSummary(data);
+
       } catch (err) {
         console.error("Fetch report summary error:", err);
       } finally {
@@ -32,12 +58,14 @@ const Reports = () => {
       `Generated At,"${summary.generated_at}"\n` +
       `Total Users Monitored,${summary.total_users_monitored}\n` +
       `Behavioral Days Analyzed,${summary.total_behavioral_days_analyzed}\n` +
-      `Normal Records,${summary.normal_records_count}\n` +
-      `Suspicious Records,${summary.suspicious_records_count}\n` +
-      `Critical Severity,${summary.critical_severity_count}\n` +
-      `High Severity,${summary.high_severity_count}\n` +
-      `Medium Severity,${summary.medium_severity_count}\n` +
-      `Low Severity,${summary.low_severity_count}\n`;
+      `Normal Users,${summary.normal_users_count || 0}\n` +
+      `Suspicious Users,${summary.suspicious_users_count || 0}\n` +
+      `High-Risk Users,${summary.high_risk_users_count || 0}\n` +
+      `Medium-Risk Users,${summary.medium_risk_users_count || 0}\n` +
+      `Low-Risk Users,${summary.low_risk_users_count || 0}\n` +
+      `Total Alerts,${summary.total_alerts || 0}\n` +
+      `Open Investigations,${summary.open_investigations || 0}\n` +
+      `Resolved Investigations,${summary.resolved_investigations || 0}\n`;
     
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
@@ -51,6 +79,42 @@ const Reports = () => {
   if (loading) {
     return <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '100px' }}>Generating Intelligence Executive Report...</div>;
   }
+
+  // 1. Risk Distribution Bar Chart Data
+  const riskDistData = {
+    labels: summary?.risk_distribution?.labels || ['0-20 (Normal)', '21-40 (Low)', '41-60 (Medium)', '61-80 (High)', '81-100 (Critical)'],
+    datasets: [
+      {
+        label: 'Monitored Dataset Records',
+        data: summary?.risk_distribution?.counts || [0, 0, 0, 0, 0],
+        backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(56, 189, 248, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(249, 115, 22, 0.8)', 'rgba(244, 63, 94, 0.9)'],
+        borderRadius: 6,
+      }
+    ]
+  };
+
+  // 2. Threat Trend Line Chart Data
+  const threatTrendData = {
+    labels: summary?.threat_trend?.map(t => t.day) || [],
+    datasets: [
+      {
+        label: 'Average final_risk_score',
+        data: summary?.threat_trend?.map(t => t.avg_risk_score) || [],
+        borderColor: '#38bdf8',
+        backgroundColor: 'rgba(56, 189, 248, 0.12)',
+        fill: true,
+        tension: 0.4,
+      },
+      {
+        label: 'Suspicious Predictions',
+        data: summary?.threat_trend?.map(t => t.suspicious_count) || [],
+        borderColor: '#f43f5e',
+        backgroundColor: 'rgba(244, 63, 94, 0.12)',
+        fill: false,
+        tension: 0.4,
+      }
+    ]
+  };
 
   return (
     <div>
@@ -74,25 +138,9 @@ const Reports = () => {
         </div>
       </div>
 
-      {/* Report Navigation Tabs & Filters */}
-      <div className="glass-card" style={{ padding: '16px 20px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-        <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {[
-            { id: 'summary', label: '1. Risk Summary' },
-            { id: 'user_risk', label: '2. User Risk Report' },
-            { id: 'severity', label: '3. Severity Report' },
-            { id: 'alerts', label: '4. Alert Summary' },
-            { id: 'analytics', label: '5. Behavioral Analytics Report' }
-          ].map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveReportTab(tab.id)}
-              className={`tab-btn ${activeReportTab === tab.id ? 'active' : ''}`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+      {/* Report Filters Header */}
+      <div className="glass-card" style={{ padding: '16px 20px', marginBottom: '24px', display: 'flex', justifyContent: 'flex-end', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
+
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Filter size={16} color="var(--text-muted)" />
@@ -110,6 +158,92 @@ const Reports = () => {
         </div>
       </div>
 
+      {/* Dynamic Statistics Grid (Rule 11) */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '14px', marginBottom: '28px' }}>
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Total Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)', marginTop: '2px' }}>{summary?.total_users_monitored?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Monitored personnel</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Total Analysed User-Days</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-cyan)', marginTop: '2px' }}>{summary?.total_behavioral_days_analyzed?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Evaluated days</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Normal Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-low)', marginTop: '2px' }}>{summary?.normal_users_count?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>prediction = 0</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Suspicious Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-critical)', marginTop: '2px' }}>{summary?.suspicious_users_count?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>prediction = 1</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>High-Risk Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-high)', marginTop: '2px' }}>{summary?.high_risk_users_count?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>High severity</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Medium-Risk Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-medium)', marginTop: '2px' }}>{summary?.medium_risk_users_count?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Medium severity</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Low-Risk Users</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-low)', marginTop: '2px' }}>{summary?.low_risk_users_count?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Low severity</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Total Alerts</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-purple)', marginTop: '2px' }}>{summary?.total_alerts?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Generated alerts</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Open Investigations</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-critical)', marginTop: '2px' }}>{summary?.open_investigations?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Active cases</div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '16px' }}>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Resolved Investigations</div>
+          <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-emerald)', marginTop: '2px' }}>{summary?.resolved_investigations?.toLocaleString()}</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>Closed cases</div>
+        </div>
+      </div>
+
+      {/* Report Charts Section (Rule 12) */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
+        <div className="glass-card" style={{ padding: '24px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <BarChart3 size={18} color="var(--accent-cyan)" />
+            <span>Risk Score Distribution (Backend Data)</span>
+          </h3>
+          <div style={{ height: '240px' }}>
+            <Bar data={riskDistData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
+          </div>
+        </div>
+
+        <div className="glass-card" style={{ padding: '24px' }}>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <TrendingUp size={18} color="var(--severity-critical)" />
+            <span>Threat Trend (Backend Aggregation)</span>
+          </h3>
+          <div style={{ height: '240px' }}>
+            <Line data={threatTrendData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', labels: { color: 'var(--text-muted)' } } } }} />
+          </div>
+        </div>
+      </div>
+
       {/* Main Report Container */}
       <div className="glass-card" style={{ padding: '28px', marginBottom: '28px' }}>
         <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '24px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
@@ -119,41 +253,20 @@ const Reports = () => {
               {activeReportTab === 'user_risk' && 'High-Risk Monitored Personnel Risk Evaluation'}
               {activeReportTab === 'severity' && 'Security Incident Severity Distribution Report'}
               {activeReportTab === 'alerts' && 'Automated Alert Queue & Triage Summary'}
-              {activeReportTab === 'analytics' && 'Comprehensive Behavioral Sub-System Analytics Audit'}
             </h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-              Report Generated: {new Date(summary?.generated_at).toLocaleString()} • Scope: {timeRange.toUpperCase()}
+              Report Generated: {summary?.generated_at} • Scope: {timeRange.toUpperCase()}
             </p>
           </div>
           <span className="badge badge-low" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
             <ShieldCheck size={14} />
-            <span>CERT r4.2 Verified</span>
+            <span>CERT r4.2 Verified Data</span>
           </span>
-        </div>
-
-        {/* Metric Summary Grid */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '28px' }}>
-          <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Total Users Monitored</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-main)' }}>{summary?.total_users_monitored?.toLocaleString()}</div>
-          </div>
-          <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>User-Days Analyzed</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--accent-cyan)' }}>{summary?.total_behavioral_days_analyzed?.toLocaleString()}</div>
-          </div>
-          <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Suspicious Records</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-critical)' }}>{summary?.suspicious_records_count?.toLocaleString()}</div>
-          </div>
-          <div style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: '10px', border: '1px solid var(--border-color)' }}>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Critical Incidents</div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--severity-critical)' }}>{summary?.critical_severity_count?.toLocaleString()}</div>
-          </div>
         </div>
 
         {/* Tab Specific Content Table */}
         <h4 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px' }}>
-          Report Data Breakdown
+          High-Risk Personnel Evaluation Breakdown
         </h4>
         <div style={{ overflowX: 'auto' }}>
           <table className="custom-table">
@@ -202,13 +315,13 @@ const Reports = () => {
             </div>
 
             <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: '1.6' }}>
-              <p><strong>Report Reference:</strong> EXP-2026-{Math.floor(Math.random()*9000+1000)}</p>
-              <p><strong>Generated Date:</strong> {new Date().toLocaleString()}</p>
+              <p><strong>Report Reference:</strong> EXP-2026-AUDIT</p>
+              <p><strong>Generated Date:</strong> {summary?.generated_at}</p>
               <p><strong>Classification:</strong> RESTRICTED // SOC INTERNAL USE ONLY</p>
               <hr style={{ borderColor: 'var(--border-color)', margin: '16px 0' }} />
               <p>
                 This executive report summarizes behavioral telemetry from the CERT Insider Threat Dataset r4.2.
-                The Gradient Boosting machine learning model classified <strong>{summary?.suspicious_records_count}</strong> user-days as suspicious with high exfiltration probability.
+                The Gradient Boosting machine learning model classified <strong>{summary?.suspicious_records_count}</strong> user-days as suspicious with high exfiltration probability across <strong>{summary?.total_users_monitored}</strong> monitored users.
               </p>
             </div>
 
@@ -224,3 +337,4 @@ const Reports = () => {
 };
 
 export default Reports;
+

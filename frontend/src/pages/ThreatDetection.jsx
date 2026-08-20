@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { predictionAPI, usersAPI, analysisAPI } from '../services/api';
-import { Cpu, Play, BarChart3, AlertCircle, CheckCircle2, Upload, FileText, FolderArchive, ShieldAlert, Download, AlertTriangle, ListFilter } from 'lucide-react';
+import { Cpu, Play, BarChart3, AlertCircle, CheckCircle2, Upload, FileText, FolderArchive, ShieldAlert, Download, AlertTriangle, ListFilter, UserSearch } from 'lucide-react';
 import { Bar } from 'react-chartjs-2';
 import { Link } from 'react-router-dom';
 
 const ThreatDetection = () => {
   const [activeTab, setActiveTab] = useState('simulator'); // 'simulator' | 'bulk_analysis'
 
-  // Manual 19-feature simulator state
+  const [monitoredUsers, setMonitoredUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
+  const [userLoading, setUserLoading] = useState(false);
+  const [userError, setUserError] = useState(null);
+
+  // Manual 19-feature simulator state in exact schema order expected by model
   const [features, setFeatures] = useState({
     logon_count: 2,
     logoff_count: 2,
@@ -43,66 +48,43 @@ const ThreatDetection = () => {
   const [bulkResponse, setBulkResponse] = useState(null);
   const [bulkError, setBulkError] = useState(null);
 
-  // Presets for simulator
-  const presets = {
-    normal: {
-      logon_count: 1, logoff_count: 1, off_hours_logons: 0, unique_pcs: 1,
-      device_connects: 0, device_disconnects: 0, unique_device_pcs: 0,
-      file_activity_count: 10, unique_file_pcs: 1, unique_files: 8, sensitive_file_count: 0,
-      email_count: 8, attachment_count: 1, total_email_size: 25000, unique_email_pcs: 1, external_email_count: 0,
-      http_request_count: 45, unique_http_urls: 15, off_hours_http: 0
-    },
-    usb_exfil: {
-      logon_count: 3, logoff_count: 2, off_hours_logons: 4, unique_pcs: 2,
-      device_connects: 7, device_disconnects: 7, unique_device_pcs: 2,
-      file_activity_count: 45, unique_file_pcs: 2, unique_files: 28, sensitive_file_count: 18,
-      email_count: 10, attachment_count: 2, total_email_size: 45000, unique_email_pcs: 1, external_email_count: 1,
-      http_request_count: 60, unique_http_urls: 12, off_hours_http: 30
-    },
-    email_exfil: {
-      logon_count: 2, logoff_count: 2, off_hours_logons: 3, unique_pcs: 1,
-      device_connects: 1, device_disconnects: 1, unique_device_pcs: 1,
-      file_activity_count: 30, unique_file_pcs: 1, unique_files: 15, sensitive_file_count: 12,
-      email_count: 28, attachment_count: 14, total_email_size: 580000, unique_email_pcs: 1, external_email_count: 22,
-      http_request_count: 50, unique_http_urls: 20, off_hours_http: 25
-    }
+  const extractArray = (res) => {
+    if (Array.isArray(res)) return res;
+    if (Array.isArray(res?.users)) return res.users;
+    if (Array.isArray(res?.data)) return res.data;
+    return [];
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [imp, users] = await Promise.all([
-          predictionAPI.getFeatureImportance(),
-          usersAPI.getMonitoredUsers({ minRisk: 70 })
+        const [imp, usersRes, allUsersRes] = await Promise.all([
+          predictionAPI.getFeatureImportance().catch(() => []),
+          usersAPI.getMonitoredUsers({ minRisk: 60 }).catch(() => []),
+          usersAPI.getMonitoredUsers({ limit: 100 }).catch(() => [])
         ]);
-        setImportanceData(imp);
-        setHighRiskUsers(users);
+        const impArray = Array.isArray(imp) ? imp : [];
+        const usersArray = extractArray(usersRes);
+        const allUsersArray = extractArray(allUsersRes);
+
+        setImportanceData(impArray);
+        setHighRiskUsers(usersArray);
+        setMonitoredUsers(allUsersArray);
+
+        if (allUsersArray.length > 0 && allUsersArray[0]?.user) {
+          handleSelectUser(allUsersArray[0].user, false);
+        }
       } catch (err) {
         console.error("Threat detection fetch error:", err);
       }
     };
     fetchData();
-    handlePredict();
   }, []);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFeatures(prev => ({
-      ...prev,
-      [name]: parseFloat(value) || 0
-    }));
-  };
-
-  const applyPreset = (presetKey) => {
-    if (presets[presetKey]) {
-      setFeatures(presets[presetKey]);
-    }
-  };
-
-  const handlePredict = async () => {
+  const runInferenceForFeatures = async (featureObj) => {
     setLoading(true);
     try {
-      const res = await predictionAPI.predict(features);
+      const res = await predictionAPI.predict(featureObj);
       setPredictionResult(res);
     } catch (err) {
       console.error("Prediction error:", err);
@@ -110,6 +92,45 @@ const ThreatDetection = () => {
       setLoading(false);
     }
   };
+
+  const handleSelectUser = async (userId, autoRun = false) => {
+    if (!userId) return;
+    setSelectedUser(userId);
+    setUserLoading(true);
+    setUserError(null);
+    try {
+      const userFeatData = await usersAPI.getUserFeatures(userId);
+      if (userFeatData && userFeatData.features) {
+        setFeatures(userFeatData.features);
+        if (autoRun) {
+          await runInferenceForFeatures(userFeatData.features);
+        }
+      }
+    } catch (err) {
+      console.error("Fetch user features error:", err);
+      setUserError(`Could not load feature records for ${userId}`);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFeatures(prev => ({
+      ...prev,
+      [name]: value === '' ? '' : (parseFloat(value) || 0)
+    }));
+  };
+
+  const handlePredict = async () => {
+    const cleanFeatures = {};
+    Object.keys(features).forEach(k => {
+      const val = features[k];
+      cleanFeatures[k] = val === '' ? 0 : (parseFloat(val) || 0);
+    });
+    await runInferenceForFeatures(cleanFeatures);
+  };
+
 
   // Submit Bulk Analysis Upload
   const handleBulkSubmit = async (e) => {
@@ -150,12 +171,13 @@ const ThreatDetection = () => {
     }
   };
 
+  const safeImportanceData = Array.isArray(importanceData) ? importanceData : [];
   const barChartData = {
-    labels: importanceData.map(i => i.feature),
+    labels: safeImportanceData.map(i => i.feature),
     datasets: [
       {
         label: 'Gradient Boosting Feature Importance Weight',
-        data: importanceData.map(i => i.importance),
+        data: safeImportanceData.map(i => i.importance),
         backgroundColor: '#38bdf8',
         borderRadius: 4,
       },
@@ -195,21 +217,55 @@ const ThreatDetection = () => {
       {/* TAB 1: Real-time Feature Simulator */}
       {activeTab === 'simulator' && (
         <>
+          {/* Dataset User Selector Bar for Rule 6 */}
+          <div className="glass-card" style={{ padding: '18px 24px', marginBottom: '24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+              <UserSearch size={22} color="var(--accent-cyan)" />
+              <div>
+                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--text-main)' }}>Dataset-Based Employee Analysis</div>
+                <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Select a real employee ID from dataset to auto-fill behavioral features & run model inference</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <select
+                className="input-field"
+                style={{ width: '220px', padding: '8px 12px', fontSize: '0.85rem', fontWeight: 600 }}
+                value={selectedUser}
+                onChange={(e) => handleSelectUser(e.target.value, true)}
+                disabled={userLoading}
+              >
+                <option value="">-- Select Monitored User --</option>
+                {(Array.isArray(monitoredUsers) ? monitoredUsers : []).map((u) => (
+                  <option key={u.user} value={u.user}>
+                    {u.user} (Risk: {u.max_risk_score ?? u.risk_score ?? 0} / 100)
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {userError && (
+            <div style={{ padding: '12px 16px', background: 'rgba(244,63,94,0.15)', border: '1px solid rgba(244,63,94,0.3)', color: 'var(--severity-critical)', borderRadius: '8px', marginBottom: '20px', fontSize: '0.85rem' }}>
+              {userError}
+            </div>
+          )}
+
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px', marginBottom: '28px' }}>
             <div className="glass-card" style={{ padding: '20px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Classification Output</div>
               <div style={{ fontSize: '1.4rem', fontWeight: 800, color: predictionResult?.prediction === 1 ? 'var(--severity-critical)' : 'var(--severity-low)', marginTop: '4px' }}>
                 {predictionResult ? (predictionResult.prediction === 1 ? 'SUSPICIOUS (1)' : 'NORMAL (0)') : '---'}
               </div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>Trained Model Prediction</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>Trained Model Binary Prediction</div>
             </div>
 
             <div className="glass-card" style={{ padding: '20px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Prediction Probability</div>
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-cyan)', marginTop: '4px' }}>
-                {predictionResult ? `${(predictionResult.prediction_probability * 100).toFixed(2)}%` : '0.0%'}
+                {predictionResult ? `${(predictionResult.prediction_probability * 100).toFixed(2)}%` : '0.00%'}
               </div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>prediction_probability</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>Model inference probability</div>
             </div>
 
             <div className="glass-card" style={{ padding: '20px' }}>
@@ -217,12 +273,12 @@ const ThreatDetection = () => {
               <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-purple)', marginTop: '4px' }}>
                 {predictionResult ? `${predictionResult.behavioral_risk_score}` : '0'} <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>/ 100</span>
               </div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>(risk_score / 6) * 100</div>
+              <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>Rule calculation formula</div>
             </div>
 
             <div className="glass-card" style={{ padding: '20px' }}>
               <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Final Risk Score</div>
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: 'var(--accent-purple)', marginTop: '4px' }}>
+              <div style={{ fontSize: '1.6rem', fontWeight: 800, color: predictionResult?.final_risk_score >= 80 ? 'var(--severity-critical)' : 'var(--accent-purple)', marginTop: '4px' }}>
                 {predictionResult ? predictionResult.final_risk_score : 0} <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>/ 100</span>
               </div>
               <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>0.7 * ML + 0.3 * Behavioral</div>
@@ -236,13 +292,8 @@ const ThreatDetection = () => {
                   <Cpu size={20} color="var(--accent-cyan)" />
                   <span>Behavioral Feature Inputs (19 Features)</span>
                 </h3>
-
-                <div style={{ display: 'flex', gap: '6px' }}>
-                  <button onClick={() => applyPreset('normal')} className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>Normal</button>
-                  <button onClick={() => applyPreset('usb_exfil')} className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>USB Threat</button>
-                  <button onClick={() => applyPreset('email_exfil')} className="btn-secondary" style={{ padding: '4px 8px', fontSize: '0.7rem' }}>Email Threat</button>
-                </div>
               </div>
+
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', maxHeight: '460px', overflowY: 'auto', paddingRight: '6px' }}>
                 {Object.keys(features).map((key) => (
@@ -337,14 +388,30 @@ const ThreatDetection = () => {
       {/* TAB 2: Bulk CSV Data Analysis Hub */}
       {activeTab === 'bulk_analysis' && (
         <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+          {/* Requirement 12: Help & Instruction Area */}
+          <div className="glass-card" style={{ padding: '20px 24px', marginBottom: '20px', background: 'rgba(56, 189, 248, 0.08)', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
+            <h4 style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--accent-cyan)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <AlertCircle size={18} />
+              <span>CERT 4.2 Dataset Testing & Pipeline Guidelines</span>
+            </h4>
+            <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', lineHeight: '1.5' }}>
+              <strong>Preferred Data Source:</strong> Use the official CERT Insider Threat Dataset r4.2.
+              <br />
+              • <strong>Mode 1 (Engineered CSV):</strong> Upload a 19-feature matrix CSV containing the exact schema: <code>logon_count</code>, <code>logoff_count</code>, <code>off_hours_logons</code>, <code>unique_pcs</code>, <code>device_connects</code>, <code>device_disconnects</code>, <code>unique_device_pcs</code>, <code>file_activity_count</code>, <code>unique_file_pcs</code>, <code>unique_files</code>, <code>sensitive_file_count</code>, <code>email_count</code>, <code>attachment_count</code>, <code>total_email_size</code>, <code>unique_email_pcs</code>, <code>external_email_count</code>, <code>http_request_count</code>, <code>unique_http_urls</code>, <code>off_hours_http</code>.
+              <br />
+              • <strong>Mode 2 (CERT Raw Activity Files):</strong> Upload raw CERT log CSVs (<code>logon.csv</code>, <code>device.csv</code>, <code>file.csv</code>, <code>email.csv</code>, <code>http.csv</code>). The backend pipeline automatically performs data cleaning, feature extraction, scaling, and Gradient Boosting ML inference.
+            </p>
+          </div>
+
           <div className="glass-card" style={{ padding: '28px', marginBottom: '28px' }}>
             <h3 style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '8px', display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Upload size={22} color="var(--accent-cyan)" />
-              <span>POST /api/analysis/upload - Bulk Analysis Engine</span>
+              <span>Bulk Analysis Engine</span>
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '20px' }}>
-              Select dataset type below to run validation, scaler transform, and Gradient Boosting inference. Results are saved to SQLite database without modifying original CSVs.
+              Select dataset type below to run validation, scaler transform, and Gradient Boosting inference. Results are saved to SQLite database.
             </p>
+
 
             {/* Mode Switcher */}
             <div style={{ display: 'flex', gap: '10px', marginBottom: '24px' }}>
@@ -567,20 +634,24 @@ const ThreatDetection = () => {
                 </tr>
               </thead>
               <tbody>
-                {highRiskUsers.map((u) => (
-                  <tr key={u.user}>
-                    <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{u.user}</td>
-                    <td style={{ fontWeight: 800, color: 'var(--severity-critical)' }}>{u.max_risk_score} / 100</td>
-                    <td>
-                      <span className={`badge badge-${u.latest_severity.toLowerCase()}`}>{u.latest_severity}</span>
-                    </td>
-                    <td>
-                      <Link to={`/user-details?user=${u.user}`} className="btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
-                        Inspect
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
+                {(Array.isArray(highRiskUsers) ? highRiskUsers : []).map((u) => {
+                  const scoreVal = u.max_risk_score ?? u.risk_score ?? u.display_risk_score ?? 0;
+                  const sevLabel = u.latest_severity || u.severity || 'Low';
+                  return (
+                    <tr key={u.user}>
+                      <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{u.user}</td>
+                      <td style={{ fontWeight: 800, color: 'var(--severity-critical)' }}>{scoreVal} / 100</td>
+                      <td>
+                        <span className={`badge badge-${sevLabel.toLowerCase()}`}>{sevLabel}</span>
+                      </td>
+                      <td>
+                        <Link to={`/user-details?user=${u.user}`} className="btn-secondary" style={{ padding: '4px 10px', fontSize: '0.75rem' }}>
+                          Inspect
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

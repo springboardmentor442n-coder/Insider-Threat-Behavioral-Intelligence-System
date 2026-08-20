@@ -9,7 +9,7 @@ const Users = () => {
   const [search, setSearch] = useState(searchParams.get('search') || '');
   const [severityFilter, setSeverityFilter] = useState('');
   const [riskFilter, setRiskFilter] = useState('');
-  const [sortBy, setSortBy] = useState('max_risk_score');
+  const [sortBy, setSortBy] = useState('display_risk_score');
   const [sortOrder, setSortOrder] = useState('desc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -19,10 +19,14 @@ const Users = () => {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      const data = await usersAPI.getMonitoredUsers({ search, severity: severityFilter });
-      setUsers(data);
+      const responseData = await usersAPI.getMonitoredUsers({ search, severity: severityFilter });
+      const userList = Array.isArray(responseData)
+        ? responseData
+        : (responseData?.users || responseData?.data || []);
+      setUsers(userList);
     } catch (err) {
       console.error("Fetch users error:", err);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -41,23 +45,25 @@ const Users = () => {
   // Sort and filter processing
   let processedUsers = users.filter((u) => {
     let match = true;
+    const userIdStr = String(u.user || u.username || u.id || '');
     if (search.trim()) {
       const q = search.toLowerCase();
-      match = match && (u.user.toLowerCase().includes(q) || u.status?.toLowerCase().includes(q));
+      match = match && (userIdStr.toLowerCase().includes(q) || String(u.status || '').toLowerCase().includes(q));
     }
+    const score = u.display_risk_score ?? u.risk_score ?? u.max_risk_score ?? 0;
     if (riskFilter === 'high') {
-      match = match && u.max_risk_score >= 75;
+      match = match && score >= 75;
     } else if (riskFilter === 'medium') {
-      match = match && (u.max_risk_score >= 45 && u.max_risk_score < 75);
+      match = match && (score >= 45 && score < 75);
     } else if (riskFilter === 'low') {
-      match = match && u.max_risk_score < 45;
+      match = match && score < 45;
     }
     return match;
   });
 
   processedUsers.sort((a, b) => {
-    let valA = a[sortBy] ?? a.max_risk_score;
-    let valB = b[sortBy] ?? b.max_risk_score;
+    const valA = a[sortBy] ?? (a.display_risk_score ?? a.risk_score ?? a.max_risk_score ?? 0);
+    const valB = b[sortBy] ?? (b.display_risk_score ?? b.risk_score ?? b.max_risk_score ?? 0);
     if (typeof valA === 'string') {
       return sortOrder === 'asc' ? valA.localeCompare(valB) : valB.localeCompare(valA);
     }
@@ -93,7 +99,7 @@ const Users = () => {
             <input
               type="text"
               className="input-field"
-              placeholder="Search by User ID (e.g. USR0017, DLM0051)..."
+              placeholder="Search by User ID (e.g. USR0157, DLM0051)..."
               style={{ paddingLeft: '40px' }}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -153,14 +159,14 @@ const Users = () => {
                         <ArrowUpDown size={14} />
                       </div>
                     </th>
-                    <th onClick={() => toggleSort('avg_risk_score')} style={{ cursor: 'pointer' }}>
+                    <th onClick={() => toggleSort('ml_risk_score')} style={{ cursor: 'pointer' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span>Risk Score</span>
+                        <span>ML Risk Score</span>
                         <ArrowUpDown size={14} />
                       </div>
                     </th>
                     <th>ML Probability</th>
-                    <th onClick={() => toggleSort('max_risk_score')} style={{ cursor: 'pointer' }}>
+                    <th onClick={() => toggleSort('display_risk_score')} style={{ cursor: 'pointer' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                         <span>Final Risk Score</span>
                         <ArrowUpDown size={14} />
@@ -175,23 +181,31 @@ const Users = () => {
                 </thead>
                 <tbody>
                   {currentUsers.map((u) => {
-                    const mlProb = (u.max_risk_score / 100).toFixed(2);
-                    const predictionLabel = u.max_risk_score >= 65 ? 'Suspicious (1)' : 'Normal (0)';
-                    const predictionColor = u.max_risk_score >= 65 ? 'var(--severity-critical)' : 'var(--severity-low)';
+                    const userId = u.user || u.username || u.id;
+                    const finalRiskScore = u.display_risk_score ?? u.risk_score ?? u.max_risk_score ?? 0;
+                    const mlRiskScore = u.ml_risk_score ?? finalRiskScore;
+                    const mlProbPercent = (
+                      (u.prediction_probability ?? u.ml_probability ?? 0) * 100
+                    ).toFixed(1);
+                    const isSuspicious = u.prediction !== undefined ? u.prediction === 1 : finalRiskScore >= 50;
+                    const predictionLabel = isSuspicious ? 'Suspicious (1)' : 'Normal (0)';
+                    const predictionColor = isSuspicious ? 'var(--severity-critical)' : 'var(--severity-low)';
+                    const severityLabel = u.severity || u.latest_severity || 'Low';
 
                     return (
-                      <tr key={u.user}>
-                        <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{u.user}</td>
-                        <td style={{ fontWeight: 600 }}>{u.avg_risk_score || Math.round(u.max_risk_score * 0.8)} / 100</td>
-                        <td style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>{(parseFloat(mlProb) * 100).toFixed(1)}%</td>
-                        <td style={{ fontWeight: 800, color: u.max_risk_score >= 80 ? 'var(--severity-critical)' : u.max_risk_score >= 65 ? 'var(--severity-high)' : 'var(--severity-medium)' }}>
-                          {u.max_risk_score} / 100
+                      <tr key={userId}>
+                        <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{userId}</td>
+                        <td style={{ fontWeight: 600 }}>{mlRiskScore} / 100</td>
+                        <td style={{ fontWeight: 700, color: 'var(--accent-cyan)' }}>{mlProbPercent}%</td>
+                        <td style={{ fontWeight: 800, color: finalRiskScore >= 80 ? 'var(--severity-critical)' : finalRiskScore >= 70 ? 'var(--severity-high)' : finalRiskScore >= 50 ? 'var(--severity-medium)' : 'var(--severity-low)' }}>
+                          {finalRiskScore} / 100
                         </td>
                         <td>
-                          <span className={`badge badge-${u.latest_severity.toLowerCase()}`}>{u.latest_severity}</span>
+                          <span className={`badge badge-${severityLabel.toLowerCase()}`}>{severityLabel}</span>
                         </td>
                         <td style={{ fontWeight: 700, color: predictionColor }}>{predictionLabel}</td>
-                        <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{u.last_activity ? new Date(u.last_activity).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Today 18:30'}</td>
+                        <td style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>{u.last_activity || '2010-01-04'}</td>
+
                         <td>
                           <span style={{
                             padding: '4px 10px',
@@ -206,7 +220,7 @@ const Users = () => {
                         </td>
                         <td>
                           <button 
-                            onClick={() => navigate(`/user-details?user=${u.user}`)} 
+                            onClick={() => navigate(`/user-details?user=${userId}`)} 
                             className="btn-secondary" 
                             style={{ padding: '6px 12px', fontSize: '0.75rem', gap: '6px' }}
                           >

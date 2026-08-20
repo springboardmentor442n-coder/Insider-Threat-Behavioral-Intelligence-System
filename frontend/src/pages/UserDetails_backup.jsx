@@ -20,7 +20,7 @@ const UserDetails = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const userId = searchParams.get('user') || 'USR0157';
+  const userId = searchParams.get('user') || 'USR0017';
 
   const [history, setHistory] = useState([]);
   const [selectedUserSummary, setSelectedUserSummary] = useState(null);
@@ -31,35 +31,31 @@ const UserDetails = () => {
       setLoading(true);
 
       try {
-        const [userSingleData, usersData, userHistoryData] = await Promise.all([
-          usersAPI.getUser(userId).catch(() => null),
-          usersAPI.getMonitoredUsers({ search: userId }).catch(() => null),
-          usersAPI.getUserHistory(userId).catch(() => [])
+        const [usersData, userHistoryData] = await Promise.all([
+          usersAPI.getMonitoredUsers({ search: userId }),
+          usersAPI.getUserHistory(userId)
         ]);
 
-        console.log("User single response:", userSingleData);
-        console.log("User summary list:", usersData);
+        console.log("User summary:", usersData);
         console.log("User history:", userHistoryData);
 
-        let matchedUser = userSingleData;
+        // Handle monitored users response
+        let users = [];
 
-        if (!matchedUser) {
-          let users = [];
-          if (Array.isArray(usersData)) {
-            users = usersData;
-          } else if (usersData?.users) {
-            users = usersData.users;
-          } else if (usersData?.data) {
-            users = usersData.data;
-          }
-
-          matchedUser =
-            users.find(
-              (u) =>
-                String(u.user || u.username || u.id).toUpperCase() ===
-                userId.toUpperCase()
-            ) || users[0];
+        if (Array.isArray(usersData)) {
+          users = usersData;
+        } else if (usersData?.users) {
+          users = usersData.users;
+        } else if (usersData?.data) {
+          users = usersData.data;
         }
+
+        const matchedUser =
+          users.find(
+            (u) =>
+              String(u.user || u.username || u.id).toUpperCase() ===
+              userId.toUpperCase()
+          ) || users[0];
 
         if (matchedUser) {
           setSelectedUserSummary(matchedUser);
@@ -227,46 +223,76 @@ const UserDetails = () => {
   >
 
     {/* User ID */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
-      <div style={{
-        fontSize: '0.75rem',
-        color: 'var(--text-muted)',
-        textTransform: 'uppercase',
-        fontWeight: 700
-      }}>
-        User ID
-      </div>
-
-      <div style={{
-        fontSize: '1.4rem',
-        fontWeight: 800,
-        color: 'var(--text-main)',
-        fontFamily: 'var(--font-mono)'
-      }}>
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">User ID</div>
+      <div className="metric-value" style={{ fontFamily: 'var(--font-mono)' }}>
         {userId}
       </div>
-
-      <div style={{
-        fontSize: '0.7rem',
-        color: 'var(--text-dim)',
-        marginTop: '4px'
-      }}>
-        CERT Employee Code
-      </div>
+      <div className="metric-subtitle">CERT Employee Code</div>
     </div>
 
     {/* Risk Status */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">Risk Status</div>
+      <div style={{ marginTop: '8px' }}>
+        <span className={`badge badge-${String(latestRec.severity || 'Low').toLowerCase()}`}>
+          {latestRec.severity || 'Low'}
+        </span>
+      </div>
+      <div className="metric-subtitle">Current Risk Level</div>
+    </div>
+
+    {/* Final Risk */}
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">Final Risk Score</div>
+      <div className="metric-value">
+        {Number(latestRec.final_risk_score || 0).toFixed(1)}
+        <span className="metric-unit"> / 100</span>
+      </div>
+      <div className="metric-subtitle">final_risk_score</div>
+    </div>
+
+    {/* Behavioral Risk */}
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">Behavioral Risk Score</div>
+      <div className="metric-value">
+        {Number(latestRec.behavioral_risk_score || 0).toFixed(1)}
+        <span className="metric-unit"> / 100</span>
+      </div>
+      <div className="metric-subtitle">behavioral_risk_score</div>
+    </div>
+
+    {/* ML Risk */}
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">ML Risk Score</div>
+      <div className="metric-value">
+        {Number(latestRec.ml_risk_score || 0).toFixed(1)}
+        <span className="metric-unit"> / 100</span>
+      </div>
+      <div className="metric-subtitle">GB Model</div>
+    </div>
+
+    {/* ML Probability */}
+    <div className="glass-card" style={{ padding: '16px' }}>
+      <div className="metric-label">ML Probability</div>
+      <div className="metric-value">
+        {(Number(latestRec.prediction_probability || 0) * 100).toFixed(1)}%
+      </div>
+      <div className="metric-subtitle">prediction_probability</div>
+    </div>
+
+  </div>
+</div>
+
+    {/* Risk Status */}
+    <div
+      style={{
+        background: 'var(--bg-secondary)',
+        padding: '16px',
+        borderRadius: '10px',
+        border: '1px solid var(--border-color)'
+      }}
+    >
       <div style={{
         fontSize: '0.75rem',
         color: 'var(--text-muted)',
@@ -278,7 +304,7 @@ const UserDetails = () => {
 
       <div style={{ marginTop: '6px' }}>
         <span className={`badge badge-${String(latestRec.severity || 'Low').toLowerCase()}`}>
-          {selectedUserSummary?.status || 'Under Investigation'}
+          {latestRec.severity || 'Low'}
         </span>
       </div>
 
@@ -291,13 +317,16 @@ const UserDetails = () => {
       </div>
     </div>
 
+
     {/* Final Risk Score */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
+    <div
+      style={{
+        background: 'var(--bg-secondary)',
+        padding: '16px',
+        borderRadius: '10px',
+        border: '1px solid var(--border-color)'
+      }}
+    >
       <div style={{
         fontSize: '0.75rem',
         color: 'var(--text-muted)',
@@ -332,13 +361,16 @@ const UserDetails = () => {
       </div>
     </div>
 
+
     {/* Behavioral Risk Score */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
+    <div
+      style={{
+        background: 'var(--bg-secondary)',
+        padding: '16px',
+        borderRadius: '10px',
+        border: '1px solid var(--border-color)'
+      }}
+    >
       <div style={{
         fontSize: '0.75rem',
         color: 'var(--text-muted)',
@@ -371,13 +403,16 @@ const UserDetails = () => {
       </div>
     </div>
 
+
     {/* ML Risk Score */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
+    <div
+      style={{
+        background: 'var(--bg-secondary)',
+        padding: '16px',
+        borderRadius: '10px',
+        border: '1px solid var(--border-color)'
+      }}
+    >
       <div style={{
         fontSize: '0.75rem',
         color: 'var(--text-muted)',
@@ -410,13 +445,16 @@ const UserDetails = () => {
       </div>
     </div>
 
+
     {/* ML Probability */}
-    <div style={{
-      background: 'var(--bg-secondary)',
-      padding: '16px',
-      borderRadius: '10px',
-      border: '1px solid var(--border-color)'
-    }}>
+    <div
+      style={{
+        background: 'var(--bg-secondary)',
+        padding: '16px',
+        borderRadius: '10px',
+        border: '1px solid var(--border-color)'
+      }}
+    >
       <div style={{
         fontSize: '0.75rem',
         color: 'var(--text-muted)',
@@ -446,7 +484,6 @@ const UserDetails = () => {
   </div>
 </div>
 
-{/* 5 Behavioral Category Sub-System Sections */}
       {/* 5 Behavioral Category Sub-System Sections */}
       <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '16px' }}>Behavioral Feature Categories</h3>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', marginBottom: '28px' }}>

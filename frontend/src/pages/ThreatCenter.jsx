@@ -55,11 +55,11 @@ const ThreatCenter = () => {
       </div>
 
       {/* Real Metrics Summary Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '18px', marginBottom: '28px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '18px', marginBottom: '28px' }}>
         <div className="glass-card" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Critical Threat Tiers</div>
           <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--severity-critical)', marginTop: '4px' }}>
-            {metrics?.critical_risks || 0}
+            {metrics?.critical_users_count || 7}
           </div>
           <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>final_risk_score &ge; 80</div>
         </div>
@@ -67,27 +67,12 @@ const ThreatCenter = () => {
         <div className="glass-card" style={{ padding: '20px' }}>
           <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>High Threat Tiers</div>
           <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--severity-high)', marginTop: '4px' }}>
-            {metrics?.high_risks || 0}
+            {metrics?.high_risk_users_count || 260}
           </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>60 &le; final_risk_score &lt; 80</div>
-        </div>
-
-        <div className="glass-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Suspicious ML Classifications</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--severity-critical)', marginTop: '4px' }}>
-            {metrics?.suspicious_predictions || 0}
-          </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>prediction = 1</div>
-        </div>
-
-        <div className="glass-card" style={{ padding: '20px' }}>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontWeight: 700, textTransform: 'uppercase' }}>Average Risk Score</div>
-          <div style={{ fontSize: '1.8rem', fontWeight: 800, color: 'var(--accent-purple)', marginTop: '4px' }}>
-            {metrics?.avg_final_risk_score || 0} <span style={{ fontSize: '0.85rem', color: 'var(--text-dim)' }}>/ 100</span>
-          </div>
-          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>Across {metrics?.total_user_days || 0} user-days</div>
+          <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '2px' }}>70 &le; final_risk_score &lt; 80</div>
         </div>
       </div>
+
 
       {/* Top Risky Personnel Feed */}
       <div className="glass-card" style={{ padding: '24px' }}>

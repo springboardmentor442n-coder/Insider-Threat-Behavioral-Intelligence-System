@@ -83,6 +83,10 @@ const Alerts = () => {
       <div className="glass-card" style={{ padding: '24px' }}>
         {loading ? (
           <div style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>Loading Security Alerts...</div>
+        ) : alerts.length === 0 ? (
+          <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px', background: 'var(--bg-secondary)', borderRadius: '8px' }}>
+            No security alerts found matching current filters
+          </div>
         ) : (
           <div style={{ overflowX: 'auto' }}>
             <table className="custom-table">
@@ -153,6 +157,7 @@ const Alerts = () => {
           </div>
         )}
       </div>
+
 
       {/* Alert Details Modal */}
       {selectedAlert && (

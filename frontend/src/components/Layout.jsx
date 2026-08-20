@@ -40,14 +40,12 @@ const Layout = () => {
     { path: '/threat-center', label: 'Threat Center', icon: Flame },
     { path: '/employees', label: 'Employees', icon: Users },
     { path: '/upload-analyze', label: 'Upload & Analyze', icon: Upload },
-    { path: '/analytics', label: 'Behavioral Analytics', icon: Activity },
-    { path: '/models', label: 'Models', icon: Layers },
-    { path: '/explainability', label: 'Explainability', icon: HelpCircle },
     { path: '/investigations', label: 'Investigation', icon: FileSearch },
     { path: '/alerts', label: 'Alerts', icon: Bell },
     { path: '/reports', label: 'Reports', icon: FileText },
     { path: '/settings', label: 'Settings', icon: Settings },
   ];
+
 
   const getBreadcrumb = () => {
     const active = navItems.find(item => item.path === location.pathname);

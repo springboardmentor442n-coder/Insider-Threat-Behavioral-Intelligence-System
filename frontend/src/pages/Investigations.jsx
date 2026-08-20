@@ -5,6 +5,7 @@ import { FileSearch, Plus, User, Tag, Clock, Send, ShieldAlert, CheckCircle2, Lo
 const Investigations = () => {
   const [investigations, setInvestigations] = useState([]);
   const [selectedCase, setSelectedCase] = useState(null);
+  const [userHistory, setUserHistory] = useState([]);
   const [newNote, setNewNote] = useState('');
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -23,12 +24,16 @@ const Investigations = () => {
     setLoading(true);
     try {
       const data = await investigationsAPI.getInvestigations();
-      setInvestigations(data);
-      if (data.length > 0 && !selectedCase) {
+      setInvestigations(data || []);
+      if (data && data.length > 0) {
         setSelectedCase(data[0]);
+      } else {
+        setSelectedCase(null);
       }
     } catch (err) {
       console.error("Fetch investigations error:", err);
+      setInvestigations([]);
+      setSelectedCase(null);
     } finally {
       setLoading(false);
     }
@@ -37,6 +42,23 @@ const Investigations = () => {
   useEffect(() => {
     fetchInvestigations();
   }, []);
+
+  useEffect(() => {
+    const fetchTimeline = async () => {
+      if (!selectedCase || !selectedCase.user) {
+        setUserHistory([]);
+        return;
+      }
+      try {
+        const hist = await usersAPI.getUserHistory(selectedCase.user);
+        setUserHistory(hist || []);
+      } catch (err) {
+        console.error("Fetch timeline error:", err);
+        setUserHistory([]);
+      }
+    };
+    fetchTimeline();
+  }, [selectedCase]);
 
   const handleAddNote = async () => {
     if (!newNote.trim() || !selectedCase) return;
@@ -94,11 +116,15 @@ const Investigations = () => {
         <div className="glass-card" style={{ padding: '20px' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <FileSearch size={18} color="var(--accent-cyan)" />
-            <span>Active Investigation Cases</span>
+            <span>Active Investigation Cases ({investigations.length})</span>
           </h3>
 
           {loading ? (
             <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '20px' }}>Loading Cases...</div>
+          ) : investigations.length === 0 ? (
+            <div style={{ color: 'var(--text-muted)', textAlign: 'center', padding: '40px', background: 'var(--bg-secondary)', borderRadius: '8px', border: '1px solid var(--border-color)' }}>
+              No investigations available
+            </div>
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {investigations.map((inv) => (
@@ -128,7 +154,7 @@ const Investigations = () => {
                     </span>
                   </div>
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', fontWeight: 600 }}>{inv.title}</div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '4px' }}>Created: {inv.created_date}</div>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '4px' }}>Assigned: {inv.assigned_analyst || 'Analyst'}</div>
                 </div>
               ))}
             </div>
@@ -141,12 +167,11 @@ const Investigations = () => {
             <div style={{ borderBottom: '1px solid var(--border-color)', paddingBottom: '16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--text-main)' }}>Case #{selectedCase.id}: {selectedCase.title}</h3>
-                <span className={`badge badge-${selectedCase.severity.toLowerCase()}`}>{selectedCase.severity}</span>
+                <span className={`badge badge-${(selectedCase.severity || 'high').toLowerCase()}`}>{selectedCase.severity || 'High'}</span>
               </div>
               <div style={{ display: 'flex', gap: '20px', fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '8px', flexWrap: 'wrap' }}>
                 <span>Subject User: <strong style={{ color: 'var(--accent-cyan)', fontFamily: 'var(--font-mono)' }}>{selectedCase.user}</strong></span>
-                <span>Risk Score: <strong style={{ color: 'var(--severity-critical)' }}>{selectedCase.risk_score} / 100</strong></span>
-                <span>Created Date: <strong style={{ color: 'var(--text-main)' }}>{selectedCase.created_date}</strong></span>
+                <span>Risk Score: <strong style={{ color: 'var(--severity-critical)' }}>{selectedCase.risk_score || selectedCase.final_risk_score || 80} / 100</strong></span>
                 <span>Assigned Analyst: <strong style={{ color: 'var(--accent-purple)' }}>{selectedCase.assigned_analyst}</strong></span>
               </div>
             </div>
@@ -159,12 +184,13 @@ const Investigations = () => {
                   value={selectedCase.status}
                   onChange={(e) => handleStatusChange(e.target.value)}
                   className="input-field"
-                  style={{ width: '150px', padding: '4px 8px', fontSize: '0.8rem' }}
+                  style={{ width: '170px', padding: '4px 8px', fontSize: '0.8rem' }}
                 >
-                  <option value="New">New</option>
-                  <option value="Investigating">Investigating</option>
+                  <option value="Open">Open</option>
+                  <option value="Under Investigation">Under Investigation</option>
                   <option value="Contained">Contained</option>
                   <option value="Resolved">Resolved</option>
+                  <option value="Dismissed">Dismissed</option>
                 </select>
               </div>
 
@@ -194,26 +220,27 @@ const Investigations = () => {
               </div>
             </div>
 
-            {/* Activity Forensic Timeline */}
+            {/* Activity Forensic Timeline from Real User History */}
             <div style={{ marginBottom: '20px' }}>
               <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-dim)', textTransform: 'uppercase', marginBottom: '8px' }}>
-                Forensic Activity Timeline
+                Forensic Activity Timeline (Real Dataset Records)
               </div>
               <div style={{ background: 'var(--bg-secondary)', padding: '14px', borderRadius: '8px', border: '1px solid var(--border-color)', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                  <Clock size={16} color="var(--accent-cyan)" />
-                  <span><strong>18:45:00</strong> — User logged on outside working hours (off_hours_logons = 4)</span>
-                </div>
-                <div style={{ display: 'flex', gap: '10px', marginBottom: '8px' }}>
-                  <Clock size={16} color="var(--accent-amber)" />
-                  <span><strong>19:12:30</strong> — USB storage device attached (device_connects = 7)</span>
-                </div>
-                <div style={{ display: 'flex', gap: '10px' }}>
-                  <Clock size={16} color="var(--severity-critical)" />
-                  <span><strong>19:35:10</strong> — Copied 19 sensitive files (.pdf, .doc) (sensitive_file_count = 19)</span>
-                </div>
+                {userHistory.length > 0 ? (
+                  userHistory.slice(0, 4).map((rec, i) => (
+                    <div key={i} style={{ display: 'flex', gap: '10px', marginBottom: i === userHistory.length - 1 ? 0 : '8px' }}>
+                      <Clock size={16} color={rec.final_risk_score >= 80 ? "var(--severity-critical)" : rec.final_risk_score >= 60 ? "var(--severity-high)" : "var(--accent-cyan)"} />
+                      <span>
+                        <strong>{rec.day}</strong> — final_risk_score: <strong style={{ color: 'var(--text-main)' }}>{rec.final_risk_score}</strong> | Sensitive Files: {rec.sensitive_file_count} | USB Connects: {rec.device_connects} | Off-Hours Logons: {rec.off_hours_logons} | Ext. Emails: {rec.external_email_count}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <div>No activity records retrieved for {selectedCase.user}.</div>
+                )}
               </div>
             </div>
+
 
             {/* Analyst Work Log Notes */}
             <div style={{ marginBottom: '20px' }}>

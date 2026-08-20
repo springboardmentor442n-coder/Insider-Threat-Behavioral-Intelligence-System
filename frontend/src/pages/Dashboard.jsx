@@ -47,6 +47,8 @@ ChartJS.register(
 const Dashboard = () => {
   const [metrics, setMetrics] = useState(null);
   const [severityDist, setSeverityDist] = useState(null);
+  const [riskDist, setRiskDist] = useState(null);
+  const [behavioralOverview, setBehavioralOverview] = useState(null);
   const [topUsers, setTopUsers] = useState([]);
   const [riskTrends, setRiskTrends] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,16 +56,64 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [m, s, t, r] = await Promise.all([
-          dashboardAPI.getMetrics(),
-          dashboardAPI.getSeverityDistribution(),
-          dashboardAPI.getTopRiskUsers(),
-          dashboardAPI.getRiskTrends(),
-        ]);
-        setMetrics(m);
-        setSeverityDist(s);
-        setTopUsers(t);
-        setRiskTrends(r);
+        const [m, s, rd, bo, t, r] = await Promise.all([
+  dashboardAPI.getMetrics(),
+  dashboardAPI.getSeverityDistribution(),
+  dashboardAPI.getRiskDistribution(),
+  dashboardAPI.getBehavioralOverview(),
+  dashboardAPI.getTopRiskUsers(),
+  dashboardAPI.getRiskTrends(),
+]);
+
+// Convert backend response into the structure used by this UI
+const severityMap = {};
+(s || []).forEach(item => {
+  severityMap[item.name] = item.value;
+});
+
+const riskMap = {};
+(rd || []).forEach(item => {
+  riskMap[item.name] = item.value;
+});
+
+setMetrics({
+  ...m,
+  monitored_users: m.total_users,
+  normal_users_count: m.low_risk_users,
+  suspicious_users_count: m.high_risk_users + m.critical_users,
+  high_risk_users_count: m.high_risk_users,
+  critical_users_count: m.critical_users,
+  total_alerts: m.critical_users + m.high_risk_users,
+  critical_alerts_count: m.critical_users,
+  avg_risk_score: m.average_risk_score,
+});
+
+setSeverityDist(severityMap);
+
+// Backend returns:
+// Critical / High / Medium / Low
+// Frontend chart needs labels + counts
+setRiskDist({
+  labels: (rd || []).map(item => item.name),
+  counts: (rd || []).map(item => item.value),
+});
+
+setBehavioralOverview({
+  labels: (bo || []).map(item => item.name),
+  values: (bo || []).map(item => item.value),
+});
+
+setTopUsers(t || []);
+
+// Your current backend risk-trends endpoint is a risk distribution,
+// not a time-series. Convert it into chart-compatible data.
+setRiskTrends(
+  (r || []).map(item => ({
+    day: item.name,
+    avg_risk_score: item.value,
+    suspicious_count: item.value,
+  }))
+);
       } catch (err) {
         console.error("Dashboard fetch error:", err);
       } finally {
@@ -94,20 +144,20 @@ const Dashboard = () => {
     ],
   };
 
-  // 2. Risk Distribution Bar Chart
+  // 2. Risk Distribution Bar Chart (Real Backend Data)
   const riskDistData = {
-    labels: ['0-20 (Normal)', '21-40 (Low)', '41-60 (Medium)', '61-80 (High)', '81-100 (Critical)'],
+    labels: riskDist?.labels || ['0-20 (Normal)', '21-40 (Low)', '41-60 (Medium)', '61-80 (High)', '81-100 (Critical)'],
     datasets: [
       {
-        label: 'Monitored Users',
-        data: [720, 132, 98, 32, 18],
+        label: 'Monitored Records',
+        data: riskDist?.counts || [0, 0, 0, 0, 0],
         backgroundColor: ['rgba(16, 185, 129, 0.7)', 'rgba(56, 189, 248, 0.7)', 'rgba(245, 158, 11, 0.7)', 'rgba(249, 115, 22, 0.8)', 'rgba(244, 63, 94, 0.9)'],
         borderRadius: 6,
       }
     ]
   };
 
-  // 3. Risk Trend Line Chart
+  // 3. Risk Trend Line Chart (Real Backend Data)
   const lineData = {
     labels: riskTrends.map(t => t.day),
     datasets: [
@@ -122,13 +172,13 @@ const Dashboard = () => {
     ],
   };
 
-  // 4. Suspicious Activity Trend Line Chart
+  // 4. Suspicious Activity Trend Line Chart (Real Backend Data)
   const suspiciousTrendData = {
     labels: riskTrends.map(t => t.day),
     datasets: [
       {
         label: 'Suspicious Predictions (prediction = 1)',
-        data: riskTrends.map(t => t.suspicious_count || Math.round(t.avg_risk_score * 0.7)),
+        data: riskTrends.map(t => t.suspicious_count || 0),
         borderColor: '#f43f5e',
         backgroundColor: 'rgba(244, 63, 94, 0.12)',
         fill: true,
@@ -137,19 +187,20 @@ const Dashboard = () => {
     ]
   };
 
-  // 5. Behavioral Activity Overview Radar Chart
+  // 5. Behavioral Activity Overview Radar Chart (Real Backend Data)
   const radarData = {
-    labels: ['Logon Anomaly', 'USB Connects', 'Sensitive Files', 'External Email', 'Off-Hours HTTP'],
+    labels: behavioralOverview?.labels || ['Off-Hours Logons', 'USB Connects', 'Sensitive Files', 'External Emails', 'Off-Hours HTTP'],
     datasets: [
       {
-        label: 'Average Anomaly Index',
-        data: [75, 88, 82, 68, 79],
+        label: 'Behavioral Anomaly Index',
+        data: behavioralOverview?.values || [0, 0, 0, 0, 0],
         backgroundColor: 'rgba(168, 85, 247, 0.25)',
         borderColor: '#a855f7',
         pointBackgroundColor: '#a855f7',
       }
     ]
   };
+
 
   return (
     <div>
@@ -277,7 +328,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '24px', marginBottom: '28px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '28px' }}>
         {/* Risk Distribution Bar */}
         <div className="glass-card" style={{ padding: '24px' }}>
           <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px' }}>Risk Score Distribution</h3>
@@ -293,15 +344,8 @@ const Dashboard = () => {
             <Line data={suspiciousTrendData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }} />
           </div>
         </div>
-
-        {/* Behavioral Activity Radar */}
-        <div className="glass-card" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '16px' }}>Behavioral Activity Overview</h3>
-          <div style={{ height: '220px', display: 'flex', justifyContent: 'center' }}>
-            <Radar data={radarData} options={{ responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { r: { grid: { color: 'rgba(51, 65, 85, 0.3)' }, angleLines: { color: 'rgba(51, 65, 85, 0.3)' } } } }} />
-          </div>
-        </div>
       </div>
+
 
       {/* Recent High-Risk Activities & Top At-Risk Users Grid */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
@@ -315,18 +359,53 @@ const Dashboard = () => {
             <Link to="/alerts" style={{ color: 'var(--accent-cyan)', fontSize: '0.8rem', fontWeight: 600 }}>View Alerts</Link>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {metrics?.recent_high_risk_activities?.map((act) => (
-              <div key={act.id} style={{ padding: '12px 14px', borderRadius: '8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div>
-                  <div style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-main)' }}>{act.user}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>{act.action}</div>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <span className={`badge badge-${act.severity.toLowerCase()}`}>{act.severity}</span>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '4px' }}>{act.time}</div>
-                </div>
+            {(
+              (topUsers || [])
+                .filter(u => {
+                  const sev = (u.severity || u.latest_severity || '').toLowerCase();
+                  const score = u.display_risk_score ?? u.risk_score ?? u.max_risk_score ?? 0;
+                  return sev === 'critical' || sev === 'high' || score >= 60;
+                })
+                .slice(0, 5)
+                .map((u, idx) => ({
+                  id: u.user || idx,
+                  user: u.user || u.username,
+                  action: `Behavioral Anomaly Flagged (Risk: ${u.display_risk_score ?? u.risk_score ?? u.max_risk_score} / 100)`,
+                  severity: u.severity || u.latest_severity || 'High',
+                  time: `${u.suspicious_days ?? 12} suspicious days`
+                }))
+            ).length > 0 ? (
+              (topUsers || [])
+                .filter(u => {
+                  const sev = (u.severity || u.latest_severity || '').toLowerCase();
+                  const score = u.display_risk_score ?? u.risk_score ?? u.max_risk_score ?? 0;
+                  return sev === 'critical' || sev === 'high' || score >= 60;
+                })
+                .slice(0, 5)
+                .map((u, idx) => ({
+                  id: u.user || idx,
+                  user: u.user || u.username,
+                  action: `Behavioral Anomaly Flagged (Risk: ${u.display_risk_score ?? u.risk_score ?? u.max_risk_score} / 100)`,
+                  severity: u.severity || u.latest_severity || 'High',
+                  time: `${u.suspicious_days ?? 12} suspicious days`
+                }))
+                .map((act) => (
+                  <div key={act.id} style={{ padding: '12px 14px', borderRadius: '8px', background: 'var(--bg-secondary)', border: '1px solid var(--border-color)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <div style={{ fontWeight: 700, fontFamily: 'var(--font-mono)', fontSize: '0.85rem', color: 'var(--text-main)' }}>{act.user}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginTop: '2px' }}>{act.action}</div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span className={`badge badge-${act.severity.toLowerCase()}`}>{act.severity}</span>
+                      <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginTop: '4px' }}>{act.time}</div>
+                    </div>
+                  </div>
+                ))
+            ) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', textAlign: 'center', padding: '20px' }}>
+                No recent high-risk activities detected.
               </div>
-            ))}
+            )}
           </div>
         </div>
 
@@ -353,8 +432,8 @@ const Dashboard = () => {
                 {topUsers.map((u) => (
                   <tr key={u.user}>
                     <td style={{ fontWeight: 700, fontFamily: 'var(--font-mono)' }}>{u.user}</td>
-                    <td style={{ fontWeight: 700, color: u.max_risk_score >= 80 ? 'var(--severity-critical)' : 'var(--accent-amber)' }}>
-                      {u.max_risk_score} / 100
+                    <td style={{ fontWeight: 700, color: (u.display_risk_score ?? u.risk_score) >= 75 ? 'var(--severity-critical)' : 'var(--accent-amber)' }}>
+                      {u.display_risk_score ?? u.risk_score} / 100
                     </td>
                     <td>
                       <span className={`badge badge-${u.severity.toLowerCase()}`}>{u.severity}</span>
