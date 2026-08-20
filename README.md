@@ -1,8 +1,4 @@
-Yes. You want **one single copyable block containing the entire README**, with no separate explanations around it.
 
-Copy everything below and paste it directly into your GitHub `README.md`:
-
-````markdown
 # 🛡️ Insider Threat Behavioral Intelligence System
 
 ## AI-Powered Insider Threat Detection and Behavioral Intelligence Platform
