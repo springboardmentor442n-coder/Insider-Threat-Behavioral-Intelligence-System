@@ -8,18 +8,29 @@ The system combines behavioral feature engineering, user behavior baseline, anom
 
 ## 📌 Project Overview & Objectives
 
-Enterprise security traditional perimeter defenses often fail against internal bad actors, compromised credentials, or privilege abuse. This project implements an AI-driven **Insider Threat Behavioral Intelligence System** built on top of multi-source audit logs (CERT v4.2 dataset)
+Enterprise security traditional perimeter defenses often fail against internal bad actors, compromised credentials, or privilege abuse. This project implements an AI-driven **Insider Threat Behavioral Intelligence System** built on top of multi-source audit logs from the **CERT v4.2 dataset**.
 
-This project analyzes employee behavioral activity and generates a **risk score** based on deviations from normal behavior.
+The system analyzes employee behavioral activity and generates a **risk score** based on behavioral patterns and deviations from expected activity.
 
 ### Key Capabilities
+
 * **Behavioral Baseline Profiling:** Aggregates daily user activity across Logon, Device, File, Email, HTTP, and LDAP organizational context.
-* **Hybrid Machine Learning & Anomaly Engine:** Combines supervised classification (XGBoost + SMOTE) with unsupervised anomaly detection (Isolation Forest).
-* **Composite Risk Scoring Engine:** Blends ML fraud probabilities with a 5-component weighted UEBA behavioral risk framework to categorize threat severity (Low, Medium, High, Critical).
+
+* **Hybrid Machine Learning & Anomaly Detection:** Combines supervised classification using **XGBoost** with **SMOTE** oversampling and unsupervised anomaly detection using **Isolation Forest**.
+
+* **Composite Risk Scoring:** Combines the ML prediction probability with a weighted behavioral risk score to categorize activity into **Low, Medium, High, and Critical** threat levels.
+
+* **Threat Investigation:** Allows analysts to select an employee and session date, review behavioral telemetry, and run a threat assessment.
+
+* **Session Threat Feed:** Provides a filtered and paginated view of evaluated activity records by severity.
+
+* **Behavior Simulator:** Allows analysts to modify selected behavioral activity parameters and evaluate the resulting threat risk.
 
 ---
 
 ## 🏗️ System Architecture & Workflow
+
+The system follows a multi-stage pipeline that transforms raw CERT Insider Threat activity logs into behavioral features, ML predictions, risk scores, and interactive security analysis.
 
 ```text
 +-------------------------------------------------------------+
@@ -35,110 +46,272 @@ This project analyzes employee behavioral activity and generates a **risk score*
                                │
                                ▼
 +-------------------------------------------------------------+
-|                     ML & UEBA ENGINES                       |
-|          XGBoost Classifier & Isolation Forest              |
+|                    ML & UEBA ENGINES                        |
+|        XGBoost Classifier & Isolation Forest                |
 +-------------------------------------------------------------+
                                │
                                ▼
 +-------------------------------------------------------------+
 |                COMPOSITE RISK SCORING ENGINE                |
-|      Blended Risk Score & Severity Categorization Tiers     |
+|       ML Probability + Behavioral Risk Score                |
++-------------------------------------------------------------+
+                               │
+                               ▼
++-------------------------------------------------------------+
+|                  FASTAPI BACKEND                            |
+| Dashboard Stats | Threat Feed | User Logs | Predictions    |
++-------------------------------------------------------------+
+                               │
+                               ▼
++-------------------------------------------------------------+
+|              INTERACTIVE WEB DASHBOARD                      |
+| Dashboard | Threat Feed | Investigation | Simulator        |
 +-------------------------------------------------------------+
 ```
-
 ---
+
 ## 📊 Dataset & Feature Engineering
 
-The system processes multi-source activity logs aggregated at a **User-Day** granularity ($330,452$ records across $1,000$ employees)[cite: 1, 3]:
+The system is built using the **CERT Insider Threat Dataset (Release 4.2)**. The activity data is aggregated at a **User-Day** level to create behavioral profiles for employees.
 
-### 1. Extracted Activity Features
-* **Logon Activity:** `logon_count`, `off_hours_logons`, `distinct_pcs`
-* **Removable Media (USB):** `usb_connects`, `off_hours_usb`
-* **File Operations:** `files_copied_to_usb`, `sensitive_files_to_usb` (`.doc`, `.pdf`, `.zip`)`
-* **Email Exfiltration:** `total_emails_sent`, `external_emails_sent`, `total_attachments`, `total_email_size`
-* **Web Activity:** `http_requests`, `cloud_job_visits` (Dropbox, Google Drive, Job sites)
-* **LDAP Organizational Context:** `role_encoded`, `department_encoded`, `supervisor_encoded`
+The feature engineering process combines activity from multiple sources, including logon, device, file, email, HTTP, and LDAP organizational data.
 
-## 📊 Feature Extraction
+### Extracted Activity Features
 
-Activity logs are aggregated at a daily user level across several key dimensions:
+| Activity Source | Key Features |
+|---|---|
+| **Logon Activity** | `logon_count`, `off_hours_logons`, `distinct_pcs` |
+| **Device / USB Activity** | `usb_connects`, `off_hours_usb` |
+| **File Operations** | `files_copied_to_usb`, `sensitive_files_to_usb` |
+| **Email Activity** | `total_emails_sent`, `external_emails_sent`, `total_attachments`, `total_email_size` |
+| **Web Activity** | `http_requests`, `cloud_job_visits` |
+| **Organizational Context** | `role_encoded`, `department_encoded`, `supervisor_encoded` |
 
-* **Logon Activity:** Monitoring logon frequency, off-hours access, and workstation switches.
-* **Device Usage:** Tracking removable media connections and off-hours USB activity.
-* **File Operations:** Monitoring file copies and interactions with sensitive document types.
-* **Email Communication:** Tracking outbound email volume, external recipients, and attachment sizes.
-* **Web Activity:** Monitoring web traffic and visits to cloud storage or job portals.
-* **Organizational Data:** Mapping roles, departments, and manager details using LDAP records.
+### Feature Engineering Process
+
+* **User-Day Aggregation:** Converts raw activity logs into daily behavioral records for each employee.
+* **Behavioral Features:** Captures login patterns, workstation usage, USB activity, file transfers, email activity, and web activity.
+* **Sensitive File Monitoring:** Tracks files copied to removable media, including sensitive document types.
+* **Email Exfiltration Indicators:** Captures external email activity, attachment counts, and outbound email volume.
+* **Web Activity Indicators:** Tracks HTTP activity and visits associated with cloud storage and job-related websites.
+* **Organizational Context:** Encodes role, department, and supervisor information from LDAP data.
 
 ---
 
 ## 🤖 Modeling Strategy
 
-* **Supervised Learning:** An XGBoost classification pipeline combined with SMOTE oversampling to identify known insider threat patterns.
-* **Unsupervised Anomaly Detection:** An Isolation Forest model running in parallel to catch unexpected behavioral deviations.
-* **Leak-Free Pipeline:** Strict separation maintained between data preprocessing, feature scaling, and evaluation sets.
+The system uses a combination of supervised machine learning, anomaly detection, and behavioral risk analysis to identify potentially risky employee activity.
 
+### Supervised Learning
+
+An **XGBoost classifier** is used to predict the probability of insider threat activity from the engineered behavioral features.
+
+**SMOTE (Synthetic Minority Oversampling Technique)** is used during model development to address class imbalance and improve detection of the minority threat class.
+
+### Anomaly Detection
+
+An **Isolation Forest** model is used separately to identify unusual behavioral patterns within employee activity. Its anomaly score provides an additional signal for security analysis.
+
+### Behavioral Risk Analysis
+
+A separate **behavioral risk scoring engine** evaluates multiple activity indicators, including:
+
+- After-hours logon and USB activity
+- USB and sensitive file activity
+- External email and attachment activity
+- HTTP and cloud/job-site activity
+- Historical security events
+
+These behavioral components are normalized and combined using configured weights to produce a behavioral risk score.
+
+### Overall Risk Assessment
+
+The final risk assessment combines the **XGBoost threat probability** with the **behavioral risk score**:
+
+```text
+XGBoost Threat Probability
+            +
+    Behavioral Risk Score
+            │
+            ▼
+    Overall Risk Score
+            │
+            ▼
+   Severity Classification
+ Low → Medium → High → Critical
+```
 ---
 
 ## 📈 Risk Scoring & Severity Tiers
 
-The system combines multiple behavioral signals-
+The system generates an overall risk score by combining the supervised ML prediction with a separate behavioral risk score.
+
+### Behavioral Risk Components
+
+The behavioral risk engine evaluates five major areas:
+
+1. **Behavioral Anomalies**  
+   After-hours logon and USB activity.
+
+2. **Privilege Misuse**  
+   USB connections, file transfers, and sensitive files copied to USB.
+
+3. **Data Access Violations**  
+   Sensitive file activity, external emails, attachments, and outbound email volume.
+
+4. **Access Pattern Deviations**  
+   Workstation usage, HTTP requests, and cloud/job-site visits.
+
+5. **Historical Security Events**  
+   Historical security event indicators used as an additional behavioral signal.
+
+Each component is normalized and combined using configured weights to produce a behavioral risk score between **0 and 100**.
+
+### Overall Risk Score
+
+The final score combines:
 
 ```text
-Login Behavior
-      +
-Device Behavior
-      +
-Email Behavior
-      +
-File Behavior
-      +
-HTTP Behavior
-      +
-Behavior Deviation
-      +
-Anomaly Detection
-      │
-      ▼
-   Risk Score
-      │
-      ▼
-Risk Classification
-      │
-      ├── Low
-      ├── Medium
-      ├── High
-      └── Critical
+XGBoost Threat Probability
+            +
+    Behavioral Risk Score
+            │
+            ▼
+     Overall Risk Score
+            │
+            ▼
+     Severity Classification
 ```
+
+### Severity Classification
+
+| Overall Risk Score | Severity |
+|---:|---|
+| **0 – <25** | Low |
+| **25 – <50** | Medium |
+| **50 – <75** | High |
+| **75 – 100** | Critical |
 
 ---
 
-# 🔍 Explainable Security Analysis
+## 🖥️ Application Features
 
-The system is designed to answer two important questions:
+The system provides an interactive security dashboard with four main workspaces:
+
+### 1. Executive Dashboard
+
+Provides an organization-level view of:
+
+- Monitored employees
+- Evaluated sessions
+- High and Critical risk flags
+- Average organizational risk score
+- Risk distribution across evaluated sessions
+- Organizational risk trends
+- Top evaluated targets
+
+### 2. Session Threat Feed
+
+Provides a continuously replayed view of evaluated activity records with:
+
+- Severity filtering
+- Pagination
+- Overall risk scores
+- Activity indicators
+- Direct access to employee investigation
+
+### 3. Threat Analysis
+
+Allows an analyst to:
+
+- Select an employee
+- Select a specific session date
+- Review behavioral telemetry
+- Run a threat assessment
+- View the overall risk score and severity
+
+### 4. Behavior Simulator
+
+Allows an analyst to select an employee and modify behavioral activity parameters such as:
+
+- After-hours logins
+- USB activity
+- File transfers
+- Sensitive file transfers
+- External emails
+- HTTP requests
+- Cloud/job-site visits
+
+The modified activity can then be submitted to the prediction API to evaluate the resulting threat risk.
+
+---
+
+## 🔍 Explainable Security Analysis
+
+The system is designed to help analysts understand both **who is showing unusual behavior** and **which behavioral signals contribute to the assessed risk**.
 
 ### 1. Who is behaving abnormally?
 
 ```text
-Employee → Anomaly Detection → Risk Score
+Employee Activity
+        │
+        ▼
+Anomaly Detection
+        │
+        ▼
+Risk Assessment
+        │
+        ▼
+Threat Severity
 ```
 
-### 2. Why is the employee considered risky?
+### 2. Why is the activity considered risky?
 
-```text
-Risk Score
-    │
-    ▼
-Behavior Deviation
-    │
-    ▼
-Important Behavioral Factors
-    │
-    ▼
-Investigation
+```test
+Employee Activity
+        │
+        ▼
+Behavioral Indicators
+        │
+        ├── After-hours activity
+        ├── USB / file activity
+        ├── External email activity
+        ├── Web / cloud activity
+        └── Other behavioral signals
+                │
+                ▼
+        Behavioral Risk Score
+                │
+                ▼
+         Overall Risk Score
+                │
+                ▼
+          Investigation
 ```
 
-This makes the project more suitable for practical security monitoring than a simple binary classification model.
+---
+
+## 🛠️ Technology Stack
+
+### Machine Learning & Data Processing
+- **Python**
+- **Pandas** for data processing and feature preparation
+- **NumPy** for numerical operations
+- **Scikit-learn** for machine learning utilities and anomaly detection
+- **XGBoost** for supervised threat classification
+- **Imbalanced-learn (SMOTE)** for handling class imbalance
+
+### Backend
+- **FastAPI** for building the REST API
+- **Uvicorn** for running the FastAPI application
+- **Pydantic** for request data validation
+
+### Frontend
+- **React** for the interactive web interface
+- **Axios** for communication between the frontend and backend
+- **Recharts** for dashboard visualizations
+- **Lucide React** for interface icons
+- **Tailwind CSS** for styling
 
 ---
 
