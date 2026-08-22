@@ -1,0 +1,71 @@
+/* --- Panel --- */
+.panel {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.panel__head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  gap: var(--sp-4); padding: var(--sp-4) var(--sp-5);
+  border-bottom: 1px solid var(--line);
+}
+.panel__title {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--t-base); color: var(--text-hi); margin-top: 3px;
+  letter-spacing: -0.01em;
+}
+.panel__body { padding: var(--sp-5); }
+
+/* --- Metric --- */
+.metric { display: flex; flex-direction: column; gap: 4px; }
+.metric__value {
+  font-family: var(--font-display); font-weight: 600;
+  font-size: var(--t-2xl); line-height: 1; letter-spacing: -0.02em;
+  color: var(--text-hi);
+}
+.metric__value.mono { font-family: var(--font-mono); font-size: var(--t-xl); }
+.metric__sub { font-size: var(--t-sm); color: var(--text-lo); }
+.metric--signal .metric__value { color: var(--signal); }
+.metric--critical .metric__value { color: var(--sev-critical); }
+.metric--warn .metric__value { color: var(--sev-medium); }
+.metric--ok .metric__value { color: var(--ok); }
+
+/* --- Severity pill --- */
+.sevpill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px 3px 7px; border-radius: 100px;
+  font-size: var(--t-xs); font-weight: 600; text-transform: capitalize;
+  border: 1px solid transparent;
+}
+.sevpill__dot { width: 6px; height: 6px; border-radius: 50%; }
+.sevpill__count {
+  padding-left: 5px; margin-left: 2px; border-left: 1px solid currentColor;
+  opacity: 0.85;
+}
+.sevpill--critical { color: var(--sev-critical); background: var(--sev-critical-bg); border-color: rgba(244,63,94,0.25); }
+.sevpill--critical .sevpill__dot { background: var(--sev-critical); box-shadow: 0 0 8px var(--sev-critical); }
+.sevpill--high { color: var(--sev-high); background: var(--sev-high-bg); border-color: rgba(251,146,60,0.25); }
+.sevpill--high .sevpill__dot { background: var(--sev-high); }
+.sevpill--medium { color: var(--sev-medium); background: var(--sev-medium-bg); border-color: rgba(251,191,36,0.25); }
+.sevpill--medium .sevpill__dot { background: var(--sev-medium); }
+.sevpill--low { color: var(--sev-low); background: var(--sev-low-bg); border-color: rgba(56,189,248,0.25); }
+.sevpill--low .sevpill__dot { background: var(--sev-low); }
+.sevpill--informational { color: var(--sev-informational); background: var(--sev-informational-bg); border-color: rgba(100,116,139,0.25); }
+.sevpill--informational .sevpill__dot { background: var(--sev-informational); }
+
+/* --- error / empty --- */
+.errnote {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-4);
+  padding: var(--sp-4); background: var(--sev-critical-bg);
+  border: 1px solid rgba(244,63,94,0.2); border-radius: var(--r-md);
+  font-size: var(--t-sm); color: var(--text-mid);
+}
+.errnote__retry {
+  color: var(--signal); font-size: var(--t-sm); font-weight: 600;
+  padding: 4px 10px; border: 1px solid var(--line-signal); border-radius: var(--r-sm);
+}
+.empty {
+  padding: var(--sp-6); text-align: center; color: var(--text-lo);
+  font-size: var(--t-sm);
+}

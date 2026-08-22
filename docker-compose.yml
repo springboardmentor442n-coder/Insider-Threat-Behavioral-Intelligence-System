@@ -1,0 +1,73 @@
+# ============================================================================
+#  ITBIS - full stack in one command (Module 13, containerization)
+# ============================================================================
+#  docker-compose up --build
+#      db        Postgres 16, data persisted in a named volume
+#      backend   FastAPI; waits for db, migrates, optionally seeds, then serves
+#      frontend  the React console behind nginx, proxying /api to the backend
+#
+#  Then open  http://localhost:8080
+#
+#  First boot with SEED_DEMO=1 (the default) runs the pipeline once against the
+#  small committed fixture, so the UI has data immediately. Log in with the demo
+#  account printed in the README, or seed real data (see README) and set
+#  SEED_DEMO=0.
+# ============================================================================
+services:
+
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: itbis_user
+      POSTGRES_PASSWORD: itbis_dev_password
+      POSTGRES_DB: insider_threat_db
+    volumes:
+      - itbis_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      # Backend waits on this: compose only starts it once the DB is truly ready.
+      test: ["CMD-SHELL", "pg_isready -U itbis_user -d insider_threat_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    # Uncomment to inspect the database from the host (psql -h localhost -p 5433):
+    # ports:
+    #   - "5433:5432"
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgresql://itbis_user:itbis_dev_password@db:5432/insider_threat_db
+      # Override in your shell for anything real:  SECRET_KEY=... docker-compose up
+      SECRET_KEY: "${SECRET_KEY:-dev-only-insecure-key-change-me-0123456789abcdef0123456789abcdef}"
+      APP_ENV: production
+      DEBUG: "false"
+      DB_HOST: db
+      # Seed the small demo dataset on an empty database. Set to 0 to skip.
+      SEED_DEMO: "${SEED_DEMO:-1}"
+      # Create a demo administrator on first boot so you can sign in immediately.
+      BOOTSTRAP_ADMIN: "${BOOTSTRAP_ADMIN:-1}"
+      DEMO_ADMIN_EMAIL: "${DEMO_ADMIN_EMAIL:-admin@dtaa.com}"
+      DEMO_ADMIN_PASSWORD: "${DEMO_ADMIN_PASSWORD:-Tr0ub4dor-Horse!}"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      # Trained models persist across restarts so the seed pipeline runs only once.
+      - itbis_models:/app/models
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  itbis_pgdata:
+  itbis_models:

@@ -1,0 +1,119 @@
+name: CI
+
+# Run on every push to any branch, and on every PR into main.
+# Catching a break on YOUR branch before the PR is the whole point.
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    name: Backend tests
+    runs-on: ubuntu-latest
+
+    # Spin up a real PostgreSQL alongside the test run. We test against an
+    # actual database rather than a mock, because a mock cannot tell you that
+    # your connection string, driver, or SQL is wrong - and those are exactly
+    # the things that break in production.
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: itbis_user
+          POSTGRES_PASSWORD: itbis_dev_password
+          POSTGRES_DB: insider_threat_db
+        ports:
+          - 5432:5432
+        # Do not start the tests until Postgres is actually accepting
+        # connections. Without this the first test hits a database that is
+        # still booting and fails for no real reason.
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Build the pipeline against the tiny committed fixture BEFORE running the
+      # tests. This populates the database (features, baselines, labels, alerts)
+      # so the ~9 ML-pipeline tests that would otherwise skip for lack of data
+      # actually run. The fixture is 15 users over 160 days - kilobytes, not the
+      # 32.7M-event real dataset, which is not in the repo and never should be.
+      - name: Build pipeline from CI fixture
+        env:
+          DATABASE_URL: postgresql://itbis_user:itbis_dev_password@localhost:5432/insider_threat_db
+          SECRET_KEY: ci-only-key-not-used-anywhere-real-0000000000000000
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+          APP_NAME: Insider Threat Behavioral Intelligence System
+          APP_ENV: ci
+          DEBUG: "false"
+          CERT_DATA_DIR: backend/tests/fixtures/mini_cert
+        run: |
+          alembic upgrade head
+          python -m scripts.ingest_cert
+          python -m scripts.build_features
+          python -m scripts.ingest_answers
+          python -m scripts.train_detect --save
+          python -m scripts.generate_alerts
+
+      - name: Run tests
+        env:
+          DATABASE_URL: postgresql://itbis_user:itbis_dev_password@localhost:5432/insider_threat_db
+          CERT_DATA_DIR: backend/tests/fixtures/mini_cert
+          # A throwaway key for CI only. The real one lives in .env locally and
+          # in a secret manager in production - never in the repository.
+          SECRET_KEY: ci-only-key-not-used-anywhere-real-0000000000000000
+          JWT_ALGORITHM: HS256
+          ACCESS_TOKEN_EXPIRE_MINUTES: "30"
+          APP_NAME: Insider Threat Behavioral Intelligence System
+          APP_ENV: ci
+          DEBUG: "false"
+        run: pytest --cov=backend/app --cov-report=term-missing --cov-report=xml
+
+  frontend-tests:
+    name: Frontend tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      # Component + unit tests in jsdom - fast, no browser needed. Includes the
+      # regression test for the 422 render crash and the security test proving
+      # is_insider ground truth never reaches the DOM even if the API leaks it.
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm test
+
+      # A production build is itself a test: it catches every import error, type
+      # mistake, and broken reference across all 424 modules.
+      - name: Build
+        working-directory: frontend
+        run: npm run build

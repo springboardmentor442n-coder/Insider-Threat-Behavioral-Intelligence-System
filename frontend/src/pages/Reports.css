@@ -1,0 +1,63 @@
+.rep { max-width: 1100px; }
+
+.rep__head { margin-bottom: var(--sp-6); }
+.rep__title { font-family: var(--font-display); font-size: var(--t-3xl); font-weight: 600; margin: 2px 0 0; }
+.rep__lede { color: var(--text-mid); font-size: var(--t-sm); max-width: 60ch; margin-top: var(--sp-3); line-height: 1.5; }
+
+.rep__toast {
+  background: rgba(34,211,238,0.08);
+  border: 1px solid var(--line-signal);
+  color: var(--text-hi);
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--r-md);
+  font-size: var(--t-sm);
+  margin-bottom: var(--sp-4);
+}
+
+.rep__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--sp-4);
+}
+
+.rep__card { display: flex; flex-direction: column; gap: var(--sp-3); }
+.rep__card-head { display: flex; align-items: center; justify-content: space-between; gap: var(--sp-2); }
+.rep__card-title { font-family: var(--font-display); font-size: var(--t-lg); font-weight: 600; margin: 0; }
+.rep__badge {
+  font-family: var(--font-mono); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  color: var(--sev-high);
+  border: 1px solid var(--sev-high);
+  border-radius: var(--r-sm);
+  padding: 1px 6px;
+}
+.rep__card-blurb { color: var(--text-mid); font-size: var(--t-sm); line-height: 1.5; flex: 1; margin: 0; }
+
+.rep__uid {
+  width: 100%;
+  background: var(--bg-inset);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--text-hi);
+  font-family: var(--font-mono);
+  font-size: var(--t-sm);
+  padding: var(--sp-2) var(--sp-3);
+}
+.rep__uid:focus { outline: none; border-color: var(--line-signal); }
+
+.rep__actions { display: flex; gap: var(--sp-2); }
+.rep__btn {
+  flex: 1;
+  padding: var(--sp-2) var(--sp-3);
+  border-radius: var(--r-md);
+  font-family: var(--font-display);
+  font-size: var(--t-sm); font-weight: 600;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  border: 1px solid var(--line-strong);
+  background: var(--bg-inset);
+  color: var(--text-hi);
+}
+.rep__btn:hover:not(:disabled) { border-color: var(--signal); color: var(--signal); }
+.rep__btn:disabled { opacity: 0.6; cursor: default; }
+.rep__btn--pdf:hover:not(:disabled) { border-color: var(--sev-high); color: var(--sev-high); }

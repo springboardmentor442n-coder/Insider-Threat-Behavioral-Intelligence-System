@@ -1,0 +1,14 @@
+.loader {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: var(--sp-4); padding: var(--sp-7);
+}
+.loader--full {
+  position: fixed; inset: 0; background: var(--bg-void); z-index: 100;
+}
+.loader__scan { display: flex; align-items: center; gap: 5px; height: 32px; }
+.loader__bar {
+  width: 4px; height: 100%; background: var(--signal);
+  border-radius: 2px; transform-origin: center;
+  box-shadow: 0 0 12px var(--signal-glow);
+}
+.loader__label { color: var(--text-lo); }

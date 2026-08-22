@@ -1,0 +1,62 @@
+.mgr { max-width: 1200px; margin: 0 auto; }
+.mgr__head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: var(--sp-6); }
+.mgr__title { font-family: var(--font-display); font-weight: 600; font-size: var(--t-3xl); letter-spacing: -0.02em; margin-top: 4px; }
+.mgr__period { font-size: var(--t-xs); color: var(--text-lo); letter-spacing: 0.12em; padding: 6px 12px; border: 1px solid var(--line); border-radius: var(--r-md); }
+
+/* posture - the executive numbers, generous whitespace */
+.mgr__posture {
+  display: grid; grid-template-columns: 1.3fr 2fr; gap: var(--sp-6);
+  padding: var(--sp-7); margin-bottom: var(--sp-5);
+  background:
+    radial-gradient(ellipse 60% 100% at 0% 50%, rgba(34,211,238,0.05), transparent 60%),
+    var(--bg-raised);
+  border: 1px solid var(--line); border-radius: var(--r-xl);
+}
+.posture__main { border-right: 1px solid var(--line); padding-right: var(--sp-6); }
+.posture__main-label { margin-bottom: var(--sp-3); }
+.posture__main-val {
+  font-family: var(--font-display); font-weight: 600; font-size: 4rem;
+  line-height: 1; letter-spacing: -0.03em; color: var(--sev-critical);
+}
+.posture__main-sub { font-size: var(--t-sm); color: var(--text-lo); margin-top: var(--sp-3); }
+.posture__main-sub .mono { color: var(--text-mid); }
+
+.posture__stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); align-content: center; }
+.pstat { display: flex; flex-direction: column; gap: 4px; }
+.pstat__val { font-family: var(--font-display); font-weight: 600; font-size: var(--t-2xl); line-height: 1; letter-spacing: -0.02em; }
+.pstat__label { font-size: var(--t-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-lo); }
+.pstat--critical .pstat__val { color: var(--sev-critical); }
+.pstat--high .pstat__val { color: var(--sev-high); }
+.pstat--signal .pstat__val { color: var(--signal); }
+.pstat--mid .pstat__val { color: var(--text-hi); }
+
+/* trend - dominant centrepiece */
+.mgr__trend { margin-bottom: var(--sp-5); }
+.mgr__trendbox { position: relative; height: 300px; }
+
+/* accountability roster - substantial */
+.roster { display: flex; flex-direction: column; }
+.roster__row {
+  display: grid; grid-template-columns: 32px 1fr 80px 200px;
+  align-items: center; gap: var(--sp-4);
+  padding: var(--sp-4) 0; border-bottom: 1px solid var(--line);
+}
+.roster__row:last-child { border-bottom: none; }
+.roster__rank { font-size: var(--t-sm); color: var(--text-faint); }
+.roster__name { font-size: var(--t-lg); font-weight: 600; color: var(--text-hi); }
+.roster__meta { font-size: var(--t-sm); color: var(--text-lo); margin-top: 2px; }
+.roster__dept { color: var(--text-faint); }
+.roster__activity { text-align: center; }
+.roster__act-n { font-size: var(--t-lg); font-weight: 700; color: var(--text-mid); }
+.roster__act-l { font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); }
+.roster__risk { display: flex; align-items: center; gap: var(--sp-3); }
+.roster__risk-track { flex: 1; height: 8px; background: var(--bg-inset); border-radius: 100px; overflow: hidden; }
+.roster__risk-fill { height: 100%; border-radius: 100px; background: linear-gradient(90deg, var(--sev-medium), var(--sev-critical)); }
+.roster__risk-val { font-size: var(--t-lg); font-weight: 700; color: var(--text-hi); width: 30px; text-align: right; }
+
+@media (max-width: 860px) {
+  .mgr__posture { grid-template-columns: 1fr; gap: var(--sp-5); }
+  .posture__main { border-right: none; border-bottom: 1px solid var(--line); padding-right: 0; padding-bottom: var(--sp-5); }
+  .roster__row { grid-template-columns: 24px 1fr 120px; }
+  .roster__activity { display: none; }
+}
